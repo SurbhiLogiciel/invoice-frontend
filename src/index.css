@@ -2,16 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --input-border-color: #3e3c5b;
+  --input-background-color: transparent;
+  --input-background-color-hover: #ffffff;
+  --input-border-color-focus: #3e3c5b;
+  --input-text-color: #ffffff;
+  --input-icon-color: #ffffff;
+  --input-label-color: #9695b9;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+input:focus {
+  border-color: var(--input-border-color-focus);
 }
