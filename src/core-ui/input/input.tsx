@@ -24,16 +24,48 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  const formatPhoneNumber = (value: string) => {
+    if (!value.startsWith('+')) {
+      value = '+' + value;
+    }
+
+    const cleaned = value.replace(/[^\d+]/g, '');
+    const match = cleaned.match(/^\+(\d{1,3})(\d{0,3})(\d{0,3})(\d{0,4})$/);
+
+    if (match) {
+      return [
+        '+' + match[1],
+        match[2] ? ' ' + match[2] : '',
+        match[3] ? '-' + match[3] : '',
+        match[4] ? '-' + match[4] : '',
+      ].join('');
+    }
+
+    return value;
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value;
+    if (type === 'tel') {
+      value = formatPhoneNumber(value);
+    }
+    setInputValue(value);
+    if (onChange) {
+      onChange(event);
+    }
+  };
 
   const baseClasses = 'w-full h-[50px] px-3 py-2 rounded border transition';
   const variantClasses =
     variant === 'primary'
-      ? `bg-transparent text-white border ${
+      ? `bg-input-bg text-input-text border ${
           focused
-            ? 'border-[var(--input-border-color-focus)] focus:ring-2 focus:ring-white'
-            : 'border-[var(--input-border-color)]'
+            ? 'border-input-border-focus focus:ring-2 focus:ring-input-text'
+            : 'border-input-border'
         }`
-      : 'bg-transparent text-white border border-[var(--input-border-color)] focus:ring focus:ring-red-500';
+      : 'bg-input-bg text-input-text border border-input-border focus:ring focus:ring-red-500';
 
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
 
@@ -58,8 +90,8 @@ export const Input: React.FC<InputProps> = ({
         <input
           type={showPassword && type === 'password' ? 'text' : type}
           placeholder={placeholder}
-          // value={value}
-          onChange={onChange}
+          value={inputValue}
+          onChange={handleInputChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           disabled={disabled}

@@ -1,5 +1,5 @@
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'phone';
+  type?: 'text' | 'email' | 'password' | 'tel';
   label?: string;
   placeholder?: string;
   value?: string;
