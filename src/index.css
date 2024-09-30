@@ -7,6 +7,7 @@
     :root {  
         --primary-color: rgb(135, 94, 255);
         --secondary-color: rgb(19 17 53);
+        --draft: rgb(56 46 113);
         
     }  
 } 

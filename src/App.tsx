@@ -5,7 +5,9 @@ import './index.css';
 
 const App: React.FC = () => {
   return (
-   <Button size='medium' color='primary' onClick={() => alert("Button Clicked")} children="Sign-In" />
+    <>
+
+    </>
   );
 };
 

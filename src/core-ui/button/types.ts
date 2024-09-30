@@ -3,7 +3,7 @@
 export interface ButtonProps {
     size?: "small" | "medium" | "large";
     disabled?: boolean;
-    color?: string;
+    color?: "primary" | "secondary" | "danger" | "draft";
     outline?: boolean;
     fullWidth?: string;
     children: React.ReactNode;
