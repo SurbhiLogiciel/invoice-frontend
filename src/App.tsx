@@ -1,13 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button } from './core-ui/button';
 
-function App() {
+import './index.css'; 
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-       <h1>Hello  world!</h1>
-    </div>
+   <Button size='medium' color='primary' onClick={() => alert("Button Clicked")} children="Sign-In" />
   );
-}
+};
 
 export default App;
