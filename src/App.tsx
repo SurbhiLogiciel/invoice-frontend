@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button } from './core-ui/button';
+import { Layout } from './layouts/login';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 import './index.css'; 
 
 const App: React.FC = () => {
   return (
-   <Button size='medium' color='primary' onClick={() => alert("Button Clicked")} children="Sign-In" />
+    <Layout />
   );
 };
 

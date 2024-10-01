@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {  
     :root {  
-        --primary-color: rgb(135, 94, 255);
-        --secondary-color: rgb(19 17 53);
+        --color-primary: 135 94 255;
+        --color-secondary: 19 17 53;
+        --color-custom: 150 149 185;
         
     }  
 } 
