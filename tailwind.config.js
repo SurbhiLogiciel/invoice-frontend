@@ -9,7 +9,7 @@ module.exports = {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         info: 'rgb(var(--color-info) / <alpha-value>)',
         draft: 'rgb(var(--color-draft) / <alpha-value>)',
-        cancel: 'rgb(var(--color-cancel) / <alpha-value>)'
+        purple: 'rgb(var(--color-purple) / <alpha-value>)'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

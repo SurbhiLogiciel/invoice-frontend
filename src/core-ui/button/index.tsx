@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
         danger: outline ? "border border-red-600 text-red-600" : "bg-red-600 text-white",
         info: "text-info",
         draft: "bg-draft text-white",
-        cancel: "text-white bg-cancel "
+        purple: "text-white bg-purple "
     };
 
     const classNames = [
