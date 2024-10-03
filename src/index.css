@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --input-border-color: #3e3c5b;
+  --input-border-color: 62 60 91;
   --input-background-color: transparent;
-  --input-background-color-hover: #ffffff;
-  --input-border-color-focus: #3e3c5b;
-  --input-text-color: #ffffff;
-  --input-icon-color: #ffffff;
-  --input-label-color: #9695b9;
-}
-
-input:focus {
-  border-color: var(--input-border-color-focus);
+  --input-background-color-hover: 255 255 255;
+  --input-border-color-focus: 62 60 91;
+  --input-text-color: 255 255 255;
+  --input-icon-color: 255 255 255;
+  --input-label-color: 150 149 185;
+  --dropdown-background-color: 62 60 91;
+  --dropdown-text-color: 255 255 255;
+  --input-dropdown-hover-bg: 19 17 53;
+  --input-dropdown-hover-text: 255 255 255;
 }
