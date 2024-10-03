@@ -25,10 +25,33 @@ export const Input: React.FC<InputProps> = ({
     lg: 'w-input-lg h-[50px]', // Large size
   };
 
+  const formatPhoneNumber = (value: string) => {
+    if (!value.startsWith('+')) {
+      value = '+' + value;
+    }
+
+    const cleaned = value.replace(/[^\d+]/g, '');
+    const match = cleaned.match(/^\+(\d{1,3})(\d{0,3})(\d{0,3})(\d{0,4})$/);
+
+    if (match) {
+      return [
+        '+' + match[1],
+        match[2] ? ' ' + match[2] : '',
+        match[3] ? '-' + match[3] : '',
+        match[4] ? '-' + match[4] : '',
+      ].join('');
+    }
+
+    return value;
+  };
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     let value = event.target.value;
+    if (type === 'tel') {
+      value = formatPhoneNumber(value);
+    }
     setInputValue(value);
     if (onChange) {
       onChange(event);
