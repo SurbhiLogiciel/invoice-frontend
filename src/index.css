@@ -8,6 +8,7 @@
         --color-secondary: 19 17 53;
         --color-info: 150 149 185;
         --color-draft :56 46 113;
-        --color-cancel: 31 29 80;
+        --color-purple: 31 29 80;
+        --color-success: 45 249 177;
     }
 }

@@ -1,26 +1,28 @@
+// src/core-ui/chips.tsx
 import { Chips } from "./types";
 import React from "react";
 
 export const PaidChip: React.FC<Chips> = ({
-   size="small",
-   color="danger",
-   outline=true,
-   fullWidth= false,
-   disabled=false,
+   size = "small",
+   color = "danger",
+   outline = false,
+   fullWidth = false,
+   disabled = false,
    children,
    onClick
-
 }) => {
     const sizeClasses = {
         small: "px-5 py-2 text-sm",
-        medium: "px-5 py-2  text-md",
-        large: "px-5 py-2  text-lg",
+        medium: "px-5 py-2 text-md",
+        large: "px-5 py-2 text-lg",
     };
 
     const colorClasses = {
         primary: outline ? "border border-primary text-white bg-secondary" : "bg-primary text-white",
         secondary: outline ? "border border-secondary text-primary" : "bg-secondary text-white",
         danger: outline ? "border border-red-600 text-red-600" : "bg-red-600 text-white",
+        purple: outline ? "border border-purple text-purple" : "bg-purple text-white",
+        success: outline ? "border border-success text-success" : "bg-success text-white",
     };
 
     const classNames = [
@@ -33,8 +35,7 @@ export const PaidChip: React.FC<Chips> = ({
 
     return (
         <div className={classNames} onClick={onClick}>
-        <h2 className="">Invoice Details</h2>
-        {children}
-      </div>
-    )
-}
+            {children}
+        </div>
+    );
+};
