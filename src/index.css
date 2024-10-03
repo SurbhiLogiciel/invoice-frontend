@@ -6,6 +6,8 @@
     :root {
         --color-primary: 135 94 255;
         --color-secondary: 19 17 53;
-        --color-custom: 150 149 185;
+        --color-info: 150 149 185;
+        --color-draft :56 46 113;
+        --color-cancel: 31 29 80;
     }
 }

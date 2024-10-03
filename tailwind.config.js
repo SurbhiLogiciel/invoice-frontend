@@ -7,7 +7,9 @@ module.exports = {
       colors: {
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
-        custom: 'rgb(var(--color-custom) / <alpha-value>)',
+        info: 'rgb(var(--color-info) / <alpha-value>)',
+        draft: 'rgb(var(--color-draft) / <alpha-value>)',
+        cancel: 'rgb(var(--color-cancel) / <alpha-value>)'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
