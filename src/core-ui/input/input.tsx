@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import PasswordEyeIcon from '../../svg/passwordEye';
 import { InputProps } from './types';
-import InputDropdown from '../../svg/inputDropdownArrow';
 
 export const Input: React.FC<InputProps> = ({
   type = 'text',
   placeholder = '',
   onChange,
-  options = [],
   disabled = false,
   label = '',
   variant = 'primary',
@@ -17,12 +15,11 @@ export const Input: React.FC<InputProps> = ({
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const sizeClasses = {
-    sm: 'w-input-sm h-[50px]', // Small size
-    md: 'w-input-md h-[50px]', // Medium size
-    lg: 'w-input-lg h-[50px]', // Large size
+    sm: 'w-input-sm h-input-height',
+    md: 'w-input-md h-input-height',
+    lg: 'w-input-lg h-input-height',
   };
 
   const formatPhoneNumber = (value: string) => {
@@ -58,19 +55,7 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const handleOptionClick = (option: string) => {
-    setInputValue(option);
-    setDropdownOpen(false);
-    if (onChange) {
-      onChange({
-        target: { value: option },
-      } as React.ChangeEvent<HTMLInputElement>);
-    }
-  };
-
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-
-  const baseClasses = `px-3 rounded border transition ${sizeClasses[size]}`;
+  const baseClasses = `w-full px-3 rounded border transition ${sizeClasses[size]}`;
 
   const variantClasses =
     variant === 'primary'
@@ -79,12 +64,8 @@ export const Input: React.FC<InputProps> = ({
         }`
       : 'bg-input-bg text-input-text border border-input-border';
 
-  const placeholderClasses = 'text-input-label';
-  const dropdownClasses = `absolute z-10 mt-2 ${sizeClasses[size]} bg-dropdown-bg text-dropdown-text rounded-md shadow-lg left-0`;
-  const optionClasses = `px-4 py-2 hover:bg-dropdown-hover-bg hover:text-dropdown-hover-text cursor-pointer transition-colors text-left`;
-
   return (
-    <div className="relative w-[386px]">
+    <div className="relative">
       {label && (
         <label
           className={`block mb-2 text-left text-input transition-colors ${
@@ -94,50 +75,16 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-
-      {type === 'select' ? (
-        <div className="relative ${sizeClasses[size]}`}">
-          <div
-            className={`${baseClasses} ${variantClasses} flex items-center justify-between cursor-pointer`}
-            onClick={toggleDropdown}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-          >
-            <span className={inputValue ? '' : placeholderClasses}>
-              {inputValue || placeholder}
-            </span>
-            <span className="pointer-events-none">
-              <InputDropdown />
-            </span>
-          </div>
-
-          {isDropdownOpen && (
-            <div className={dropdownClasses}>
-              {options.map((option, index) => (
-                <div
-                  key={index}
-                  className={optionClasses}
-                  onClick={() => handleOptionClick(option)}
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : (
-        <input
-          type={showPassword && type === 'password' ? 'text' : type}
-          placeholder={placeholder}
-          value={inputValue}
-          onChange={handleInputChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          disabled={disabled}
-          className={`${baseClasses} ${variantClasses}`}
-        />
-      )}
-
+      <input
+        type={showPassword && type === 'password' ? 'text' : type}
+        placeholder={placeholder}
+        value={inputValue}
+        onChange={handleInputChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        disabled={disabled}
+        className={`${baseClasses} ${variantClasses}`}
+      />
       {hasIcon && type === 'password' && (
         <span
           className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"

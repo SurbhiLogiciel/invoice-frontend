@@ -8,6 +8,9 @@ module.exports = {
         'input-md': '185px',
         'input-lg': '386px',
       },
+      height: {
+        'input-height': '50px',
+      },
       colors: {
         'input-border': 'rgb(var(--input-border-color) / <alpha-value>)',
         'input-bg': 'rgb(var(--input-background-color) / <alpha-value>)',
@@ -24,6 +27,9 @@ module.exports = {
           'rgb(var(--input-dropdown-hover-bg) / <alpha-value>)',
         'dropdown-hover-text':
           'rgb(var(--input-dropdown-hover-text) / <alpha-value>)',
+      },
+      fontSize: {
+        'input-label-text': '14px',
       },
     },
   },
