@@ -1,8 +1,9 @@
+export interface SelectOption {
+  value: string,
+  label: string
+}
+
 export interface SelectorProps {
-    options: Array<{ value: string; label: string }>; // Correct prop type
-    value: string;
-    onChange: (value: string) => void;
-    disabled?: boolean;
-    placeholder?: string;
-    fullWidth?: boolean;
+  options: SelectOption[],
+  isMulti: boolean
 }

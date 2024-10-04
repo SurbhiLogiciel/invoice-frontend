@@ -1,12 +1,10 @@
-import React from 'react';
-import './index.css';
-import MainComponent from './components/invoice';
+import React, { useState } from 'react';
+import { Selector } from './core-ui/selector';
 
 const App: React.FC = () => {
   return (
-    <>
-      <MainComponent />
-    </>
+   <>
+   </>
   );
 };
 
