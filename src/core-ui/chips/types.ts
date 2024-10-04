@@ -1,9 +1,8 @@
 import React from "react";
-export interface Chips {
-    size: "small"| "medium" | "large" ,
-    color: "primary" | "secondary" | "danger" | "purple",
-    outline: boolean,
-    fullWidth?: boolean,
+export interface ChipsProp {
+    size?: "small"| "medium" | "large" ,
+    color?: "primary" | "secondary" | "danger" | "purple" | "success" |"bgGreen",
+    outline?: boolean,
     disabled?: boolean,
     children?: React.ReactNode;
     onClick: () => void;
