@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        'input-sm': '65px',
+        'input-sm': '50px',
         'input-md': '185px',
         'input-lg': '386px',
       },

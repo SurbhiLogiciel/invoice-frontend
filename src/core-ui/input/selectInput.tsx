@@ -30,7 +30,7 @@ const SelectInput: React.FC<InputProps> = ({
     }
   };
 
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
   const baseClasses = `w-full px-3 rounded border transition ${sizeClasses[size]}`;
 
@@ -50,7 +50,7 @@ const SelectInput: React.FC<InputProps> = ({
       {label && (
         <label
           className={`block mb-2 text-left text-input transition-colors ${
-            focused ? 'text-white' : 'text-input-label'
+            focused || inputValue ? 'text-white' : 'text-input-label'
           }`}
         >
           {label}
@@ -59,9 +59,13 @@ const SelectInput: React.FC<InputProps> = ({
       <div className={`relative ${sizeClasses[size]}`}>
         <div
           className={`${baseClasses} ${variantClasses} flex items-center justify-between cursor-pointer`}
+          tabIndex={0}
           onClick={toggleDropdown}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false);
+            setDropdownOpen(false);
+          }}
         >
           <span className={inputValue ? '' : placeholderClasses}>
             {inputValue || placeholder}
@@ -72,12 +76,16 @@ const SelectInput: React.FC<InputProps> = ({
         </div>
 
         {isDropdownOpen && (
-          <div className={dropdownClasses}>
+          <div
+            className={dropdownClasses}
+            onBlur={() => setDropdownOpen(false)}
+          >
             {options.map((option, index) => (
               <div
                 key={index}
                 className={optionClasses}
                 onClick={() => handleOptionClick(option)}
+                onMouseDown={(e) => e.preventDefault()}
               >
                 {option}
               </div>

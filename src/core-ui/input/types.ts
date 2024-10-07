@@ -12,3 +12,8 @@ export interface InputProps {
   hasIcon?: boolean;
   size?: 'lg' | 'md' | 'sm';
 }
+
+export interface OtpInputProps {
+  length?: number; // Optional length for the OTP input (default 6)
+  onChange: (otp: string) => void; // Callback for OTP changes
+}
