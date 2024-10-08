@@ -10,18 +10,10 @@ export const Input: React.FC<InputProps> = ({
   label = '',
   variant = 'primary',
   hasIcon = false,
-  size = 'lg',
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState('');
-
-  const sizeClasses = {
-    sm: 'w-input-sm h-input-height',
-    md: 'w-input-md h-input-height',
-    lg: 'w-input-lg h-input-height',
-  };
-
   const formatPhoneNumber = (value: string) => {
     if (!value.startsWith('+')) {
       value = '+' + value;
@@ -55,20 +47,19 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const baseClasses = `w-full px-3 rounded border transition ${sizeClasses[size]}`;
+  const baseClasses = `w-full px-5 py-5 rounded border transition text-input-label-text`;
 
   const variantClasses =
     variant === 'primary'
       ? `bg-input-bg text-input-text border ${
           focused ? 'border-input-border-focus' : 'border-input-border'
         }`
-      : 'bg-input-bg text-input-text border border-input-border';
-
+      : 'bg-secondary-input-bg text-secondary-input-text border border-secondary-input-border';
   return (
     <div className="relative">
       {label && (
         <label
-          className={`block mb-2 text-left text-input transition-colors ${
+          className={`block mb-2 text-left font-roboto font-normal text-input-label-text ${
             focused ? 'text-white' : 'text-input-label'
           }`}
         >
@@ -83,7 +74,7 @@ export const Input: React.FC<InputProps> = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         disabled={disabled}
-        className={`${baseClasses} ${variantClasses}`}
+        className={`${baseClasses} ${variantClasses} font-roboto font-normal text-input-text`}
       />
       {hasIcon && type === 'password' && (
         <span

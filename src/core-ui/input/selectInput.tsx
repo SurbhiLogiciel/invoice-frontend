@@ -8,17 +8,10 @@ const SelectInput: React.FC<InputProps> = ({
   options = [],
   label = '',
   variant = 'primary',
-  size = 'lg',
 }) => {
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const sizeClasses = {
-    sm: 'w-input-sm h-input-height',
-    md: 'w-input-md h-input-height',
-    lg: 'w-input-lg h-input-height',
-  };
 
   const handleOptionClick = (option: string) => {
     setInputValue(option);
@@ -32,31 +25,31 @@ const SelectInput: React.FC<InputProps> = ({
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
-  const baseClasses = `w-full px-3 rounded border transition ${sizeClasses[size]}`;
+  const baseClasses = `w-full px-5 py-5 rounded border transition text-input-text`;
 
   const variantClasses =
     variant === 'primary'
       ? `bg-input-bg text-input-text border ${
           focused ? 'border-input-border-focus' : 'border-input-border'
         }`
-      : 'bg-input-bg text-input-text border border-input-border';
+      : 'bg-secondary-input-bg text-secondary-input-text border border-secondary-input-border';
 
   const placeholderClasses = 'text-input-label';
   const dropdownClasses = `absolute z-10 mt-2 w-full bg-dropdown-bg text-dropdown-text rounded-md shadow-lg left-0`;
-  const optionClasses = `px-4 py-2 hover:bg-dropdown-hover-bg hover:text-dropdown-hover-text cursor-pointer transition-colors text-left`;
+  const optionClasses = `px-4 py-2 hover:bg-dropdown-hover-bg hover:text-dropdown-hover-text cursor-pointer transition-colors text-left text-input-dropdown-text font-normal`;
 
   return (
     <div className="relative">
       {label && (
         <label
-          className={`block mb-2 text-left text-input transition-colors ${
+          className={`block mb-2 text-left font-roboto font-normal text-input-label-text ${
             focused || inputValue ? 'text-white' : 'text-input-label'
           }`}
         >
           {label}
         </label>
       )}
-      <div className={`relative ${sizeClasses[size]}`}>
+      <div className={`relative`}>
         <div
           className={`${baseClasses} ${variantClasses} flex items-center justify-between cursor-pointer`}
           tabIndex={0}
@@ -67,7 +60,13 @@ const SelectInput: React.FC<InputProps> = ({
             setDropdownOpen(false);
           }}
         >
-          <span className={inputValue ? '' : placeholderClasses}>
+          <span
+            className={`${
+              inputValue
+                ? 'font-roboto font-normal text-input-text'
+                : placeholderClasses
+            }`}
+          >
             {inputValue || placeholder}
           </span>
           <span className="pointer-events-none">

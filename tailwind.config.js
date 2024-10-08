@@ -3,11 +3,6 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
-      spacing: {
-        'input-sm': '50px',
-        'input-md': '185px',
-        'input-lg': '386px',
-      },
       height: {
         'input-height': '50px',
       },
@@ -27,9 +22,23 @@ module.exports = {
           'rgb(var(--input-dropdown-hover-bg) / <alpha-value>)',
         'dropdown-hover-text':
           'rgb(var(--input-dropdown-hover-text) / <alpha-value>)',
+
+        'secondary-input-bg': 'rgb(var(--secondary-input-bg) / <alpha-value>)',
+        'secondary-input-text':
+          'rgb(var(--secondary-input-text) / <alpha-value>)',
+        'secondary-input-border':
+          'rgb(var(--secondary-input-border) / <alpha-value>)',
       },
       fontSize: {
-        'input-label-text': '14px',
+        'input-label-text': ['14px', '24px'],
+        'input-text': ['18px', '24px'],
+        'input-dropdown-text': ['14px', '24px'],
+      },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
+      fontWeight: {
+        normal: '400',
       },
     },
   },

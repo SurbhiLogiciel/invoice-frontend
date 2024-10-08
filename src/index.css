@@ -15,4 +15,8 @@
   --dropdown-text-color: 255 255 255;
   --input-dropdown-hover-bg: 19 17 53;
   --input-dropdown-hover-text: 255 255 255;
+
+  --secondary-input-bg: 31 29 80;
+  --secondary-input-text: 255 255 255;
+  --secondary-input-border: 31 29 80;
 }
