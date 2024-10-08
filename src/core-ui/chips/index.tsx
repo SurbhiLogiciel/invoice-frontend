@@ -4,14 +4,14 @@ import React from 'react';
 
 export const Chips: React.FC<ChipsProp> = ({
   size = 'small',
-  color = 'danger',
+  color = 'success',
   outline = false,
   disabled = false,
   children,
   onClick,
 }) => {
   const sizeClasses = {
-    small: 'px-5 py-2 text-sm',
+    small: 'pl-5 pr-[18px] py-2 w-[62px] h-[30px] text-sm',
     medium: 'px-5 py-2 text-md',
     large: 'px-5 py-2 text-lg',
   };
@@ -30,11 +30,11 @@ export const Chips: React.FC<ChipsProp> = ({
       ? 'border border-purple text-purple'
       : 'bg-purple text-white',
     bgGreen: 'text-success bg-bgGreen/20',
-    success: '',
+    success: 'text-success bg-bgGreen/50',
   };
 
   const classNames = [
-    'font-roboto my-[25px]',
+    'font-roboto  rounded-md',
     sizeClasses[size],
     colorClasses[color],
     disabled ? 'opacity-50 cursor-not-allowed' : '',
