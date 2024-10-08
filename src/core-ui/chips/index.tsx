@@ -29,8 +29,8 @@ export const Chips: React.FC<ChipsProp> = ({
     purple: outline
       ? 'border border-purple text-purple'
       : 'bg-purple text-white',
-    bgGreen: 'text-success bg-bgGreen/20',
-    success: 'text-success bg-bgGreen/50',
+    green: 'text-success bg-green/20',
+    success: 'text-success bg-green/50',
   };
 
   const classNames = [

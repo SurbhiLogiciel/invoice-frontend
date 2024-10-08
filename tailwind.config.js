@@ -7,11 +7,11 @@ module.exports = {
       colors: {
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
-        info: 'rgb(var(--color-info) / <alpha-value>)',
+        gray: 'rgb(var(--color-gray) / <alpha-value>)',
         draft: 'rgb(var(--color-draft) / <alpha-value>)',
         purple: 'rgb(var(--color-purple) / <alpha-value>)',
         success: 'rgb(var(--color-success) / <alpha-value>)',
-        bgGreen: 'rgb(var(--color-bgGreen) / <alpha-value>)'
+        green: 'rgb(var(--color-green) / <alpha-value>)'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
