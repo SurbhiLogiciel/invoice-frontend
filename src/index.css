@@ -6,8 +6,16 @@
     :root {
         --color-primary: 135 94 255;
         --color-secondary: 19 17 53;
-        --color-info: 150 149 185;
+        --color-gray: 150 149 185;
         --color-draft :56 46 113;
         --color-purple: 31 29 80;
+        /* 
+        --color-primary: 135 94 255;
+        --color-secondary: 19 17 53;
+        --color-gray: 150 149 185; info-gray
+        --color-draft :56 46 113;
+        --color-purple: 31 29 80;
+        --color-success: 45 249 177;
+        --color-bgGreen: 0 131 85;  bg-green - green */
     }
 }
