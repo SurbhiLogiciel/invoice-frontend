@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
+import Invoice from './components/invoice';
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello world!</h1>
+      <Invoice />
     </div>
   );
 }
