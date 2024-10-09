@@ -1,22 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer utilities {
+  :root {
+    --color-primary: 135 94 255;
+    --color-secondary: 19 17 53;
+    --color-gray: 150 149 185;
+    --color-draft: 56 46 113;
+    --color-purple: 31 29 80;
+    --color-success: 45 249 177;
+    --color-green: 0 131 85;
 
-:root {
-  --input-border-color: 62 60 91;
-  --input-background-color: transparent;
-  --input-background-color-hover: 255 255 255;
-  --input-border-color-focus: 62 60 91;
-  --input-text-color: 255 255 255;
-  --input-icon-color: 255 255 255;
-  --input-label-color: 150 149 185;
+    --input-border-color: 62 60 91;
+    --input-background-color: transparent;
+    --input-background-color-hover: 255 255 255;
+    --input-border-color-focus: 62 60 91;
+    --input-text-color: 255 255 255;
+    --input-icon-color: 255 255 255;
+    --input-label-color: 150 149 185;
 
-  --dropdown-background-color: 62 60 91;
-  --dropdown-text-color: 255 255 255;
-  --input-dropdown-hover-bg: 19 17 53;
-  --input-dropdown-hover-text: 255 255 255;
+    --dropdown-background-color: 62 60 91;
+    --dropdown-text-color: 255 255 255;
+    --input-dropdown-hover-bg: 19 17 53;
+    --input-dropdown-hover-text: 255 255 255;
 
-  --secondary-input-bg: 31 29 80;
-  --secondary-input-text: 255 255 255;
-  --secondary-input-border: 31 29 80;
+    --secondary-input-bg: 31 29 80;
+    --secondary-input-text: 255 255 255;
+    --secondary-input-border: 31 29 80;
+  }
 }

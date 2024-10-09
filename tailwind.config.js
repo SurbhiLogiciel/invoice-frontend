@@ -4,9 +4,20 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        'input-height': '50px',
+        'input-otp-height': '50px',
+      },
+      width: {
+        'input-otp-width': '50px',
       },
       colors: {
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        gray: 'rgb(var(--color-gray) / <alpha-value>)',
+        draft: 'rgb(var(--color-draft) / <alpha-value>)',
+        purple: 'rgb(var(--color-purple) / <alpha-value>)',
+        success: 'rgb(var(--color-success) / <alpha-value>)',
+        green: 'rgb(var(--color-green) / <alpha-value>)',
+
         'input-border': 'rgb(var(--input-border-color) / <alpha-value>)',
         'input-bg': 'rgb(var(--input-background-color) / <alpha-value>)',
         'input-bg-hover':
@@ -48,6 +59,6 @@ module.exports = {
       ringColor: ['focus'],
       ringWidth: ['focus'],
     },
+    plugins: [],
   },
-  plugins: [],
 };
