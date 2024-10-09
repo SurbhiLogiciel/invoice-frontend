@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css';
-import Invoice from './components/invoice';
 
-function App() {
+import './index.css';
+
+const App: React.FC = () => {
   return (
     <div className="App">
-      <Invoice />
+      <h1>Hello world!</h1>
     </div>
   );
-}
+};
 
 export default App;

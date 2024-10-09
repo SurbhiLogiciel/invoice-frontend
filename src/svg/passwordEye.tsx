@@ -23,5 +23,4 @@ const PasswordEyeIcon: React.FC = () => {
     </svg>
   );
 };
-
 export default PasswordEyeIcon;
