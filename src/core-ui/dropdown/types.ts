@@ -1,4 +1,4 @@
-export type DropdownColor = 'success' | 'danger'; 
+export type DropdownColor = 'success' | 'danger' ; 
 export interface DropdownOption {
   label: string;
   action: () => void;

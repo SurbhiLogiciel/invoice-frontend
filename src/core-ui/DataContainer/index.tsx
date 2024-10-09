@@ -1,5 +1,6 @@
 // src/ui-kit/container.tsx
-import { Container } from './types';import { Dropdown } from '../dropdown';
+import { Container } from './types';
+import { Dropdown } from '../dropdown';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../assets/Frame.png';
 import React from 'react';
@@ -8,7 +9,6 @@ import { Chips } from '../chips';
 export const DataContainer: React.FC<Container> = ({
   size = 'medium', // Default value if not provided
   color = 'purple', // Default value if not provided
-  fullWidth = false, // Default value for fullWidth
   children,
 }) => {
   const handleEdit = () => {
@@ -37,23 +37,22 @@ export const DataContainer: React.FC<Container> = ({
   };
 
   const classNames = [
-    'overflow-x-auto font-roboto rounded-md  text-white w-[900px] lg:w-full',
+    'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
     sizeClasses[size], // Accessing the size class based on the prop
     colorClasses[color], // Accessing the color class based on the prop
-    fullWidth ? 'w-full' : 'w-auto',
   ]
     .filter(Boolean)
     .join(' '); // Ensure proper spacing between classes
 
   return (
     <div className={classNames}>
-      <div className="flex w-full gap-3 justify-between items-center">
-        <div className="w-[75px] shrink-0">#INV-30202</div>
-        <div className="w-[109px] shrink-0">Due 19 Sept,2024</div>
-        <div className="w-48 shrink-0">David Jonas</div>
-        <div className="w-48 shrink-0">Created on 10 Sept,2024</div>
-        <div className="w-48 shrink-0 font-bold text-[20px] ">$1800</div>
-        <div className="w-48 shrink-0">
+      <div className="flex w-full gap-3 justify-between items-center max-w-full">
+        <div className="w-48">#INV-30202</div>
+        <div className="w-48">Due 19 Sept,2024</div>
+        <div className="w-48">David Jonas</div>
+        <div className="w-48">Created on 10 Sept,2024</div>
+        <div className="w-48 font-bold text-[20px] ">$1800</div>
+        <div className="shrink-0">
           <Chips
             onClick={() => alert('You clicked on paid chip')}
             color="success"

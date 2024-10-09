@@ -14,7 +14,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image }) => {
   const getColorClass = (color: DropdownOption['color']) => {
     switch (color) {
       case 'success':
-        return 'text-green-500'; 
+        return 'text-green'; 
       case 'danger':
         return 'text-red-500'; 
       default:
