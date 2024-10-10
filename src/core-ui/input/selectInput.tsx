@@ -25,23 +25,23 @@ const SelectInput: React.FC<InputProps> = ({
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
-  const baseClasses = `w-full px-5 py-5 rounded border transition text-input-text`;
+  const baseClasses = `w-full px-5 py-5 rounded border transition`;
   const variantClasses =
     variant === 'primary'
-      ? `bg-input-bg text-input-text border ${
-          focused ? 'border-input-border-focus' : 'border-input-border'
+      ? `bg-secondary text-white border ${
+          focused ? 'border-lightGray' : 'border-lightGray'
         }`
-      : 'bg-secondary-input-bg text-secondary-input-text border border-secondary-input-border';
-  const placeholderClasses = 'text-input-label';
-  const dropdownClasses = `absolute z-10 mt-2 w-full bg-dropdown-bg text-dropdown-text rounded-md shadow-lg left-0`;
-  const optionClasses = `px-4 py-2 hover:bg-dropdown-hover-bg hover:text-dropdown-hover-text cursor-pointer transition-colors text-left text-input-dropdown-text font-normal`;
+      : 'bg-purple text-white border border-purple';
+  const placeholderClasses = 'text-gray text-sm';
+  const dropdownClasses = `absolute z-10 mt-2 w-full bg-lightGray text-white rounded-md shadow-lg left-0`;
+  const optionClasses = `px-4 py-2 hover:bg-secondary hover:text-white cursor-pointer transition-colors text-left text-white font-normal text-sm`;
 
   return (
     <div className="relative">
       {label && (
         <label
-          className={`block mb-2 text-left font-roboto font-normal text-input-label-text ${
-            focused ? 'text-white' : 'text-input-label'
+          className={`block mb-2 text-left font-roboto font-normal text-[12px] ${
+            focused ? 'text-white' : 'text-gray'
           }`}
         >
           {label}
@@ -57,7 +57,7 @@ const SelectInput: React.FC<InputProps> = ({
           <span
             className={`${
               inputValue
-                ? 'font-roboto font-normal text-input-text'
+                ? 'font-roboto font-normal text-white text-sm'
                 : placeholderClasses
             }`}
           >

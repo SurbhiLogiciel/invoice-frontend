@@ -97,7 +97,7 @@ const OtpInput: React.FC<OtpInputProps> = React.memo(
             type="text"
             maxLength={1}
             defaultValue={otpValuesRef.current[index]}
-            className={`w-input-otp-width h-input-otp-height text-center bg-input-bg border border-input-border-focus rounded focus:ring-2 focus:ring-input-border-focus text-input-text placeholder:text-input-label transition-colors`}
+            className={`w-full h-full text-center bg-secondary border border-lightGray rounded focus:ring-2 focus:ring-white text-white transition-colors opacity-95`}
             onChange={(e) => handleChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             onMouseDown={() => handleMouseDown(index)}

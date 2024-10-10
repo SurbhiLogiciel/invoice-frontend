@@ -47,20 +47,20 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const baseClasses = `w-full px-5 py-5 rounded border transition text-input-label-text`;
+  const baseClasses = `w-full px-5 py-5 rounded border transition `;
 
   const variantClasses =
     variant === 'primary'
-      ? `bg-input-bg text-input-text border ${
-          focused ? 'border-input-border-focus' : 'border-input-border'
+      ? `bg-secondary text-white border ${
+          focused ? 'border-lightGray' : 'border-lightGray'
         }`
-      : 'bg-secondary-input-bg text-secondary-input-text border border-secondary-input-border';
+      : 'bg-purple text-white border border-purple';
   return (
     <div className="relative">
       {label && (
         <label
-          className={`block mb-2 text-left font-roboto font-normal text-input-label-text ${
-            focused ? 'text-white' : 'text-input-label'
+          className={`block mb-2 text-left font-roboto font-normal text-[12px] ${
+            focused ? 'text-white' : 'text-gray'
           }`}
         >
           {label}
@@ -74,7 +74,7 @@ export const Input: React.FC<InputProps> = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         disabled={disabled}
-        className={`${baseClasses} ${variantClasses} font-roboto font-normal text-input-text`}
+        className={`${baseClasses} ${variantClasses} font-roboto font-normal text-sm`}
       />
       {hasIcon && type === 'password' && (
         <span
