@@ -1,4 +1,3 @@
-// src/core-ui/chips.tsx
 import { ChipsProp } from './types';
 import React from 'react';
 

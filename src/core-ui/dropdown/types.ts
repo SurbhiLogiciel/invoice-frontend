@@ -1,5 +1,5 @@
 export type DropdownColor = 'success' | 'danger';
-export type DropdownPosition = 'left' | 'right'; // Added position types
+export type DropdownPosition = 'left' | 'right'; 
 
 export interface DropdownOption {
   label: string;
@@ -10,5 +10,5 @@ export interface DropdownOption {
 export interface DropdownProps {
   options: DropdownOption[];
   Image: string;
-  position?: DropdownPosition; // Optional position prop
+  position?: DropdownPosition; 
 }

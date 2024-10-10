@@ -1,4 +1,3 @@
-// src/ui-kit/container.tsx
 import { Container } from './types';
 import { Dropdown } from '../dropdown';
 import { DropdownOption } from '../dropdown/types';
@@ -7,8 +6,7 @@ import React from 'react';
 import { Chips } from '../chips';
 
 export const DataContainer: React.FC<Container> = ({
-  size = 'medium', // Default value if not provided
-  color = 'purple', // Default value if not provided
+  size = 'medium',   color = 'purple',
   children,
 }) => {
   const handleEdit = () => {
@@ -22,7 +20,7 @@ export const DataContainer: React.FC<Container> = ({
   };
 
   const options: DropdownOption[] = [
-    // Use DropdownOption type here
+
     { label: 'Edit', action: handleEdit, color: 'success' },
     { label: 'Delete', action: handleDelete, color: 'danger' },
   ];
@@ -38,11 +36,11 @@ export const DataContainer: React.FC<Container> = ({
 
   const classNames = [
     'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
-    sizeClasses[size], // Accessing the size class based on the prop
-    colorClasses[color], // Accessing the color class based on the prop
+    sizeClasses[size], 
+    colorClasses[color],
   ]
     .filter(Boolean)
-    .join(' '); // Ensure proper spacing between classes
+    .join(' '); 
 
   return (
     <div className={classNames}>
