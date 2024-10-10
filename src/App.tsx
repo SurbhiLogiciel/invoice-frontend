@@ -1,13 +1,11 @@
 import React from 'react';
 import './App.css';
-
+import MainComponent from './components/invoice';
 import './index.css';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <h1>Hello world!</h1>
-    </div>
+    <MainComponent />
   );
 };
 

@@ -38,11 +38,11 @@ export const DataContainer: React.FC<Container> = ({
 
   const classNames = [
     'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
-    sizeClasses[size], // Accessing the size class based on the prop
-    colorClasses[color], // Accessing the color class based on the prop
+    sizeClasses[size], 
+    colorClasses[color], 
   ]
     .filter(Boolean)
-    .join(' '); // Ensure proper spacing between classes
+    .join(' '); 
 
   return (
     <div className={classNames}>
