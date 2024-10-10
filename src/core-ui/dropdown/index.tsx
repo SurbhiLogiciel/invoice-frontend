@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { DropdownOption, DropdownProps } from './types';
+import { DropdownOption, DropdownProps, DropdownPosition } from './types';
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, Image }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => { // Default position to 'right'
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -14,11 +14,23 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image }) => {
   const getColorClass = (color: DropdownOption['color']) => {
     switch (color) {
       case 'success':
-        return 'text-green'; 
+        return 'text-green';
       case 'danger':
-        return 'text-red-500'; 
+        return 'text-red-500';
       default:
-        return 'text-black'; 
+        return 'text-black';
+    }
+  };
+
+  // Set dynamic position class based on the position prop
+  const getPositionClass = (position: DropdownPosition) => {
+    switch (position) {
+      case 'left':
+        return 'left-0'; // Opens to the left
+      case 'right':
+        return 'right-0'; // Opens to the right
+      default:
+        return 'right-0'; // Default to right if position is undefined
     }
   };
 
@@ -32,11 +44,11 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image }) => {
       />
 
       {isOpen && (
-        <ul className="absolute mt-2 w-32 bg-white shadow-lg border rounded-lg z-10">
+        <ul className={`absolute mt-2 w-32 bg-white shadow-lg border rounded-lg z-10 ${getPositionClass(position)}`}>
           {options.map((option, index) => (
             <li
               key={index}
-              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${getColorClass(option.color)}`}  // Apply color class
+              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${getColorClass(option.color)}`}
               onClick={() => handleOptionClick(option.action)}
             >
               {option.label}

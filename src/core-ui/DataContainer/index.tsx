@@ -60,7 +60,7 @@ export const DataContainer: React.FC<Container> = ({
           />
         </div>
         <div className="w-16">
-          <Dropdown options={options} Image={Frame} />
+          <Dropdown options={options} Image={Frame} position="right"/>
         </div>
       </div>
     </div>
