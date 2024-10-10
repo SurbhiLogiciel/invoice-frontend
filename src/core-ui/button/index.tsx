@@ -31,11 +31,11 @@ export const Button: React.FC<ButtonProps> = ({
         colorClasses[color],
         fullWidth ? "w-full" : "w-auto",
         disabled ? "opacity-50 cursor-not-allowed" : ""
-    ].filter(Boolean); 
+    ].filter(Boolean).join(' '); 
 
     return (
         <button
-            className={classNames.join(" ").trim()}
+            className={classNames}
             onClick={onClick}
             disabled={disabled}
         >

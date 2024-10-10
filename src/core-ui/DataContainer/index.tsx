@@ -1,0 +1,68 @@
+// src/ui-kit/container.tsx
+import { Container } from './types';
+import { Dropdown } from '../dropdown';
+import { DropdownOption } from '../dropdown/types';
+import Frame from '../../assets/Frame.png';
+import React from 'react';
+import { Chips } from '../chips';
+
+export const DataContainer: React.FC<Container> = ({
+  size = 'medium', // Default value if not provided
+  color = 'purple', // Default value if not provided
+  children,
+}) => {
+  const handleEdit = () => {
+    alert('you clicked edit option');
+    console.log('Edit option clicked');
+  };
+
+  const handleDelete = () => {
+    alert('you clicked delete option');
+    console.log('Delete option clicked');
+  };
+
+  const options: DropdownOption[] = [
+    // Use DropdownOption type here
+    { label: 'Edit', action: handleEdit, color: 'success' },
+    { label: 'Delete', action: handleDelete, color: 'danger' },
+  ];
+  const sizeClasses: Record<string, string> = {
+    small: 'py-4 ',
+    medium: 'py-8 px-5 text-md',
+    large: 'py-4',
+  };
+
+  const colorClasses: Record<string, string> = {
+    purple: 'bg-purple',
+  };
+
+  const classNames = [
+    'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
+    sizeClasses[size], // Accessing the size class based on the prop
+    colorClasses[color], // Accessing the color class based on the prop
+  ]
+    .filter(Boolean)
+    .join(' '); // Ensure proper spacing between classes
+
+  return (
+    <div className={classNames}>
+      <div className="flex w-full gap-3 justify-between items-center max-w-full">
+        <div className="w-48">#INV-30202</div>
+        <div className="w-48">Due 19 Sept,2024</div>
+        <div className="w-48">David Jonas</div>
+        <div className="w-48">Created on 10 Sept,2024</div>
+        <div className="w-48 font-bold text-[20px] ">$1800</div>
+        <div className="shrink-0">
+          <Chips
+            onClick={() => alert('You clicked on paid chip')}
+            color="success"
+            children="Paid"
+          />
+        </div>
+        <div className="w-16">
+          <Dropdown options={options} Image={Frame} position="right"/>
+        </div>
+      </div>
+    </div>
+  );
+};
