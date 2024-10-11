@@ -111,4 +111,5 @@ const OtpInput: React.FC<OtpInputProps> = React.memo(
   }
 );
 
+OtpInput.displayName = 'OtpInput';
 export default OtpInput;
