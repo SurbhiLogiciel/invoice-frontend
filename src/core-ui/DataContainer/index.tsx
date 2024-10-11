@@ -22,7 +22,6 @@ export const DataContainer: React.FC<Container> = ({
   };
 
   const options: DropdownOption[] = [
-    // Use DropdownOption type here
     { label: 'Edit', action: handleEdit, color: 'success' },
     { label: 'Delete', action: handleDelete, color: 'danger' },
   ];
