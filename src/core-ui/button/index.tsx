@@ -21,7 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
         secondary: outline ? "border border-secondary text-primary" : "bg-secondary text-white",
         danger: outline ? "border border-red-600 text-red-600" : "bg-red-600 text-white",
         gray: "text-gray",
-        draft: "bg-draft text-white",
+        lightPurple: "bg-lightPurple text-white",
         purple: "text-white bg-purple "
     };
 
@@ -31,11 +31,11 @@ export const Button: React.FC<ButtonProps> = ({
         colorClasses[color],
         fullWidth ? "w-full" : "w-auto",
         disabled ? "opacity-50 cursor-not-allowed" : ""
-    ].filter(Boolean); 
+    ].filter(Boolean).join(' '); 
 
     return (
         <button
-            className={classNames.join(" ").trim()}
+            className={classNames}
             onClick={onClick}
             disabled={disabled}
         >
