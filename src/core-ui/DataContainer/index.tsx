@@ -8,6 +8,7 @@ import { Chips } from '../chips';
 export const DataContainer: React.FC<Container> = ({
   size = 'medium', 
   color = 'purple', 
+  size = 'medium',   color = 'purple',
   children,
 }) => {
   const handleEdit = () => {
@@ -21,6 +22,7 @@ export const DataContainer: React.FC<Container> = ({
   };
 
   const options: DropdownOption[] = [
+
     { label: 'Edit', action: handleEdit, color: 'success' },
     { label: 'Delete', action: handleDelete, color: 'danger' },
   ];
@@ -37,7 +39,7 @@ export const DataContainer: React.FC<Container> = ({
   const classNames = [
     'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
     sizeClasses[size], 
-    colorClasses[color], 
+    colorClasses[color],
   ]
     .filter(Boolean)
     .join(' '); 

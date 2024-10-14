@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DropdownOption, DropdownProps, DropdownPosition } from './types';
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => {  
+export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => { 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
