@@ -4,7 +4,7 @@ import image1 from '../assets/1.png';
 import image3 from '../assets/3.png';
 import image4 from '../assets/4.png';
 
-export const Layout: React.FC = () => {
+export const Login: React.FC = () => {
   return (
     <div className="flex bg-secondary bg-contain bg-no-repeat bg-right bg-[url('./assets/2.png')]">
       <div className="flex mx-auto my-[62px] justify-center w-full max-w-[1200px]">
@@ -17,7 +17,7 @@ export const Layout: React.FC = () => {
           <div className="flex font-bold mt-10 text-[36px] text-white text-center sm:text-[40px] md:text-[44px] lg:text-[48px]">
             Welcome
           </div>
-          <div className="flex text-custom text-[18px] text-center sm:text-[20px] md:text-[22px] lg:text-[24px]">
+          <div className="flex text-gray text-custom text-[18px] text-center sm:text-[20px] md:text-[22px] lg:text-[24px]">
             We glad to see you
           </div>
           <div className="mt-10 text-white">
