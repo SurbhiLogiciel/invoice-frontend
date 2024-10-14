@@ -3,12 +3,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer utilities {  
-    :root {  
+@layer utilities {
+    :root {
+        
         --color-primary: 135 94 255;
         --color-secondary: 19 17 53;
-        --color-custom: 150 149 185;
-        
-    }  
-} 
+        --color-gray: 150 149 185;
+        --color-lightPurple :56 46 113;
+        --color-purple: 31 29 80;
+        --color-success: 45 249 177;
+        --color-green: 0 131 85;
+    }
+}

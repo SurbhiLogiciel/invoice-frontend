@@ -6,35 +6,40 @@ export const Button: React.FC<ButtonProps> = ({
     disabled = false,
     color = "primary",
     outline = false,
-    fullWidth = true,
+    fullWidth = false,
     children,
     onClick
 }) => {
     const sizeClasses = {
-        small: "py-4 text-sm ",
-        medium: "py-4 text-md",
-        large: "py-4 text-lg"
-    }
+        small: "py-[11px] px-4 text-sm",
+        medium: "py-[11px] px-4 text-md",
+        large: "py-[11px] px-4 text-lg"
+    };
 
     const colorClasses = {
-        primary: outline? "border border-primary text-white bg-secondary": "bg-primary text-white",
-        secondary: outline? "border border-secondary text-primary": "bg-secondary text--white",
-        danger: outline? "border border-red-600 text-red-600": "bg-red-600 text-white",
-        custom: outline? "border border-custom text-custom": "bg-custom text-white"
-    }
+        primary: outline ? "border border-primary text-white bg-secondary" : "bg-primary text-white",
+        secondary: outline ? "border border-secondary text-primary" : "bg-secondary text-white",
+        danger: outline ? "border border-red-600 text-red-600" : "bg-red-600 text-white",
+        gray: "text-gray",
+        lightPurple: "bg-lightPurple text-white",
+        purple: "text-white bg-purple "
+    };
+
+    const classNames = [
+        "font-roboto rounded-md",
+        sizeClasses[size],
+        colorClasses[color],
+        fullWidth ? "w-full" : "w-auto",
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+    ].filter(Boolean).join(' '); 
+
     return (
         <button
-        className={`
-            font-roboto rounded hover hover:outline-blue-500 bg-primary text-white
-            ${sizeClasses[size]} 
-            ${colorClasses[color]} 
-            ${fullWidth ? "w-full" : "w-auto"} 
-            ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-        `}
-        onClick={onClick}
-        disabled={disabled}
-    >
-        {children}
-    </button>
-    )
-}
+            className={classNames}
+            onClick={onClick}
+            disabled={disabled}
+        >
+            {children}
+        </button>
+    );
+};
