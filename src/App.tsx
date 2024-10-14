@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-// import MainComponent from './components/invoice';
 import SelectableContainer from './core-ui/choosePlan';
 import './index.css';
 
