@@ -40,7 +40,7 @@ const SelectInput: React.FC<InputProps> = ({
     <div className="relative">
       {label && (
         <label
-          className={`block mb-2 text-left font-roboto font-normal text-[12px] ${
+          className={`block mb-2 text-left font-roboto font-normal text-xs ${
             focused ? 'text-white' : 'text-gray'
           }`}
         >
