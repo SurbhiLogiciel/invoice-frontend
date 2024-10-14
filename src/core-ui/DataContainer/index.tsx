@@ -1,4 +1,3 @@
-// src/ui-kit/container.tsx
 import { Container } from './types';
 import { Dropdown } from '../dropdown';
 import { DropdownOption } from '../dropdown/types';
@@ -7,8 +6,8 @@ import React from 'react';
 import { Chips } from '../chips';
 
 export const DataContainer: React.FC<Container> = ({
-  size = 'medium', // Default value if not provided
-  color = 'purple', // Default value if not provided
+  size = 'medium', 
+  color = 'purple', 
   children,
 }) => {
   const handleEdit = () => {

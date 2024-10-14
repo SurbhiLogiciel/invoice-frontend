@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DropdownOption, DropdownProps, DropdownPosition } from './types';
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => { // Default position to 'right'
+export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => {  
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -22,15 +22,14 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = '
     }
   };
 
-  // Set dynamic position class based on the position prop
   const getPositionClass = (position: DropdownPosition) => {
     switch (position) {
       case 'left':
-        return 'left-0'; // Opens to the left
+        return 'left-0'; 
       case 'right':
-        return 'right-0'; // Opens to the right
+        return 'right-0'; 
       default:
-        return 'right-0'; // Default to right if position is undefined
+        return 'right-0'; 
     }
   };
 
