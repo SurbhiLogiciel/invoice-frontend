@@ -78,7 +78,7 @@ export const Input: React.FC<InputProps> = ({
       />
       {hasIcon && type === 'password' && (
         <span
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          className="absolute right-3 top-2/3 transform -translate-y-1/2 cursor-pointer"
           onClick={() => setShowPassword(!showPassword)}
         >
           <PasswordEyeIcon />
