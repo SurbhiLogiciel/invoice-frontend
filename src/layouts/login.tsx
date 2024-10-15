@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../core-ui/button';
+import { Input } from '../core-ui/input/input';
 import image1 from '../assets/1.png';
 import image3 from '../assets/3.png';
 import image4 from '../assets/4.png';
@@ -21,47 +22,35 @@ export const Login: React.FC = () => {
             We glad to see you
           </div>
           <div className="mt-10 text-white">
-            Email:
-            <div className="mt-[10px]">
-              <input
-                type="text"
-                className="h-10 w-96 rounded-lg sm:w-[80%] md:w-[70%] lg:w-[60%]"
-              />
-            </div>
+            <Input label='Email' />
             <div className="mt-5">
-              Password:
-              <div className="mt-[10px]">
-                <input
-                  type="text"
-                  className="h-10 w-96 rounded-lg sm:w-[80%] md:w-[70%] lg:w-[60%]"
-                />
-              </div>
+             <Input label='Password'/>
             </div>
           </div>
           <div className="mt-5 text-white">
-            <input type="checkbox" className="rounded" name="" id="" /> Remember
+            <input type="checkbox" className="rounded text-[14px] font-roboto" name="" id="" /> Remember
             me
           </div>
           <div className="mt-[35px]">
-            <Button size="medium" color="primary" fullWidth="true">
-              Sign-In
+            <Button size="large" color="primary" fullWidth="true">
+              Sign In
             </Button>
           </div>
           <div className="mt-5 text-white text-[14px] text-center font-bold">
             Forgot password?
           </div>
-          <div className="mt-[50px]">
+          <div className="text-white mt-[50px]">
             <hr />
           </div>
           <div className="mt-[30px] text-white text-[18px]">
             Don't have an account?
           </div>
           <div className="mt-[30px]">
-            <Button size="medium" outline="primary" fullWidth="true">
+            <Button size="large" outline="primary" fullWidth="true">
               Registration
             </Button>
           </div>
-          <div className="mt-[30px]">
+          <div className="text-white mt-[30px]">
             <hr />
           </div>
           <div className="text-white text-[18px] mt-[30px]">
