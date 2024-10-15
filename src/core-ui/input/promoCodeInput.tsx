@@ -41,7 +41,7 @@ const PromoCodeInput: React.FC = () => {
           focused ? 'text-white' : 'text-gray'
         }`}
       >
-        Promo Code
+        Apply Promo Code
       </label>
 
       {!codeApplied ? (
