@@ -1,5 +1,5 @@
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'tel' | 'select';
+  type?: 'text' | 'email' | 'password' | 'tel' | 'select' | 'date';
   label?: string;
   placeholder?: string;
   value?: string;
@@ -16,4 +16,8 @@ export interface InputProps {
 export interface OtpInputProps {
   length?: number;
   onChange: (otp: string) => void;
+}
+
+export interface PromoCodeInputProps {
+  size?: 'sm' | 'md' | 'lg';
 }
