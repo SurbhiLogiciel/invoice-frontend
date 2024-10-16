@@ -8,6 +8,7 @@ const SelectInput: React.FC<InputProps> = ({
   options = [],
   label = '',
   variant = 'primary',
+  size = 'lg',
 }) => {
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -26,12 +27,16 @@ const SelectInput: React.FC<InputProps> = ({
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
   const baseClasses = `w-full px-5 py-5 rounded border transition`;
+
+  const sizeClasses = size === 'sm' ? 'h-sm' : size === 'lg' ? 'h-lg' : 'h-md';
+
   const variantClasses =
     variant === 'primary'
       ? `bg-secondary text-white border ${
           focused ? 'border-lightGray' : 'border-lightGray'
         }`
       : 'bg-purple text-white border border-purple';
+
   const placeholderClasses = 'text-gray text-sm';
   const dropdownClasses = `absolute z-10 mt-2 w-full bg-lightGray text-white rounded-md shadow-lg left-0`;
   const optionClasses = `px-4 py-2 hover:bg-secondary hover:text-white cursor-pointer transition-colors text-left text-white font-normal text-sm`;
@@ -49,7 +54,7 @@ const SelectInput: React.FC<InputProps> = ({
       )}
       <div className={`relative `}>
         <div
-          className={`${baseClasses} ${variantClasses} flex items-center justify-between cursor-pointer`}
+          className={`${baseClasses} ${variantClasses} ${sizeClasses} flex items-center justify-between cursor-pointer`}
           onClick={toggleDropdown}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}

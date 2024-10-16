@@ -10,6 +10,7 @@ export const Input: React.FC<InputProps> = ({
   label = '',
   variant = 'primary',
   hasIcon = false,
+  size = 'lg',
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -49,6 +50,8 @@ export const Input: React.FC<InputProps> = ({
 
   const baseClasses = `w-full px-5 py-5 rounded border transition `;
 
+  const sizeClasses = size === 'sm' ? 'h-sm' : size === 'lg' ? 'h-lg' : 'h-md';
+
   const variantClasses =
     variant === 'primary'
       ? `bg-secondary text-white border ${
@@ -74,11 +77,11 @@ export const Input: React.FC<InputProps> = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         disabled={disabled}
-        className={`${baseClasses} ${variantClasses} font-roboto font-normal text-sm`}
+        className={`${baseClasses} ${variantClasses} ${sizeClasses} font-roboto font-normal text-sm`}
       />
       {hasIcon && type === 'password' && (
         <span
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          className="absolute right-3 top-2/3 transform -translate-y-1/2 cursor-pointer"
           onClick={() => setShowPassword(!showPassword)}
         >
           <PasswordEyeIcon />

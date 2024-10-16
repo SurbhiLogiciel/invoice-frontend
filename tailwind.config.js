@@ -4,12 +4,6 @@ module.exports = {
   content: ['./src/**/*.{html,tsx}', './index.css'],
   theme: {
     extend: {
-      height: {
-        'input-otp-height': '50px',
-      },
-      width: {
-        'input-otp-width': '50px',
-      },
       colors: {
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
@@ -25,6 +19,11 @@ module.exports = {
       },
       fontWeight: {
         normal: '400',
+      },
+      height: {
+        sm: '30px',
+        md: '40px',
+        lg: '50px',
       },
     },
   },
