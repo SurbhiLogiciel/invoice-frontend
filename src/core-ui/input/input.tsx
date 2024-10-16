@@ -52,6 +52,8 @@ export const Input: React.FC<InputProps> = ({
 
   const sizeClasses = size === 'sm' ? 'h-sm' : size === 'lg' ? 'h-lg' : 'h-md';
 
+
+
   const variantClasses =
     variant === 'primary'
       ? `bg-secondary text-white border ${

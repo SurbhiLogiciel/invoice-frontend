@@ -8,9 +8,9 @@ import IIcon from '../svg/i-icon';
 
 export const Login: React.FC = () => {
   return (
-    <div className="flex bg-secondary bg-contain bg-no-repeat max-h-screen bg-right bg-[url('./assets/2.png')]">
-    <div className="flex mx-auto my-[62px] justify-center max-h-screen  w-full max-w-[1200px]">
-      <div className="mx-auto min-h-screen w-full p-4">
+    <div className="flex bg-secondary bg-contain bg-no-repeat max-h-full bg-right bg-[url('./assets/2.png')]">
+    <div className="flex mx-auto my-[62px] justify-center max-h-full  w-full max-w-[1200px]">
+      <div className="mx-auto max-h-full w-full p-4">
         <img
           src={image3}
           alt="logo"
@@ -23,10 +23,10 @@ export const Login: React.FC = () => {
         We glad to see you 
         </div>
         <div className="mt-10 text-white">
-          <Input label="Email" />
+          <Input label="Email" size='lg'/>
         </div>
         <div className="mt-5 text-white">
-          <Input label="Password" />
+          <Input label="Password" size='lg' />
         </div>
         <input type="checkbox" className="h-5 mt-5 w-5 bg-secondary text-white border-gray-500 focus:ring-0"/>&apos;
         <span className="mt-[25px] text-white">Remember me</span>
@@ -52,8 +52,8 @@ export const Login: React.FC = () => {
         <div className="flex text-white mt-[27px]">
           <IIcon />&nbsp; support@invoice.com</div>
       </div>
-      <div className="mx-auto w-full p-4 rounded-lg hidden lg:block">
-        <div className="flex h-full max-h-[810px] justify-center px-[16px] items-center bg-primary mx-auto py-[22px] rounded-xl">
+      <div className="mx-auto w-full max-h-full p-4 rounded-lg hidden lg:block">
+        <div className="flex h-full max-h-full justify-center px-[16px] items-center bg-primary mx-auto py-[22px] rounded-xl">
           <img
             src={image1}
             alt="Layout Image"
