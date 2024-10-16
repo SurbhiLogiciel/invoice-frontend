@@ -13,7 +13,7 @@ export const Button: React.FC<ButtonProps> = ({
     const sizeClasses = {
         small: "py-[11px] px-4 text-sm",
         medium: "py-[11px] px-4 text-md",
-        large: "py-[11px] px-4 h-[60px] text-[14px] font-bold"
+        large: "px-4 h-20 py-4 text-[14px] font-bold"
     };
 
     const colorClasses = {

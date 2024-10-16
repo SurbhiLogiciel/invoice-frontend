@@ -47,7 +47,7 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const baseClasses = `w-full px-5 py-5 rounded border transition `;
+  const baseClasses = `w-full px-5 py-3 rounded border transition `;
 
   const variantClasses =
     variant === 'primary'
