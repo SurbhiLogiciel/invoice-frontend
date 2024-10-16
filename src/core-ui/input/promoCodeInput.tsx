@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import CodeCheck from '../../svg/codeCheck';
 import Cancel from '../../svg/cancel';
+import { PromoCodeInputProps } from './types';
 
-const PromoCodeInput: React.FC = () => {
+const PromoCodeInput: React.FC<PromoCodeInputProps> = ({ size = 'lg' }) => {
   const [promoCode, setPromoCode] = useState('');
   const [codeApplied, setCodeApplied] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -34,6 +35,7 @@ const PromoCodeInput: React.FC = () => {
 
   const disabledClasses = codeApplied ? 'cursor-not-allowed' : 'bg-secondary';
 
+  const sizeClasses = size === 'sm' ? 'h-sm' : size === 'lg' ? 'h-lg' : 'h-md';
   return (
     <div className="relative">
       <label
@@ -51,11 +53,11 @@ const PromoCodeInput: React.FC = () => {
           onChange={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`${baseClasses} ${disabledClasses} font-roboto font-normal text-sm text-white`}
+          className={`${baseClasses} ${disabledClasses} font-roboto font-normal text-sm text-white ${sizeClasses}`}
         />
       ) : (
         <div
-          className={`w-full px-5 py-5 rounded border transition focus:ring-2 border-lightGray bg-secondary font-roboto font-normal text-sm text-white flex items-center`}
+          className={`w-full px-5 py-5 rounded border transition focus:ring-2 border-lightGray bg-secondary font-roboto font-normal text-sm text-white flex items-center ${sizeClasses}`}
         >
           <span className="font-roboto font-normal text-sm text-white">
             {promoCode}

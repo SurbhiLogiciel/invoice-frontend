@@ -10,9 +10,14 @@ export interface InputProps {
   disabled?: boolean;
   variant?: 'primary' | 'secondary';
   hasIcon?: boolean;
+  size?: 'lg' | 'md' | 'sm';
 }
 
 export interface OtpInputProps {
   length?: number;
   onChange: (otp: string) => void;
+}
+
+export interface PromoCodeInputProps {
+  size?: 'sm' | 'md' | 'lg';
 }
