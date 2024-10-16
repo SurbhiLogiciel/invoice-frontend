@@ -10,7 +10,6 @@ export interface InputProps {
   disabled?: boolean;
   variant?: 'primary' | 'secondary';
   hasIcon?: boolean;
-  size?: 'lg' | 'md' | 'sm';
 }
 
 export interface OtpInputProps {

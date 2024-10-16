@@ -12,12 +12,12 @@ const DateInput: React.FC = () => {
       <label className="block mb-2 text-left font-roboto font-normal text-xs text-gray">
         Issue Date
       </label>
-      <div className="relative flex items-center bg-secondary text-white border border-lightGray rounded px-5 py-3">
+      <div className="relative flex items-center bg-purple text-white border border-purple rounded px-5 py-3">
         <DatePicker
           selected={selectedDate}
           onChange={(date: Date | null) => setSelectedDate(date)}
           dateFormat="dd MMM, yyyy"
-          className="w-full bg-transparent outline-none text-white"
+          className="w-full bg-purple outline-none text-white text-sm"
           ref={datepickerRef}
         />
         <span
