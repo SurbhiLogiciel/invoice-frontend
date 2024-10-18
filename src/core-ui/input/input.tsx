@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputProps } from './types';
-import PasswordEyeIcon from '../../svg/passwordEye';
+import PasswordEyeIcon from '../../app/svg/passwordEye';
 
 export const Input: React.FC<InputProps> = ({
   type = 'text',
@@ -48,7 +48,7 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const baseClasses = `w-full px-5 py-5 rounded border transition `;
+  const baseClasses = `w-full px-5 py-1 rounded border transition `;
 
   const sizeClasses = {
     small: 'py-2 px-2 text-xs h-[30px]',

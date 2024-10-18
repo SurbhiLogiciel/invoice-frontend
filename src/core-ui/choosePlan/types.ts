@@ -8,7 +8,8 @@ export interface SelectableContainerProps {
   planPrice: string,
   outline?: boolean;
   color?: SelectableContainerColor;
-  size?: SelectableContainerSize;
   disabled?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  containerClass?: string;
+  onClick?: () => void;
 }

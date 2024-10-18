@@ -1,5 +1,5 @@
 import React from 'react';
-import Invoice from '../../svg/invoice';
+import Invoice from '../../app/svg/invoice';
 
 const InvoiceComponent: React.FC = () => {
   return (
