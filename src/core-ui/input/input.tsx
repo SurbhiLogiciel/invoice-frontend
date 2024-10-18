@@ -48,15 +48,13 @@ export const Input: React.FC<InputProps> = ({
     }
   };
 
-  const baseClasses = `w-full px-5 py-3 rounded border transition `;
+  const baseClasses = `w-full px-5 py-1 rounded border transition `;
 
   const sizeClasses = {
     small: 'py-2 px-2 text-xs h-[30px]',
     medium: 'py-3 px-3 text-xs h-[40px]',
     large: 'py-5 px-5 text-sm h-[50px]',
   };
-
-
 
   const variantClasses =
     variant === 'primary'
