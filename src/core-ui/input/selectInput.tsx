@@ -9,6 +9,7 @@ const SelectInput: React.FC<InputProps> = ({
   label = '',
   variant = 'primary',
   size = 'large',
+  size = 'large',
 }) => {
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');

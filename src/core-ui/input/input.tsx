@@ -10,7 +10,7 @@ export const Input: React.FC<InputProps> = ({
   label = '',
   variant = 'primary',
   hasIcon = false,
-  size = 'lg',
+  size = 'large',
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +50,11 @@ export const Input: React.FC<InputProps> = ({
 
   const baseClasses = `w-full px-5 py-5 rounded border transition `;
 
-  const sizeClasses = size === 'sm' ? 'h-sm' : size === 'lg' ? 'h-lg' : 'h-md';
+  const sizeClasses = {
+    small: 'py-2 px-2 text-xs h-[30px]',
+    medium: 'py-3 px-3 text-xs h-[40px]',
+    large: 'py-5 px-5 text-sm h-[50px]',
+  };
 
   const variantClasses =
     variant === 'primary'
@@ -77,7 +81,7 @@ export const Input: React.FC<InputProps> = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         disabled={disabled}
-        className={`${baseClasses} ${variantClasses} ${sizeClasses} font-roboto font-normal text-sm`}
+        className={`${baseClasses} ${variantClasses} ${sizeClasses[size]} font-roboto font-normal text-sm`}
       />
       {hasIcon && type === 'password' && (
         <span

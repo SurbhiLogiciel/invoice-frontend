@@ -6,7 +6,8 @@ import React from 'react';
 import { Chips } from '../chips';
 
 export const DataContainer: React.FC<Container> = ({
-  size = 'medium',   color = 'purple',
+  size = 'medium', 
+  color = 'purple',   
   children,
 }) => {
   const handleEdit = () => {

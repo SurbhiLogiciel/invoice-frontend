@@ -19,5 +19,5 @@ export interface OtpInputProps {
 }
 
 export interface PromoCodeInputProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'small' | 'medium' | 'large';
 }

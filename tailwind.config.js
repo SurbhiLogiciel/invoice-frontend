@@ -20,11 +20,6 @@ module.exports = {
       fontWeight: {
         normal: '400',
       },
-      height: {
-        sm: '30px',
-        md: '40px',
-        lg: '50px',
-      },
     },
   },
   variants: {
