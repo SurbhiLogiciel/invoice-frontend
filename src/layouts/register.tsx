@@ -10,7 +10,7 @@ export const RegisterEmail: React.FC = () => {
   return (
     <div className="flex bg-secondary bg-contain bg-no-repeat h-screen bg-right bg-[url('./assets/2.png')]">
       <div className="flex mx-auto py-8 justify-center max-h-full  w-full max-w-[1200px] gap-20">
-        <div className="mx-auto max-h-full w-full p-4">
+        <div className="mx-auto max-h-full w-full max-w-[390px]">
           <img
             src={image3}
             alt="logo"
