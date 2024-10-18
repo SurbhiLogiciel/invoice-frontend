@@ -7,7 +7,7 @@ import './index.css';
 // import { VerifyOTP } from './layouts/verifyOTP';
 // import { Login } from './layouts/login';
 // import { RegisterEmail } from './layouts/register';
-import { UserProfile } from './layouts/Profile/userProfile';
+import { UserProfile } from './app/Profile/userProfile';
 
 const App: React.FC = () => {
   return (

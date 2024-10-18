@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputProps } from './types';
-import PasswordEyeIcon from '../../svg/passwordEye';
+import PasswordEyeIcon from '../../app/svg/passwordEye';
 
 export const Input: React.FC<InputProps> = ({
   type = 'text',

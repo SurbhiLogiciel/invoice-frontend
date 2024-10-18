@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
-import image1 from '../assets/1.png';
 import Layout from '../layouts';
 
 export const UserProfile: React.FC = () => {
   return (
     <Layout>
-      <div className=" ">
+      <div className="">
         <div className="font-bold mt-8 text-4xl text-white">
           Set Up Your Profile
         </div>
@@ -20,7 +19,7 @@ export const UserProfile: React.FC = () => {
             label="Phone Number"
             type="tel"
             size="large"
-            placeholder="+91 00000-00000"
+            placeholder="91 00000-00000"
           />
         </div>
         <div className="mt-[38px] text-white w-full">
@@ -46,6 +45,7 @@ export const UserProfile: React.FC = () => {
             color="primary"
             fullWidth="true"
             children="Continue"
+            type="submit"
           />
         </div>
         <div className="mt-2.5 w-full">

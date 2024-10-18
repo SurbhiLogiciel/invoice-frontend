@@ -9,6 +9,7 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   children,
   onClick,
+  type,
 }) => {
   const sizeClasses = {
     small: 'py-[11px] px-4 text-sm',
