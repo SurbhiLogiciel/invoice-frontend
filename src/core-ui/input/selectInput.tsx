@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputProps } from './types';
-import InputDropdown from '../../svg/selectDropdown';
+import InputDropdown from '../../app/svg/selectDropdown';
 
 const SelectInput: React.FC<InputProps> = ({
   placeholder = '',

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import CalendarIcon from '../../svg/calendar';
+import CalendarIcon from '../../app/svg/calendar';
 
 const DateInput: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import CodeCheck from '../../svg/codeCheck';
-import Cancel from '../../svg/cancel';
+import CodeCheck from '../../app/svg/codeCheck';
+import Cancel from '../../app/svg/cancel';
 import { PromoCodeInputProps } from './types';
 
 const PromoCodeInput: React.FC<PromoCodeInputProps> = ({ size = 'large' }) => {
