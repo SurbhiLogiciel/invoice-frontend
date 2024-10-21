@@ -12,27 +12,15 @@ const SelectInput: React.FC<InputProps> = ({
 }) => {
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleOptionClick = (option: string) => {
-    setInputValue(option);
-    setDropdownOpen(false);
-    if (onChange) {
-      onChange({
-        target: { value: option },
-      } as React.ChangeEvent<HTMLInputElement>);
-    }
-  };
-
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-
-  const baseClasses = `w-full px-5 py-5 rounded border transition`;
+  const baseClasses = `w-full rounded border transition `;
 
   const sizeClasses = {
-    small: 'py-2 px-2 text-xs h-[30px]',
-    medium: 'py-3 px-3 text-xs h-[40px]',
-    large: 'py-5 px-5 text-sm h-[50px]',
+    small: 'px-5 text-xs h-[30px]',
+    medium: 'px-5 text-sm h-[40px]',
+    large: 'px-5 py-3 text-sm h-[50px]',
   };
+
   const variantClasses =
     variant === 'primary'
       ? `bg-secondary text-white border ${
@@ -40,9 +28,15 @@ const SelectInput: React.FC<InputProps> = ({
         }`
       : 'bg-purple text-white border border-purple';
 
-  const placeholderClasses = 'text-gray text-sm';
-  const dropdownClasses = `absolute z-10 mt-2 w-full bg-lightGray text-white rounded-md shadow-lg left-0`;
-  const optionClasses = `px-4 py-2 hover:bg-secondary hover:text-white cursor-pointer transition-colors text-left text-white font-normal text-sm`;
+  const handleFocus = () => setFocused(true);
+  const handleBlur = () => setFocused(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setInputValue(e.target.value);
+    if (onChange) {
+      onChange(e);
+    }
+  };
 
   return (
     <div className="relative">
@@ -55,40 +49,32 @@ const SelectInput: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <div className={`relative `}>
-        <div
-          className={`${baseClasses} ${variantClasses} ${sizeClasses[size]} flex items-center justify-between cursor-pointer`}
-          onClick={toggleDropdown}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+      <div className="relative">
+        <select
+          className={`${baseClasses} ${variantClasses} ${
+            sizeClasses[size]
+          } appearance-none flex items-center cursor-pointer focus:ring-2 focus:ring-input-border-focus ${
+            inputValue === '' ? 'text-gray' : 'text-white'
+          } border border-lightGray`}
+          value={inputValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          defaultValue=""
         >
-          <span
-            className={`${
-              inputValue
-                ? 'font-roboto font-normal text-white text-sm'
-                : placeholderClasses
-            }`}
-          >
-            {inputValue || placeholder}
-          </span>
-          <span className="pointer-events-none">
-            <InputDropdown />
-          </span>
-        </div>
+          <option value="" disabled hidden className="text-gray">
+            {placeholder}
+          </option>
 
-        {isDropdownOpen && (
-          <div className={dropdownClasses}>
-            {options.map((option, index) => (
-              <div
-                key={index}
-                className={optionClasses}
-                onClick={() => handleOptionClick(option)}
-              >
-                {option}
-              </div>
-            ))}
-          </div>
-        )}
+          {options.map((option, index) => (
+            <option key={index} value={option} className="text-white">
+              {option}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <InputDropdown />
+        </span>
       </div>
     </div>
   );
