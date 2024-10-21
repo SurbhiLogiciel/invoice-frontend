@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../../core-ui/button';
 import OtpInput from '../../core-ui/input/otpInput';
 import Layout from '../layouts';
+import { Link } from 'react-router-dom';
 
 export const VerifyOTP: React.FC = () => {
   return (
@@ -18,12 +19,14 @@ export const VerifyOTP: React.FC = () => {
         <OtpInput onChange={() => alert('dfhdhf')} length={6} />
       </div>
       <div className="mt-[35px]">
-        <Button
-          size="large"
-          color="primary"
-          fullWidth="true"
-          children="Verify Email"
-        />
+        <Link to="/registerProfile">
+          <Button
+            size="large"
+            color="primary"
+            fullWidth="true"
+            children="Verify Email"
+          />
+        </Link>
       </div>
       <div className="mt-2.5">
         <Button

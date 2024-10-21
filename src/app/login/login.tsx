@@ -3,6 +3,7 @@ import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import IIcon from '../svg/i-icon';
 import Layout from '../layouts';
+import { Link } from 'react-router-dom';
 
 export const Login: React.FC = () => {
   return (
@@ -34,9 +35,11 @@ export const Login: React.FC = () => {
       <hr className="mt-10 mb-8 text-white/10"></hr>
       <div className="text-gray text-[18px]">Don't have an account?</div>
       <div className="mt-[30px]">
-        <Button size="large" outline="primary" fullWidth="true">
-          Registration
-        </Button>
+        <Link to="/registerEmail">
+          <Button size="large" outline="primary" fullWidth="true">
+            Registration
+          </Button>
+        </Link>
       </div>
       <hr className="mt-[30px] text-white/10"></hr>
       <div className="mt-[30px] text-white text-[18px]">

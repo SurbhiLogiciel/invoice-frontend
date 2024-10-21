@@ -1,22 +1,24 @@
 import React from 'react';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
 import './App.css';
 
+import AppRoutes from './routes/userRoutes';
+
+// Adjusted import path if needed
 import './index.css';
-// import { Login } from './layouts/login';
-// import { RegisterEmail } from './layouts/register';
-// import { VerifyOTP } from './layouts/verifyOTP';
-// import { Login } from './layouts/login';
-// import { RegisterEmail } from './layouts/register';
-import { UserProfile } from './app/Profile/userProfile';
 
 const App: React.FC = () => {
   return (
-    <>
-      {/* <VerifyOTP />
-      <Login />
-      <RegisterEmail /> */}
-      <UserProfile />
-    </>
+    <Router>
+      <Link to="/"></Link>
+      <Link to="/registerEmail"></Link>
+      <Link to="/verifyOtp"></Link>
+      <Link to="/registerProfile"></Link>
+
+      <div>
+        <AppRoutes />
+      </div>
+    </Router>
   );
 };
 
