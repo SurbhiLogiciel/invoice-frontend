@@ -31,7 +31,6 @@ export const VerifyOTP: React.FC = () => {
       <div className="mt-2.5">
         <Button
           size="large"
-          // color="secondary"
           outline="primary"
           fullWidth="true"
           children="Back"

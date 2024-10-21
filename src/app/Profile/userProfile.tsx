@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import Layout from '../layouts';
+import { Link } from 'react-router-dom';
 
 export const UserProfile: React.FC = () => {
   return (
@@ -40,13 +41,15 @@ export const UserProfile: React.FC = () => {
         </div>
 
         <div className="mt-[38px] w-full">
-          <Button
-            size="large"
-            color="primary"
-            fullWidth="true"
-            children="Continue"
-            type="submit"
-          />
+          <Link to="/registerCompanyProfile">
+            <Button
+              size="large"
+              color="primary"
+              fullWidth="true"
+              children="Continue"
+              type="submit"
+            />
+          </Link>
         </div>
         <div className="mt-2.5 w-full">
           <Button

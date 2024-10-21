@@ -3,6 +3,7 @@ import { Login } from '../app/login/login';
 import { RegisterEmail } from '../app/Registration/register';
 import { VerifyOTP } from '../app/Registration/verifyOTP';
 import { UserProfile } from '../app/Profile/userProfile';
+import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfile';
 
 const AppRoutes = () => {
   return (
@@ -11,6 +12,10 @@ const AppRoutes = () => {
       <Route path="/registerEmail" element={<RegisterEmail />} />
       <Route path="/verifyOtp" element={<VerifyOTP />} />
       <Route path="/registerProfile" element={<UserProfile />} />
+      <Route
+        path="/registerCompanyProfile"
+        element={<RegisterCompanyProfile />}
+      />
     </Routes>
   );
 };

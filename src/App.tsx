@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 
 import AppRoutes from './routes/userRoutes';
@@ -14,7 +14,7 @@ const App: React.FC = () => {
       <Link to="/registerEmail"></Link>
       <Link to="/verifyOtp"></Link>
       <Link to="/registerProfile"></Link>
-
+      <Link to="/registerCompanyProfile"></Link>
       <div>
         <AppRoutes />
       </div>

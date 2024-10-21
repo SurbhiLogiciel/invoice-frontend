@@ -26,12 +26,12 @@ const SelectInput: React.FC<InputProps> = ({
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
-  const baseClasses = `w-full px-5 py-5 rounded border transition`;
+  const baseClasses = `w-full rounded border transition`;
 
   const sizeClasses = {
-    small: 'py-2 px-2 text-xs h-[30px]',
-    medium: 'py-3 px-3 text-xs h-[40px]',
-    large: 'py-5 px-5 text-sm h-[50px]',
+    small: 'py-2 px-2 text-xs w-full h-[30px]',
+    medium: 'py-3 px-3 text-md h-[50px]',
+    large: 'py-3 px-3 text-sm h-[50px]',
   };
   const variantClasses =
     variant === 'primary'
