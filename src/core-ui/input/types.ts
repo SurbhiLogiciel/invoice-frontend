@@ -11,6 +11,11 @@ export interface InputProps {
   variant?: 'primary' | 'secondary';
   hasIcon?: boolean;
   size?: 'large' | 'medium' | 'small';
+  passwordValue?: string;
+  isConfirmPassword?: boolean;
+  error?: string;
+  required?: boolean;
+  validateOnSubmit?: boolean;
 }
 
 export interface OtpInputProps {
