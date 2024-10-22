@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InputProps } from './types';
 import InputDropdown from '../../app/svg/selectDropdown';
 
@@ -9,10 +9,14 @@ const SelectInput: React.FC<InputProps> = ({
   label = '',
   variant = 'primary',
   size = 'large',
+  required = false,
+  validateOnSubmit = false,
+  value = '',
 }) => {
   const [focused, setFocused] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(value);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleOptionClick = (option: string) => {
     setInputValue(option);
@@ -26,6 +30,14 @@ const SelectInput: React.FC<InputProps> = ({
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
+  useEffect(() => {
+    if (validateOnSubmit && required && !inputValue) {
+      setHasError(true);
+    } else {
+      setHasError(false);
+    }
+  }, [validateOnSubmit, required, inputValue]);
+
   const baseClasses = `w-full rounded border transition`;
 
   const sizeClasses = {
@@ -33,6 +45,7 @@ const SelectInput: React.FC<InputProps> = ({
     medium: 'py-3 px-3 text-md h-[50px]',
     large: 'py-3 px-3 text-sm h-[50px]',
   };
+
   const variantClasses =
     variant === 'primary'
       ? `bg-secondary text-white border ${
@@ -55,7 +68,7 @@ const SelectInput: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <div className={`relative `}>
+      <div className="relative">
         <div
           className={`${baseClasses} ${variantClasses} ${sizeClasses[size]} flex items-center justify-between cursor-pointer`}
           onClick={toggleDropdown}
@@ -90,6 +103,10 @@ const SelectInput: React.FC<InputProps> = ({
           </div>
         )}
       </div>
+
+      {hasError && (
+        <p className="mt-1 text-sm text-red-500">{label} is required.</p>
+      )}
     </div>
   );
 };
