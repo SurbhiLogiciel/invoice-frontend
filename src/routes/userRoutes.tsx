@@ -4,6 +4,7 @@ import { RegisterEmail } from '../app/Registration/register';
 import { VerifyOTP } from '../app/Registration/verifyOTP';
 import { UserProfile } from '../app/Profile/userProfile';
 import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfile';
+import { ChoosePlan } from '../app/Plan/choosePlan';
 
 const AppRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
         path="/registerCompanyProfile"
         element={<RegisterCompanyProfile />}
       />
+      <Route path="/choosePlan" element={<ChoosePlan />} />
     </Routes>
   );
 };

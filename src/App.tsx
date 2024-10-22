@@ -15,6 +15,8 @@ const App: React.FC = () => {
       <Link to="/verifyOtp"></Link>
       <Link to="/registerProfile"></Link>
       <Link to="/registerCompanyProfile"></Link>
+      <Link to="/choosePlan"></Link>
+
       <div>
         <AppRoutes />
       </div>
