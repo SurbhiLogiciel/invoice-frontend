@@ -1,30 +1,38 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate   } from 'react-router-dom';
 
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import Layout from '../layouts';
-import { useNavigate } from 'react-router-dom';
 
 export const RegisterEmail: React.FC = () => {
+
   const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleRegisterEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://127.0.0.1:3001/api/register/userEmail',
+        `http://127.0.0.1:3001/api/register/userEmail`,
         { email }
       );
 
       if (response.status === 201) {
-        alert('Registration successful!');
-        navigate('/verifyOtp');
+        const userId = response.data.userId;
+        console.log('userId:', userId); 
+        navigate(`/verifyOtp/${userId}`);
+      } else {
+        alert('Unexpected response. Please try again.');
       }
-    } catch (error) {
-      console.error('Error during registration:', error); // Log the error for debugging
-      alert('Registration failed. Please try again.');
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        setErrorMessage('Email already exists');
+      } else {
+        setErrorMessage('Registration failed. Please try again.');
+      }
     }
   };
 
@@ -40,9 +48,10 @@ export const RegisterEmail: React.FC = () => {
         <div className="mt-10 text-white">
           <Input
             label="E-mail"
+            placeholder="john@logiciel.io"
             size="large"
             onChange={(e) => setEmail(e.target.value)}
-            value={email} // Controlled input
+            value={email}
           />
         </div>
         <div className="mt-[35px]">

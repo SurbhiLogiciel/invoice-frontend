@@ -11,8 +11,8 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/registerEmail" element={<RegisterEmail />} />
-      <Route path="/verifyOtp" element={<VerifyOTP />} />
-      <Route path="/registerProfile" element={<UserProfile />} />
+      <Route path="/verifyOtp/:userId" element={<VerifyOTP />} />
+      <Route path="/registerProfile/:userId" element={<UserProfile />} />
       <Route
         path="/registerCompanyProfile"
         element={<RegisterCompanyProfile />}
