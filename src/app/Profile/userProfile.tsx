@@ -3,11 +3,10 @@ import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import axios from 'axios';
 import Layout from '../layouts';
-import { useNavigate,useParams } from 'react-router-dom';
-import { UserProfileProps } from './userProfileTypes';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const UserProfile: React.FC = () => {
-  const userId = useParams<{userId:string}>();
+  const { userId } = useParams<{ userId: string }>();
   const [companyId, setCompanyId] = useState('');
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,39 +15,43 @@ export const UserProfile: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-const handleRegisterUserProfile = async(e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleRegisterUserProfile = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
 
-  if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match');
       return;
-  }
+    }
+    setErrorMessage('');
 
-  try{
-    const response = await axios.post(
-      `http://127.0.0.1:3001/api/register/userProfile/${userId}`,
-      {
-        companyId,
-        fullName,
-        phoneNumber,
-        password,
-      });
-       if (response.status === 200) {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:3001/api/register/userProfile/${userId}`,
+        {
+          companyId,
+          fullName,
+          phoneNumber,
+          password,
+          confirmPassword,
+        }
+      );
 
+      if (response.status === 200) {
         navigate('/registerCompanyProfile');
       } else {
         alert('Unexpected response. Please try again.');
       }
-    
-    }catch(error: any) {
+    } catch (error: any) {
       setErrorMessage('Error submitting the profile. Please try again.');
       console.error('Profile submission error:', error);
-}
-};
+    }
+  };
 
   return (
     <Layout>
-      <form onSubmit={handleRegisterUserProfile} method='post'>
+      <form onSubmit={handleRegisterUserProfile} method="post">
         <div className="">
           <div className="font-bold mt-8 text-4xl text-white">
             Set Up Your Profile
@@ -82,6 +85,7 @@ const handleRegisterUserProfile = async(e: React.FormEvent<HTMLFormElement>) => 
               placeholder="+234 000 000 0000"
               onChange={(e) => setPhoneNumber(e.target.value)}
               value={phoneNumber}
+              required
             />
           </div>
           <div className="mt-[38px] text-white w-full">
@@ -92,6 +96,7 @@ const handleRegisterUserProfile = async(e: React.FormEvent<HTMLFormElement>) => 
               placeholder="***********"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              required
             />
           </div>
           <div className="mt-[38px] text-white w-full">
@@ -100,9 +105,13 @@ const handleRegisterUserProfile = async(e: React.FormEvent<HTMLFormElement>) => 
               type="password"
               size="large"
               placeholder="***********"
-              isConfirmPassword={true}
+              onChange={(e) => setConfirmPassword(e.target.value)} // Update confirmPassword state
+              value={confirmPassword} 
             />
           </div>
+          {errorMessage && (
+            <div className="mt-2 text-red-500">{errorMessage}</div>
+          )}
           <div className="mt-[38px] w-full">
             <Button
               size="large"

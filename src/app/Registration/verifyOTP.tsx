@@ -11,26 +11,59 @@ export const VerifyOTP: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const HandleOtpVerification = async(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try{
-      const response = await axios.post(
-        `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
-        { otp }
-      );
-      if(response.status === 200) {
-        navigate(`/registerProfile/${userId}`);
-      }else{
-        alert('Unexpected response. Please try again.');
-      }
-    }catch(error: any) {
-  if (error.response && error.response.status === 401) {
-    setErrorMessage('Email already exists');
-  } else {
-    setErrorMessage('Registration failed. Please try again.');
-  }
+
+  const HandleOtpVerification = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log('UserId:', userId); // Log the userId
+  console.log('Entered OTP:', otp); // Log the entered OTP
+  try {
+   const response = await axios.post(
+     `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
+     { otp: String(otp) }
+   );
+    if (response.status === 200) {
+      const verifiedUserId = response.data.userId;
+      console.log('User verified, navigating to:', `/registerUserProfile/${verifiedUserId}`);
+      navigate(`/registerUserProfile/${verifiedUserId}`);
+    } else {
+      alert('Unexpected response. Please try again.');
     }
+  } catch (error: any) {
+    //  console.error('Error during OTP verification:', error); // Log error details
+     if (error.response) {
+       console.error('Response data:', error.response.data); // Log the response data
+       console.error('Response status:', error.response.status); // Log the response status
+       if (error.response.status === 401) {
+         setErrorMessage('Invalid OTP');
+       } else {
+         setErrorMessage('Registration failed. Please try again.');
+       }
+     } else {
+       setErrorMessage('Network error. Please try again.');
+     }
   }
+};
+
+  // const HandleOtpVerification = async(e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   try{
+  //     const response = await axios.post(
+  //       `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
+  //       { otp }
+  //     );
+  //     if(response.status === 200) {
+  //       const userId = response.data.userId;
+  //       navigate(`/registerProfile/${userId}`);
+  //     }else{
+  //       alert('Unexpected response. Please try again.');
+  //     }
+  //   }catch(error: any) {
+  // if (error.response && error.response.status === 401) {
+  //   setErrorMessage('Email already exists');
+  // } else {
+  //   setErrorMessage('Registration failed. Please try again.');
+  // }
+  //   }
 
   return (
     <Layout>
