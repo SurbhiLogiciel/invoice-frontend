@@ -13,6 +13,7 @@ export const UserProfile: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleRegisterUserProfile = async (
@@ -105,8 +106,8 @@ export const UserProfile: React.FC = () => {
               type="password"
               size="large"
               placeholder="***********"
-              onChange={(e) => setConfirmPassword(e.target.value)} // Update confirmPassword state
-              value={confirmPassword} 
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
             />
           </div>
           {errorMessage && (
@@ -117,9 +118,11 @@ export const UserProfile: React.FC = () => {
               size="large"
               color="primary"
               fullWidth="true"
-              children="Continue"
               type="submit"
-            />
+              disabled={isLoading}
+            >Continue
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </Button>
           </div>
           <div className="mt-2.5 w-full">
             <Button

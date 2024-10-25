@@ -13,7 +13,6 @@ const AppRoutes = () => {
       <Route path="/registerEmail" element={<RegisterEmail />} />
       <Route path="/verifyOtp/:userId" element={<VerifyOTP />} />
       <Route path="/registerUserProfile/:userId" element={<UserProfile />} />
-
       <Route
         path="/registerCompanyProfile"
         element={<RegisterCompanyProfile />}
