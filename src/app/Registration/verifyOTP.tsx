@@ -2,45 +2,47 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import OtpInput from '../../core-ui/input/otpInput';
 import axios from 'axios';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const VerifyOTP: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
-  const [otp, setOtp ] = useState<number | string>('');
+  const [otp, setOtp] = useState<number | string>('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-
   const HandleOtpVerification = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  console.log('UserId:', userId); // Log the userId
-  console.log('Entered OTP:', otp); // Log the entered OTP
-  try {
-   const response = await axios.post(
-     `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
-     { otp: String(otp) }
-   );
-    if (response.status === 200) {
-      const verifiedUserId = response.data.userId;
-      console.log('User verified, navigating to:', `/registerUserProfile/${verifiedUserId}`);
-      navigate(`/registerUserProfile/${verifiedUserId}`);
-    } else {
-      alert('Unexpected response. Please try again.');
+    e.preventDefault();
+    console.log('UserId:', userId); // Log the userId
+    console.log('Entered OTP:', otp); // Log the entered OTP
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
+        { otp: String(otp) }
+      );
+      if (response.status === 200) {
+        const verifiedUserId = response.data.userId;
+        console.log(
+          'User verified, navigating to:',
+          `/registerCompanyProfile/${verifiedUserId}`
+        );
+        navigate(`/registerCompanyProfile/${verifiedUserId}`);
+      } else {
+        alert('Unexpected response. Please try again.');
+      }
+    } catch (error: any) {
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        if (error.response.status === 401) {
+          setErrorMessage('Invalid OTP');
+        } else {
+          setErrorMessage('Registration failed. Please try again.');
+        }
+      } else {
+        setErrorMessage('Network error. Please try again.');
+      }
     }
-  } catch (error: any) {
-     if (error.response) {
-       console.error('Response data:', error.response.data); 
-       console.error('Response status:', error.response.status); 
-       if (error.response.status === 401) {
-         setErrorMessage('Invalid OTP');
-       } else {
-         setErrorMessage('Registration failed. Please try again.');
-       }
-     } else {
-       setErrorMessage('Network error. Please try again.');
-     }
-  }
-};
+  };
 
   return (
     <div>
