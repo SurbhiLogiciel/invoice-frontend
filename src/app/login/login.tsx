@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import IIcon from '../svg/i-icon';
-import Layout from '../layouts';
 import { Link } from 'react-router-dom';
 
 export const Login: React.FC = () => {
@@ -29,7 +28,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <div>
       <div className="flex font-bold mt-8 text-3xl text-white">Welcome</div>
       <div className="flex text-gray text-custom text-lg">
         We are glad to see you
@@ -100,6 +99,6 @@ export const Login: React.FC = () => {
         <IIcon />
         &nbsp; support@invoice.com
       </div>
-    </Layout>
+    </div>
   );
 };

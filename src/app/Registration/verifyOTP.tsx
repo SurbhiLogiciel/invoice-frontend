@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import OtpInput from '../../core-ui/input/otpInput';
-import Layout from '../layouts';
 import axios from 'axios';
 import { useNavigate,useParams } from 'react-router-dom';
 
@@ -29,10 +28,9 @@ export const VerifyOTP: React.FC = () => {
       alert('Unexpected response. Please try again.');
     }
   } catch (error: any) {
-    //  console.error('Error during OTP verification:', error); // Log error details
      if (error.response) {
-       console.error('Response data:', error.response.data); // Log the response data
-       console.error('Response status:', error.response.status); // Log the response status
+       console.error('Response data:', error.response.data); 
+       console.error('Response status:', error.response.status); 
        if (error.response.status === 401) {
          setErrorMessage('Invalid OTP');
        } else {
@@ -44,29 +42,8 @@ export const VerifyOTP: React.FC = () => {
   }
 };
 
-  // const HandleOtpVerification = async(e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   try{
-  //     const response = await axios.post(
-  //       `http://127.0.0.1:3001/api/register/verifyOtp/${userId}`,
-  //       { otp }
-  //     );
-  //     if(response.status === 200) {
-  //       const userId = response.data.userId;
-  //       navigate(`/registerProfile/${userId}`);
-  //     }else{
-  //       alert('Unexpected response. Please try again.');
-  //     }
-  //   }catch(error: any) {
-  // if (error.response && error.response.status === 401) {
-  //   setErrorMessage('Email already exists');
-  // } else {
-  //   setErrorMessage('Registration failed. Please try again.');
-  // }
-  //   }
-
   return (
-    <Layout>
+    <div>
       <form onSubmit={HandleOtpVerification} method="post">
         <div className="flex font-bold mt-8 text-3xl text-white text-center">
           Verify OTP
@@ -99,6 +76,6 @@ export const VerifyOTP: React.FC = () => {
           />
         </div>
       </form>
-    </Layout>
+    </div>
   );
 };

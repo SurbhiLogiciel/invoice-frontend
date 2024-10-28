@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import axios from 'axios';
-import Layout from '../layouts';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const UserProfile: React.FC = () => {
@@ -50,7 +49,7 @@ export const UserProfile: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <div>
       <form onSubmit={handleRegisterUserProfile} method="post">
         <div className="">
           <div className="font-bold mt-8 text-4xl text-white">
@@ -58,16 +57,6 @@ export const UserProfile: React.FC = () => {
           </div>
           <div className="text-gray text-lg">Let's Meet</div>
           <div className="mt-10 text-white w-full">
-            <Input
-              label="Company Id"
-              size="large"
-              placeholder="123455668980908976867"
-              onChange={(e) => setCompanyId(e.target.value)}
-              value={companyId}
-              required
-            />
-          </div>
-          <div className="mt-[38px] text-white w-full">
             <Input
               label="Full Name"
               size="large"
@@ -131,6 +120,6 @@ export const UserProfile: React.FC = () => {
           </div>
         </div>
       </form>
-    </Layout>
+      </div>
   );
 };

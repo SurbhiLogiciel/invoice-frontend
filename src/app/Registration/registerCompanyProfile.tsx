@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
-import Layout from '../layouts';
 import SelectInput from '../../core-ui/input/selectInput';
 
 export const RegisterCompanyProfile: React.FC = () => {
@@ -32,7 +31,7 @@ export const RegisterCompanyProfile: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <div>
       <form onSubmit={handleSubmit}>
         <div className="">
           <div className="font-bold mt-8 text-3xl text-white">
@@ -123,6 +122,6 @@ export const RegisterCompanyProfile: React.FC = () => {
           </div>
         </div>
       </form>
-    </Layout>
-  );
+  </div>
+);
 };

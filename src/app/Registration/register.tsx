@@ -4,7 +4,6 @@ import { useNavigate   } from 'react-router-dom';
 
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
-import Layout from '../layouts';
 
 export const RegisterEmail: React.FC = () => {
 
@@ -37,7 +36,7 @@ export const RegisterEmail: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <div>
       <form onSubmit={handleRegisterEmail} method="post">
         <div className="flex font-bold mt-10 text-[36px] text-white text-center">
           Register as Company
@@ -70,6 +69,6 @@ export const RegisterEmail: React.FC = () => {
           </Button>
         </div>
       </form>
-    </Layout>
+    </div>
   );
 };

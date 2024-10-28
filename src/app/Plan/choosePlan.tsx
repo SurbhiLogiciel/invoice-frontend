@@ -1,12 +1,10 @@
 import React from 'react';
 import { Button } from '../../core-ui/button';
-import Layout from '../layouts';
 import PromoCodeInput from '../../core-ui/input/promoCodeInput';
 import SelectableContainer from '../../core-ui/choosePlan';
 
 export const ChoosePlan: React.FC = () => {
   return (
-    <Layout>
       <div className="">
         <div className="font-bold mt-8 text-4xl text-white">Choose Plan</div>
         <div className="text-gray text-lg">Select a Plan</div>
@@ -75,6 +73,5 @@ export const ChoosePlan: React.FC = () => {
           />
         </div>
       </div>
-    </Layout>
   );
 };
