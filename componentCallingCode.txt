@@ -1,0 +1,9 @@
+for Buttons:-
+
+   <Button size="medium" color='primary' children="newInvoice" />
+   <Button size='medium' color='secondary'  fullWidth='true' children="Registration" />
+   <Button size='medium' color='primary' fullWidth='true'  onClick={() => alert("Button Clicked")} children="Sign-In" />
+    <Button size='medium' color='secondary' children="Cancel" />
+    <Button size="small" color='primary' children="save" />
+    <Button size="medium" color='draft' children="save as draft" />
+
