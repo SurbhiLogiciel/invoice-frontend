@@ -10,6 +10,7 @@ import { isValidEmail } from '../../utils/validations';
 export const RegisterEmail: React.FC = () => {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterEmail = async (e: React.FormEvent<HTMLFormElement>) => {
