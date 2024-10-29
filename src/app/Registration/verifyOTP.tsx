@@ -21,12 +21,12 @@ export const VerifyOTP: React.FC = () => {
     }
 
     if (!userId) {
-      setErrorMessage('User ID is not defined.'); 
+      setErrorMessage('User ID is not defined.');
       return;
     }
 
     try {
-      const response = await verifyOtp(userId, otp); 
+      const response = await verifyOtp(userId, otp);
 
       if (response.status === 200) {
         const verifiedUserId = response.data.userId;
