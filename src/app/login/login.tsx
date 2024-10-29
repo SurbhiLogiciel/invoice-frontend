@@ -28,8 +28,8 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="flex font-bold mt-8 text-3xl text-white">Welcome</div>
+  <div>
+ <div className="flex font-bold mt-8 text-3xl text-white">Welcome</div>
       <div className="flex text-gray text-custom text-lg">
         We are glad to see you
       </div>
@@ -99,6 +99,6 @@ export const Login: React.FC = () => {
         <IIcon />
         &nbsp; support@invoice.com
       </div>
-    </div>
+  </div>
   );
 };

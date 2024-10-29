@@ -1,37 +1,37 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate   } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
+import { registerUserEmail } from '../../services/apiService';
+import { getErrorMessage } from '../../utils/getErrorMessages';
+import { isValidEmail } from '../../utils/validations';
 
 export const RegisterEmail: React.FC = () => {
-
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleRegisterEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!isValidEmail(email)) {
+      setErrorMessage('Please enter a valid email.');
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:3001/api/register/userEmail`,
-        { email }
-      );
+      const response = await registerUserEmail(email);
 
       if (response.status === 201) {
         const userId = response.data.userId;
-        console.log('userId:', userId); 
         navigate(`/verifyOtp/${userId}`);
       } else {
-        alert('Unexpected response. Please try again.');
+        setErrorMessage('Unexpected response. Please try again.');
       }
     } catch (error: any) {
-      if (error.response && error.response.status === 409) {
-        setErrorMessage('Email already exists');
-      } else {
-        setErrorMessage('Registration failed. Please try again.');
-      }
+      const errorMessage = getErrorMessage()(error.response?.status);
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -49,10 +49,17 @@ export const RegisterEmail: React.FC = () => {
             label="E-mail"
             placeholder="john@logiciel.io"
             size="large"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMessage(''); // Clear error message on input change
+            }}
             value={email}
           />
         </div>
+        {errorMessage && (
+          <div className="mt-2 text-[11px] text-red-500">{errorMessage}</div>
+        )}
+
         <div className="mt-[35px]">
           <Button type="submit" size="large" color="primary" fullWidth="true">
             Verify Email
@@ -64,6 +71,7 @@ export const RegisterEmail: React.FC = () => {
             color="primary"
             outline="primary"
             fullWidth="true"
+            onClick={() => navigate('/login')}
           >
             Sign In
           </Button>
