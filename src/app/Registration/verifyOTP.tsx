@@ -8,6 +8,7 @@ import { isValidOtp } from '../../utils/validations';
 export const VerifyOTP: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [otp, setOtp] = useState<string>('');
+
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
