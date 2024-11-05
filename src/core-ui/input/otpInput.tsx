@@ -89,7 +89,7 @@ const OtpInput: React.FC<OtpInputProps> = React.memo(
     );
 
     return (
-      <div className="flex justify-center space-x-2" onMouseUp={handleMouseUp}>
+      <div className="flex justify-center space-x-4" onMouseUp={handleMouseUp}>
         {[...Array(length)].map((_, index) => (
           <input
             key={index}

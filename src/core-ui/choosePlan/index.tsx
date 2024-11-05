@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TickIcon from '../../svg/tickIcon';
+import TickIcon from '../../app/svg/tickIcon';
 
 import {
   SelectableContainerProps,
@@ -50,9 +50,7 @@ const SelectableContainer: React.FC<SelectableContainerProps> = ({
         <div className="flex justify-between items-start w-full">
           <div className="flex flex-col">
             <h3 className="text-lg font-roboto font-bold mb-1">{heading}</h3>
-            <p className="text-base text-gray-500">
-              {description}
-            </p>
+            <p className="text-base text-gray-500">{description}</p>
           </div>
           <div className="text-[32px] font-bold self-center">{planPrice}</div>
           {isSelected && !disabled && (
