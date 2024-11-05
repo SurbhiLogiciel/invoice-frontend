@@ -2,54 +2,52 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import SelectInput from '../../core-ui/input/selectInput';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { registerCompanyProfile } from '../../services/apiService';
+import { useCompany } from '../context/CompanyContext';
 
 export const RegisterCompanyProfile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
-  const [validateOnSubmit, setValidateOnSubmit] = useState(false);
-  const [formData, setFormData] = useState({
-    companyName: '',
-    location: '',
-    city: '',
-    state: '',
-    zip: '',
-  });
+  const { setCompanyId } = useCompany();
+  const navigate = useNavigate();
+  const [companyName, setCompanyName] = useState('');
+  const [location, setLocation] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  if (!userId) {
-    setErrorMessage('User ID is missing. Unable to register company.');
-  }
-
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegisterCompanyProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setValidateOnSubmit(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!userId) {
+      setErrorMessage('User ID is required.');
+      return;
+    }
 
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:3001/api/register/company/${userId}`,
-        formData
+      const response = await registerCompanyProfile(
+        userId,
+        companyName,
+        location,
+        city,
+        state,
+        zip
       );
 
       if (response.status === 201) {
         setSuccessMessage('Company registered successfully!');
         setErrorMessage(null);
+        setCompanyId(response.data.company._id);
+        console.log('Company ID:', response.data.company._id);
+        navigate(`/registerUserProfile/${userId}`);
       } else {
         setErrorMessage('Unexpected response. Please try again.');
       }
     } catch (error: any) {
-      console.error('Error: here is your error', error);
       setErrorMessage(
         error.response?.data?.message ||
           'Registration failed. Please try again.'
@@ -59,7 +57,7 @@ export const RegisterCompanyProfile: React.FC = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleRegisterCompanyProfile}>
         <div>
           <div className="font-bold mt-8 text-3xl text-white">
             Set Up Company Profile
@@ -71,9 +69,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               label="Company Name"
               size="large"
               required
-              value={formData.companyName}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
             />
           </div>
 
@@ -83,9 +80,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               type="text"
               size="large"
               required
-              value={formData.location}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
 
@@ -95,9 +91,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               options={['Ludhiana', 'Amritsar']}
               placeholder="Select"
               required
-              value={formData.city}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
@@ -105,13 +100,12 @@ export const RegisterCompanyProfile: React.FC = () => {
             <div className="w-full h-[50px] pr-4">
               <SelectInput
                 label="State"
-                options={['opt-1', 'opt-2', 'opt-3']}
+                options={['Punjab', 'Haryana', 'Karnataka']}
                 size="medium"
                 placeholder="Select"
                 required
-                value={formData.state}
-                onChange={handleInputChange}
-                validateOnSubmit={validateOnSubmit}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
               />
             </div>
 
@@ -119,26 +113,32 @@ export const RegisterCompanyProfile: React.FC = () => {
               <SelectInput
                 label="Zip"
                 size="medium"
-                options={['opt-1', 'opt-2', 'opt-3']}
+                options={['14000', '16000', '18000']}
                 placeholder="Select"
                 required
-                value={formData.zip}
-                onChange={handleInputChange}
-                validateOnSubmit={validateOnSubmit}
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
               />
             </div>
           </div>
 
           <div className="mt-[33px] w-full">
-            <Button size="large" color="primary" fullWidth="true" type="submit">
-              Continue
-            </Button>
+            <Button
+              size="large"
+              color="primary"
+              fullWidth="true"
+              children="Continue"
+              type="submit"
+            />
           </div>
 
           <div className="mt-2.5 w-full">
-            <Button size="large" outline="primary" fullWidth="true">
-              Back
-            </Button>
+            <Button
+              size="large"
+              outline="primary"
+              fullWidth="true"
+              children="Back"
+            />
           </div>
 
           {/* Display success or error message */}

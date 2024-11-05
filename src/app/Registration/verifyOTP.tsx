@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import OtpInput from '../../core-ui/input/otpInput';
 import { useNavigate, useParams } from 'react-router-dom';
-import { verifyOtp } from '../../services/apiService'; // Updated import
+import { verifyOtp } from '../../services/apiService';
 import { isValidOtp } from '../../utils/validations';
 
 export const VerifyOTP: React.FC = () => {
@@ -30,7 +30,7 @@ export const VerifyOTP: React.FC = () => {
 
       if (response.status === 200) {
         const verifiedUserId = response.data.userId;
-        navigate(`/registerUserProfile/${verifiedUserId}`);
+        navigate(`/registerCompanyProfile/${verifiedUserId}`);
       } else {
         alert('Unexpected response. Please try again.');
       }

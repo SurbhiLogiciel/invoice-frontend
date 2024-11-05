@@ -6,11 +6,14 @@ import AppRoutes from './routes/appRoutes';
 
 // Adjusted import path if needed
 import './index.css';
+import { CompanyProvider } from './app/context/CompanyContext';
 
 const App: React.FC = () => {
   return (
     <Router>
-      <AppRoutes />
+      <CompanyProvider>
+        <AppRoutes />
+      </CompanyProvider>
     </Router>
   );
 };

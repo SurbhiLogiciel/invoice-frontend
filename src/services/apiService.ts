@@ -13,21 +13,47 @@ export const verifyOtp = async (userId: string, otp: number | string) => {
 
 export const registerUserProfile = async (
   userId: string,
+  companyId: string,
   fullName: string,
   phoneNumber: string,
   password: string,
   confirmPassword: string
 ) => {
-  if(!userId){
+  if (!userId) {
     throw new Error('userId is required');
   }
-  if(password !== confirmPassword){
-    throw new Error('Password do not match');
+
+  if (password !== confirmPassword) {
+    throw new Error('Passwords do not match');
   }
+
   return await apiClient.post(`/register/userProfile/${userId}`, {
+    companyId,
     fullName,
     phoneNumber,
     password,
+    confirmPassword,
+  });
+};
+
+export const registerCompanyProfile = async (
+  userId: string,
+  companyName: string,
+  location: string,
+  city: string,
+  state: string,
+  zip: string
+) => {
+  if (!userId) {
+    throw new Error('userId is required');
+  }
+  return await apiClient.post(`/register/companyProfile/${userId}`, {
+    id: userId,
+    companyName,
+    location,
+    city,
+    state,
+    zip,
   });
 };
 

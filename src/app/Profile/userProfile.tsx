@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { registerUserProfile } from '../../services/apiService';
+import { useCompany } from '../context/CompanyContext';
 
 export const UserProfile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
-  // const [companyId, setCompanyId] = useState('');
+  const { companyId } = useCompany();
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
@@ -20,14 +20,23 @@ export const UserProfile: React.FC = () => {
   ) => {
     e.preventDefault();
 
+    if (!userId) {
+      setErrorMessage('User ID is required.');
+      return;
+    }
+    if (!companyId) {
+      setErrorMessage('Company ID is required.');
+      return;
+    }
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      setErrorMessage('Passwords do not match.');
       return;
     }
 
     try {
       const response = await registerUserProfile(
-        userId!,
+        userId,
+        companyId,
         fullName,
         phoneNumber,
         password,
@@ -35,13 +44,14 @@ export const UserProfile: React.FC = () => {
       );
 
       if (response.status === 200) {
-        navigate('/registerCompanyProfile');
+        navigate('/choosePlan');
       } else {
-        alert('Unexpected response. Please try again.');
+        setErrorMessage('Unexpected response. Please try again.');
       }
     } catch (error: any) {
       setErrorMessage(
-        error.message || 'Error submitting the profile. Please try again.'
+        error.response?.data?.message ||
+          'Error submitting the profile. Please try again.'
       );
     }
   };
@@ -83,6 +93,7 @@ export const UserProfile: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
+            hasIcon
           />
         </div>
         <div className="mt-[38px] text-white w-full">
@@ -91,8 +102,9 @@ export const UserProfile: React.FC = () => {
             type="password"
             size="large"
             placeholder="***********"
-            onChange={(e) => setConfirmPassword(e.target.value)} // Update confirmPassword state
+            onChange={(e) => setConfirmPassword(e.target.value)}
             value={confirmPassword}
+            hasIcon
           />
         </div>
         <div className="mt-[38px] w-full">
