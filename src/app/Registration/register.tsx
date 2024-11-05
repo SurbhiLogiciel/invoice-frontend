@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import { registerUserEmail } from '../../services/apiService';
 import { getErrorMessage } from '../../utils/getErrorMessages';
 import { isValidEmail } from '../../utils/validations';
+import { useAuth } from '../context/AuthContext';
 
 export const RegisterEmail: React.FC = () => {
   const [email, setEmail] = useState('');
+  const { registerEmail } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,20 +20,20 @@ export const RegisterEmail: React.FC = () => {
       setErrorMessage('Please enter a valid email.');
       return;
     }
+  try {
+  const response = await registerUserEmail(email);
 
-    try {
-      const response = await registerUserEmail(email);
+  if (response.status === 201) {
+        registerEmail();
+        navigate(`/verifyOtp/${response.data.userId}`);
 
-      if (response.status === 201) {
-        const userId = response.data.userId;
-        navigate(`/verifyOtp/${userId}`);
-      } else {
-        setErrorMessage('Unexpected response. Please try again.');
-      }
-    } catch (error: any) {
-      const errorMessage = getErrorMessage()(error.response?.status);
-      setErrorMessage(errorMessage);
-    }
+  } else {
+    setErrorMessage('Unexpected response. Please try again.');
+  }
+} catch (error: any) {
+  const errorMessage = getErrorMessage()(error.response?.status);
+  setErrorMessage(errorMessage);
+}
   };
 
   return (

@@ -1,3 +1,5 @@
+// src/routes/AppRoutes.tsx
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from '../app/login/login';
 import { RegisterEmail } from '../app/Registration/register';
@@ -6,6 +8,7 @@ import { UserProfile } from '../app/Profile/userProfile';
 import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfile';
 import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
+import ProtectedRoute from '../app/components/protectedRouteComponent';
 
 const AppRoutes = () => {
   return (
@@ -14,15 +17,43 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="login" replace />} />
         <Route path="login" element={<Login />} />
         <Route path="/registerEmail" element={<RegisterEmail />} />
-        <Route path="/verifyOtp/:userId" element={<VerifyOTP />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/verifyOtp/:userId"
+          element={
+            <ProtectedRoute>
+              <VerifyOTP />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/registerCompanyProfile/:userId"
-          element={<RegisterCompanyProfile />}
+          element={
+            <ProtectedRoute>
+              <RegisterCompanyProfile />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/registerUserProfile/:userId" element={<UserProfile />} />
-        <Route path="/choosePlan" element={<ChoosePlan />} />
+        <Route
+          path="/registerUserProfile/:userId"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/choosePlan"
+          element={
+            <ProtectedRoute>
+              <ChoosePlan />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     </Routes>
   );
 };
+
 export default AppRoutes;

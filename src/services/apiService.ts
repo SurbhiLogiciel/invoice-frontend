@@ -1,14 +1,27 @@
-import apiClient from '../utils/http ';
+import apiClient from '../utils/http';
 
 export const registerUserEmail = async (email: string) => {
-  return await apiClient.post('register/userEmail', { email });
+  try {
+    return await apiClient.post('register/userEmail', { email });
+  } catch (error: any) {
+    console.error('Error in registerUserEmail:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to register user email.'
+    );
+  }
 };
 
 export const verifyOtp = async (userId: string, otp: number | string) => {
   if (!userId) {
     throw new Error('userId is required');
   }
-  return await apiClient.post(`/register/verifyOtp/${userId}`, { otp });
+
+  try {
+    return await apiClient.post(`/register/verifyOtp/${userId}`, { otp });
+  } catch (error: any) {
+    console.error('Error in verifyOtp:', error);
+    throw new Error(error.response?.data?.message || 'Failed to verify OTP.');
+  }
 };
 
 export const registerUserProfile = async (
@@ -27,13 +40,20 @@ export const registerUserProfile = async (
     throw new Error('Passwords do not match');
   }
 
-  return await apiClient.post(`/register/userProfile/${userId}`, {
-    companyId,
-    fullName,
-    phoneNumber,
-    password,
-    confirmPassword,
-  });
+  try {
+    return await apiClient.post(`/register/userProfile/${userId}`, {
+      companyId,
+      fullName,
+      phoneNumber,
+      password,
+      confirmPassword,
+    });
+  } catch (error: any) {
+    console.error('Error in registerUserProfile:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to register user profile.'
+    );
+  }
 };
 
 export const registerCompanyProfile = async (
@@ -47,16 +67,29 @@ export const registerCompanyProfile = async (
   if (!userId) {
     throw new Error('userId is required');
   }
-  return await apiClient.post(`/register/companyProfile/${userId}`, {
-    id: userId,
-    companyName,
-    location,
-    city,
-    state,
-    zip,
-  });
+
+  try {
+    return await apiClient.post(`/register/companyProfile/${userId}`, {
+      id: userId,
+      companyName,
+      location,
+      city,
+      state,
+      zip,
+    });
+  } catch (error: any) {
+    console.error('Error in registerCompanyProfile:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to register company profile.'
+    );
+  }
 };
 
-export const userLogin = (email: string, password: string) => {
-  return apiClient.post('/auth/login', { email, password });
+export const userLogin = async (email: string, password: string) => {
+  try {
+    return await apiClient.post('/user/login', { email, password });
+  } catch (error: any) {
+    console.error('Error in userLogin:', error);
+    throw new Error(error.response?.data?.message || 'Failed to log in user.');
+  }
 };

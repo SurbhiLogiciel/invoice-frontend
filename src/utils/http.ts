@@ -1,8 +1,7 @@
-// src/api/apiClient.ts
 import axios, { AxiosResponse } from 'axios';
 import { getErrorMessage } from './getErrorMessages';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL; // Fetching the base URL from environment variables
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -11,7 +10,6 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptors for handling responses and errors
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
@@ -21,9 +19,15 @@ apiClient.interceptors.response.use(
     const dynamicErrorMessage = getErrorMessage(customMessages);
     const errorMessage = dynamicErrorMessage(status);
 
-    console.error(errorMessage); // Log the error message for debugging
-    return Promise.reject(error); // Reject the promise to be handled in the calling code
+    console.error(errorMessage);
+    return Promise.reject(error);
   }
 );
-
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
 export default apiClient;
