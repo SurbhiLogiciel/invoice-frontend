@@ -127,6 +127,7 @@ export const ChoosePlan: React.FC = () => {
           promoCode={promoCode}
           onChange={(e) => setPromoCode(e.target.value)}
           onApply={handlePromoCodeApply}
+          disabled={selectedPlan !== 'Business'}
         />
       </div>
 

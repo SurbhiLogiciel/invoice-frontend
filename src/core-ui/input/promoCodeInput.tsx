@@ -7,6 +7,7 @@ const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
   promoCode,
   onApply,
   size = 'large',
+  disabled = false,
   onChange,
 }) => {
   const [codeApplied, setCodeApplied] = useState(false);
@@ -55,6 +56,7 @@ const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          disabled={disabled}
           className={`${baseClasses} ${disabledClasses} font-roboto font-normal text-sm text-white ${sizeClasses[size]}`}
         />
       ) : (
