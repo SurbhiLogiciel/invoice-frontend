@@ -20,20 +20,19 @@ export const RegisterEmail: React.FC = () => {
       setErrorMessage('Please enter a valid email.');
       return;
     }
-  try {
-  const response = await registerUserEmail(email);
+    try {
+      const response = await registerUserEmail(email);
 
-  if (response.status === 201) {
+      if (response.status === 201) {
         registerEmail();
         navigate(`/verifyOtp/${response.data.userId}`);
-
-  } else {
-    setErrorMessage('Unexpected response. Please try again.');
-  }
-} catch (error: any) {
-  const errorMessage = getErrorMessage()(error.response?.status);
-  setErrorMessage(errorMessage);
-}
+      } else {
+        setErrorMessage('Unexpected response. Please try again.');
+      }
+    } catch (error: any) {
+      const errorMessage = getErrorMessage()(error.response?.status);
+      setErrorMessage(errorMessage);
+    }
   };
 
   return (
@@ -52,7 +51,7 @@ export const RegisterEmail: React.FC = () => {
             size="large"
             onChange={(e) => {
               setEmail(e.target.value);
-              setErrorMessage(''); // Clear error message on input change
+              setErrorMessage('');
             }}
             value={email}
           />

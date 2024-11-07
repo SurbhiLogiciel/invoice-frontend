@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TickIcon from '../../app/svg/tickIcon';
-
-import {
-  SelectableContainerProps,
-  SelectableContainerColor,
-  SelectableContainerSize,
-} from './types';
+import { SelectableContainerProps, SelectableContainerColor } from './types';
 
 const SelectableContainer: React.FC<SelectableContainerProps> = ({
   heading,
@@ -15,12 +10,12 @@ const SelectableContainer: React.FC<SelectableContainerProps> = ({
   color = 'secondary',
   disabled = false,
   children,
+  onSelect,
+  isSelected,
 }) => {
-  const [isSelected, setIsSelected] = useState(false);
-
   const handleClick = () => {
-    if (!disabled) {
-      setIsSelected(!isSelected);
+    if (!disabled && onSelect) {
+      onSelect();
     }
   };
 
@@ -30,19 +25,16 @@ const SelectableContainer: React.FC<SelectableContainerProps> = ({
     disabled: 'border-gray-400 bg-gray-200 cursor-not-allowed',
   };
 
-  const containerClasses = `
-    relative rounded-lg cursor-pointer border-gray text-white transition-colors duration-300 py-4 px-5
-    ${
-      disabled
-        ? colorClasses['disabled']
-        : isSelected
-        ? colorClasses['primary']
-        : colorClasses[color]
-    } 
-    ${outline ? 'border-2' : 'primary'}
-    ${disabled ? 'opacity-50' : ''}
-  `;
-
+  const containerClasses = `relative rounded-lg cursor-pointer border-gray text-white transition-colors duration-300 py-4 px-5
+  ${
+    disabled
+      ? colorClasses['disabled']
+      : isSelected
+      ? colorClasses['primary']
+      : colorClasses[color]
+  } 
+  ${outline ? 'border-2' : 'primary'}
+  ${disabled ? 'opacity-50' : ''}`;
   return (
     <div className="relative font-roboto">
       <div onClick={handleClick} className={containerClasses}>

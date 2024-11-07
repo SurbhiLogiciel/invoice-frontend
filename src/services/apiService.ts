@@ -93,3 +93,52 @@ export const userLogin = async (email: string, password: string) => {
     throw new Error(error.response?.data?.message || 'Failed to log in user.');
   }
 };
+
+export const submitUserPlan = async (
+  userId: string,
+  plan: string,
+  amount: number,
+  discount: number,
+  total: number
+) => {
+  if (!userId) {
+    throw new Error('userId is required');
+  }
+
+  try {
+    return await apiClient.post(`/user/selectPlan/${userId}`, {
+      plan,
+      amount,
+      discount,
+      total,
+    });
+  } catch (error: any) {
+    console.error('Error in submitUserPlan:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to submit user plan.'
+    );
+  }
+};
+
+export const applyPromoCode = async (
+  userId: string,
+  promoCode: string,
+  amount: number
+) => {
+  if (!userId) {
+    throw new Error('userId is required');
+  }
+
+  try {
+    return await apiClient.post(`/user/applyPromoCode/${userId}`, {
+      id: userId,
+      promoCode,
+      amount,
+    });
+  } catch (error: any) {
+    console.error('Error in applyPromoCode:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to apply promo code.'
+    );
+  }
+};

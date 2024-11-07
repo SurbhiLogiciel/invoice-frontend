@@ -25,4 +25,7 @@ export interface OtpInputProps {
 
 export interface PromoCodeInputProps {
   size?: 'small' | 'medium' | 'large';
+  promoCode: string;
+  onApply: (promoCode: string) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

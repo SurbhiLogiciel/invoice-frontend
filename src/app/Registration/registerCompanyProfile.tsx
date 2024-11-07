@@ -42,7 +42,6 @@ export const RegisterCompanyProfile: React.FC = () => {
         setSuccessMessage('Company registered successfully!');
         setErrorMessage(null);
         setCompanyId(response.data.company._id);
-        console.log('Company ID:', response.data.company._id);
         navigate(`/registerUserProfile/${userId}`);
       } else {
         setErrorMessage('Unexpected response. Please try again.');
@@ -138,6 +137,7 @@ export const RegisterCompanyProfile: React.FC = () => {
               outline="primary"
               fullWidth="true"
               children="Back"
+              onClick={() => navigate(-1)}
             />
           </div>
 

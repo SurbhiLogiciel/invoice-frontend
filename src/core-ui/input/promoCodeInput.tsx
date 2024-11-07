@@ -3,28 +3,25 @@ import CodeCheck from '../../app/svg/codeCheck';
 import Cancel from '../../app/svg/cancel';
 import { PromoCodeInputProps } from './types';
 
-const PromoCodeInput: React.FC<PromoCodeInputProps> = ({ size = 'large' }) => {
-  const [promoCode, setPromoCode] = useState('');
+const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
+  promoCode,
+  onApply,
+  size = 'large',
+  onChange,
+}) => {
   const [codeApplied, setCodeApplied] = useState(false);
   const [focused, setFocused] = useState(false);
 
   const handleApplyClick = useCallback(() => {
     if (promoCode.trim() !== '') {
+      onApply(promoCode);
       setCodeApplied(true);
     }
-  }, [promoCode]);
+  }, [promoCode, onApply]);
 
   const handleRemoveCode = useCallback(() => {
-    setPromoCode('');
     setCodeApplied(false);
   }, []);
-
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setPromoCode(event.target.value);
-    },
-    []
-  );
 
   const handleFocus = useCallback(() => setFocused(true), []);
   const handleBlur = useCallback(() => setFocused(false), []);
@@ -40,6 +37,7 @@ const PromoCodeInput: React.FC<PromoCodeInputProps> = ({ size = 'large' }) => {
     medium: 'py-3 px-3 text-xs h-[40px]',
     large: 'py-5 px-5 text-sm h-[50px]',
   };
+
   return (
     <div className="relative">
       <label
@@ -54,7 +52,7 @@ const PromoCodeInput: React.FC<PromoCodeInputProps> = ({ size = 'large' }) => {
         <input
           type="text"
           value={promoCode}
-          onChange={handleInputChange}
+          onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={`${baseClasses} ${disabledClasses} font-roboto font-normal text-sm text-white ${sizeClasses[size]}`}

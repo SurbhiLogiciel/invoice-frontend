@@ -44,7 +44,7 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/choosePlan"
+          path="/choosePlan/:userId"
           element={
             <ProtectedRoute>
               <ChoosePlan />

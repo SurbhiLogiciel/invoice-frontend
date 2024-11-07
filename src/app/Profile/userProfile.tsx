@@ -44,7 +44,7 @@ export const UserProfile: React.FC = () => {
       );
 
       if (response.status === 200) {
-        navigate('/choosePlan');
+        navigate(`/choosePlan/${userId}`);
       } else {
         setErrorMessage('Unexpected response. Please try again.');
       }
@@ -122,6 +122,7 @@ export const UserProfile: React.FC = () => {
             outline="primary"
             fullWidth="true"
             children="Back"
+            onClick={() => navigate(-1)}
           />
         </div>
       </form>
