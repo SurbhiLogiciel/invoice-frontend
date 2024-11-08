@@ -3,11 +3,11 @@ import Invoice from '../../app/svg/invoice';
 
 const InvoiceComponent: React.FC = () => {
   return (
-    <div className="bg-secondary p-8 text-center">
-      <div className="mb-4 flex justify-center">
+    <div className="bg-secondary  text-center">
+      <div className=" flex justify-center">
         <Invoice />
       </div>
-      <h2 className="text-white text-lg font-roboto font-normal mb-2">
+      <h2 className="text-white mt-[30px] text-lg font-roboto font-normal">
         There is nothing here
       </h2>
       <p className="text-gray text-base mt-4">

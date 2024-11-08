@@ -1,13 +1,14 @@
-import { Container } from './types';
-import { Dropdown } from '../dropdown';
-import { DropdownOption } from '../dropdown/types';
-import Frame from '../../assets/Frame.png';
 import React from 'react';
+import { Container } from './types';
+import { DropdownOption } from '../dropdown/types';
+
+import avtar from '../../app/assets/Frame.png'
 import { Chips } from '../chips';
+import { Dropdown } from '../dropdown';
 
 export const DataContainer: React.FC<Container> = ({
-  size = 'medium', 
-  color = 'purple',   
+  size = 'medium',
+  color = 'purple',
   children,
 }) => {
   const handleEdit = () => {
@@ -21,7 +22,6 @@ export const DataContainer: React.FC<Container> = ({
   };
 
   const options: DropdownOption[] = [
-
     { label: 'Edit', action: handleEdit, color: 'success' },
     { label: 'Delete', action: handleDelete, color: 'danger' },
   ];
@@ -37,14 +37,15 @@ export const DataContainer: React.FC<Container> = ({
 
   const classNames = [
     'font-roboto rounded-md  text-white lg:w-full max-w-full min-w-[900px]',
-    sizeClasses[size], 
+    sizeClasses[size],
     colorClasses[color],
   ]
     .filter(Boolean)
-    .join(' '); 
+    .join(' ');
 
   return (
     <div className={classNames}>
+      {children}
       <div className="flex w-full gap-3 justify-between items-center max-w-full">
         <div className="w-48">#INV-30202</div>
         <div className="w-48">Due 19 Sept,2024</div>
@@ -59,7 +60,7 @@ export const DataContainer: React.FC<Container> = ({
           />
         </div>
         <div className="w-16">
-          <Dropdown options={options} Image={Frame} position="right"/>
+          <Dropdown options={options} Image={avtar} position="left" />
         </div>
       </div>
     </div>

@@ -9,6 +9,10 @@ import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfi
 import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
+import InvoiceLayout from '../app/invoiceLayouts';
+import InvoiceComponent from '../core-ui/invoice';
+import { DataContainer } from '../core-ui/DataContainer';
+
 
 const AppRoutes = () => {
   return (
@@ -16,6 +20,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<Navigate to="login" replace />} />
         <Route path="login" element={<Login />} />
+
         <Route path="/registerEmail" element={<RegisterEmail />} />
 
         {/* Protected routes */}
@@ -51,6 +56,11 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+      </Route>
+      <Route path="/invoiceLayout" element={<InvoiceLayout />}>
+        <Route element={<Navigate to="InvoiceComponent" replace />} />
+        <Route path="invoiceComponent" element={<InvoiceComponent />} />
+        <Route path="invoiceData" element={< DataContainer children/>} />
       </Route>
     </Routes>
   );
