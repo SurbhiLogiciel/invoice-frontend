@@ -3,7 +3,7 @@ import Invoice from '../../app/svg/invoice';
 
 const InvoiceComponent: React.FC = () => {
   return (
-    <div className="bg-secondary p-8 text-center">
+    <div className="bg-secondary p-8 text-center mt-40 ml-0">
       <div className="mb-4 flex justify-center">
         <Invoice />
       </div>
