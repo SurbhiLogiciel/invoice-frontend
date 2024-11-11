@@ -1,5 +1,4 @@
-import React, { ReactNode, useState } from 'react';
-import image3 from './assets/3.png';
+import React, { useState } from 'react';
 import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
 import { InvoiceDrawer } from './Inovice/generateInvoice';
@@ -9,7 +8,7 @@ import { Outlet } from 'react-router-dom';
 interface InvoiceLayoutProps {
   // children: ReactNode;
 }
-export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({ }) => {
+export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const handleOpenDrawer = () => {
     setIsDrawerOpen(true);
@@ -39,20 +38,15 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({ }) => {
           <h1 className="text-white text-2xl sm:text-3xl font-roboto">
             Invoices
           </h1>
-          <p className="text-gray  font-roboto">
-            No Invoices
-          </p>
+          <p className="text-gray  font-roboto">No Invoices</p>
         </div>
         <div className="mt-12 flex ">
-          <Outlet/>
+          <Outlet />
         </div>
-        <div className="absolute top-4 sm:top-8 right-4 sm:right-10 font-roboto font-medium">
-          <Button size="medium" color="primary" onClick={handleOpenDrawer}>
-            New Invoice
-          </Button>
-        </div>
+        <Button size="medium" color="primary" onClick={handleOpenDrawer}>
+          New Invoice
+        </Button>
       </div>
-      {/* Invoice Drawer */}
       <InvoiceDrawer open={isDrawerOpen} onClose={handleCloseDrawer} />
     </div>
   );
