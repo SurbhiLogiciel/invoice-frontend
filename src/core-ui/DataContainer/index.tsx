@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container } from './types';
 import { DropdownOption } from '../dropdown/types';
-import avtar from '../../app/assets/Frame.png';
+
+import Frame from '../../app/assets/Frame.png'
 import { Chips } from '../chips';
 import { Dropdown } from '../dropdown';
 
@@ -59,7 +60,7 @@ export const DataContainer: React.FC<Container> = ({
           />
         </div>
         <div className="w-16">
-          <Dropdown options={options} Image={avtar} position="right" />
+          <Dropdown options={options} Image={Frame} position="right" />
         </div>
       </div>
     </div>
