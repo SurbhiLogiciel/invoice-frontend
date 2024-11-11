@@ -9,6 +9,7 @@ module.exports = {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         lightGray: 'rgb(var(--color-lightGray) / <alpha-value>)',
         gray: 'rgb(var(--color-gray) / <alpha-value>)',
+        violet: 'rgb(var(--color-violet) / <alpha-value>)',
         lightPurple: 'rgb(var(--color-lightPurple) / <alpha-value>)',
         purple: 'rgb(var(--color-purple) / <alpha-value>)',
         success: 'rgb(var(--color-success) / <alpha-value>)',
