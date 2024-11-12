@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from './types';
 import { DropdownOption } from '../dropdown/types';
 
-import Frame from '../../app/assets/Frame.png'
+import Frame from '../../app/assets/Frame.png';
 import { Chips } from '../chips';
 import { Dropdown } from '../dropdown';
 
@@ -44,23 +44,25 @@ export const DataContainer: React.FC<Container> = ({
     .join(' ');
 
   return (
-    <div className={classNames}>
-      {children}
-      <div className="flex w-full gap-3 justify-between items-center max-w-full">
-        <div className="w-48">#INV-30202</div>
-        <div className="w-48">Due 19 Sept,2024</div>
-        <div className="w-48">David Jonas</div>
-        <div className="w-48">Created on 10 Sept,2024</div>
-        <div className="w-48 font-bold text-[20px] ">$1800</div>
-        <div className="shrink-0">
-          <Chips
-            onClick={() => alert('You clicked on paid chip')}
-            color="success"
-            children="Paid"
-          />
-        </div>
-        <div className="w-16">
-          <Dropdown options={options} Image={Frame} position="right" />
+    <div className="flex flex-col w-full gap-y-4">
+      <div className={classNames}>
+        {children}
+        <div className="flex w-full gap-4 justify-between items-center max-w-full">
+          <div className="w-48">#INV-30202</div>
+          <div className="w-48">Due 19 Sept,2024</div>
+          <div className="w-48">David Jonas</div>
+          <div className="w-52">Created on 10 Sept,2024</div>
+          <div className="w-40 font-bold text-[20px] ">$1800</div>
+          <div className="w-40 shrink-0">
+            <Chips
+              onClick={() => alert('You clicked on paid chip')}
+              color="success"
+              children="Paid"
+            />
+          </div>
+          <div className="w-16">
+            <Dropdown options={options} Image={Frame} position="right" />
+          </div>
         </div>
       </div>
     </div>
