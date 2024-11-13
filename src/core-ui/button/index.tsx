@@ -14,13 +14,13 @@ export const Button: React.FC<ButtonProps> = ({
   const sizeClasses = {
     small: 'py-[11px] px-4 text-sm',
     medium: 'py-[11px] px-4 text-md',
-    large: 'px-4 py-5 text-[14px] font-bold',
+    large: 'px-8 py-4 text-[14px] font-bold',
   };
 
   const colorClasses = {
     primary: outline
       ? 'border border-primary/25 text-white bg-secondary'
-      : 'bg-primary text-white',
+      : 'bg-primary text-white font-open-sans',
     secondary: outline
       ? 'border border-secondary text-primary'
       : 'bg-secondary text-white',
