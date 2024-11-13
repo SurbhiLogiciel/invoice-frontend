@@ -5,6 +5,8 @@ import SelectInput from '../../core-ui/input/selectInput';
 import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
+import { useParams } from 'react-router-dom';
+import { createInvoice } from '../../services/apiService';
 
 interface DrawerProps {
   open: boolean;
@@ -12,10 +14,58 @@ interface DrawerProps {
 }
 
 export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
-  const [items, setItems] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+  const { userId } = useParams<{ userId: string }>(); // Get userId from URL params
+
+  // State for form fields
+  const [companyName, setCompanyName] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
+  const [issueDate, setIssueDate] = useState('');
+  const [paymentTerms, setPaymentTerms] = useState('');
+  const [items, setItems] = useState([
+    { id: 1, itemName: '', qty: 0, price: 0 },
+  ]);
+
+  // Handle item row addition
   const addItemRow = () => {
-    setItems([...items, { id: items.length + 1 }]);
+    setItems([
+      ...items,
+      { id: items.length + 1, itemName: '', qty: 0, price: 0 },
+    ]);
   };
+
+  // Handle item field change
+  const handleItemChange = (index: number, field: string, value: any) => {
+    const updatedItems = [...items];
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
+    setItems(updatedItems);
+  };
+
+  // Submit form
+  const handleSubmit = async () => {
+    const invoiceData = {
+      companyName,
+      streetAddress,
+      city,
+      state,
+      zip,
+      issueDate,
+      paymentTerms,
+      items,
+    };
+
+    if (userId) {
+      try {
+        await createInvoice(userId, invoiceData);
+        onClose(); // Close drawer after submission
+      } catch (error) {
+        console.error('Failed to create invoice', error);
+      }
+    }
+  };
+
   return (
     <Drawer
       anchor="left"
@@ -47,10 +97,21 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
 
         {/* Input fields */}
         <div className="mt-2">
-          <Input variant="secondary" label="Company Name" size="large" />
+          <Input
+            variant="secondary"
+            label="Company Name"
+            size="large"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
         </div>
         <div className="mt-5">
-          <Input variant="secondary" label="Street Address" />
+          <Input
+            variant="secondary"
+            label="Street Address"
+            value={streetAddress}
+            onChange={(e) => setStreetAddress(e.target.value)}
+          />
         </div>
         <div className="mt-5">
           <SelectInput
@@ -58,6 +119,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
             label="City"
             placeholder="Select"
             options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
           />
         </div>
 
@@ -68,6 +131,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
               placeholder="Select"
               label="State"
               options={['Punjab', 'Haryana', 'Karnataka']}
+              value={state}
+              onChange={(e) => setState(e.target.value)}
             />
           </div>
 
@@ -77,13 +142,18 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
               placeholder="Select"
               label="Zip"
               options={['14000', '16000', '18000']}
+              value={zip}
+              onChange={(e) => setZip(e.target.value)}
             />
           </div>
         </div>
 
         <div className="mt-5 flex space-x-4">
           <div className="w-1/2">
-            <DateInput />
+            {/* <DateInput
+              value={issueDate}
+              onChange={(date: string) => setIssueDate(date)}
+            /> */}
           </div>
           <div className="w-1/2">
             <SelectInput
@@ -91,6 +161,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
               placeholder="Select"
               label="Payment Terms"
               options={['next 30 days', 'next 60 days', 'next 90 days']}
+              value={paymentTerms}
+              onChange={(e) => setPaymentTerms(e.target.value)}
             />
           </div>
         </div>
@@ -117,16 +189,40 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
         {items.map((item, index) => (
           <div key={index} className="flex items-center space-x-4 mt-4">
             <div className="flex-1 w-[188px]">
-              <Input variant="secondary" size="large" />
+              <Input
+                variant="secondary"
+                size="large"
+                value={item.itemName}
+                onChange={(e) =>
+                  handleItemChange(index, 'itemName', e.target.value)
+                }
+              />
             </div>
             <div className="w-[67px]">
-              <Input variant="secondary" size="large" />
+              <Input
+                variant="secondary"
+                type="number"
+                size="large"
+                value={item.qty}
+                onChange={(e) =>
+                  handleItemChange(index, 'qty', parseInt(e.target.value))
+                }
+              />
             </div>
             <div className="w-[100px]">
-              <Input variant="secondary" size="large" />
+              <Input
+                variant="secondary"
+                size="large"
+                value={item.price}
+                onChange={(e) =>
+                  handleItemChange(index, 'price', parseFloat(e.target.value))
+                }
+              />
             </div>
             <div className="w-1/5 text-center">
-              <h3 className="text-white font-roboto font-semibold">$0</h3>
+              <h3 className="text-white font-roboto font-semibold">
+                {item.qty * item.price}
+              </h3>
             </div>
             <div className="w-6 flex justify-center items-center">
               <DeleteIcon />
@@ -140,7 +236,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
           + Add More Item
         </p>
       </div>
-      <div className="flex justify-end bg-purple space-x-4  p-3">
+      <div className="flex justify-end bg-purple space-x-4 p-3">
         <Button
           size="large"
           outline="primary"
@@ -148,7 +244,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
           children="Cancel"
           onClick={onClose}
         />
-        <Button type="submit" size="large" color="primary" children="Save" />
+        <Button
+          size="large"
+          color="primary"
+          children="Save"
+          onClick={handleSubmit}
+        />
       </div>
     </Drawer>
   );

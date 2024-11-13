@@ -142,3 +142,33 @@ export const applyPromoCode = async (
     );
   }
 };
+
+interface InvoiceItem {
+  itemName: string;
+  qty: number;
+  price: number;
+}
+
+interface CreateInvoicePayload {
+  companyName: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  issueDate: string;
+  paymentTerms: string;
+  items: InvoiceItem[];
+}
+
+export const createInvoice = async (
+  userId: string,
+  data: CreateInvoicePayload
+) => {
+  try {
+    const response = await apiClient.post(`/invoices/${userId}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating invoice:', error);
+    throw error;
+  }
+};
