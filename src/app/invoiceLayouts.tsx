@@ -16,7 +16,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
   };
   return (
     <div className="flex h-screen bg-secondary">
-      <div className="flex flex-col bg-violet items-center py-5">
+      <div className="flex flex-col bg-violet items-center  py-5">
         <div className="px-2 sm:px-2 md:px-3 lg:px-4">
           <img src={invoiceLogo} alt="Logo" className="w-16 h-15" />
         </div>
@@ -38,7 +38,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
             </h1>
             <p className="text-gray  font-roboto">No Invoices</p>
           </div>
-          <div className="relative  ">
+          <div className="relative top-5 justify-between items-center ">
             <Button size="medium" color="primary" onClick={handleOpenDrawer}>
               New Invoice
             </Button>

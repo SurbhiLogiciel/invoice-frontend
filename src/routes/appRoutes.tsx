@@ -1,6 +1,6 @@
 // src/routes/AppRoutes.tsx
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { Login } from '../app/login/login';
 import { RegisterEmail } from '../app/Registration/register';
 import { VerifyOTP } from '../app/Registration/verifyOTP';
@@ -15,6 +15,7 @@ import { DataContainer } from '../core-ui/DataContainer';
 
 
 const AppRoutes = () => {
+  const { id } = useParams<{ id: string }>();
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -60,10 +61,9 @@ const AppRoutes = () => {
       <Route path="/invoiceLayout" element={<InvoiceLayout />}>
         <Route element={<Navigate to="InvoiceComponent" replace />} />
         <Route path="invoiceComponent" element={<InvoiceComponent />} />
-        <Route path="invoiceData" element={< DataContainer children/>} />
+        <Route path="invoiceData" element={<DataContainer children />} />
       </Route>
     </Routes>
   );
 };
-
 export default AppRoutes;

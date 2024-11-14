@@ -11,6 +11,16 @@ export const registerUserEmail = async (email: string) => {
   }
 };
 
+export const fetchInvoiceList = async (id: string ) => {
+  try {
+    const response = await apiClient.get(`/api/invoiceList/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch invoices:', error);
+    throw error;
+  }
+};
+
 export const verifyOtp = async (userId: string, otp: number | string) => {
   if (!userId) {
     throw new Error('userId is required');
