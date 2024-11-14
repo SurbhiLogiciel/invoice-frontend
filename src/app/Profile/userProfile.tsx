@@ -58,6 +58,7 @@ export const UserProfile: React.FC = () => {
 
   return (
     <div>
+      {errorMessage && <div className="text-red">{errorMessage}</div>}
       <form onSubmit={handleRegisterUserProfile} method="post">
         <div className="font-bold mt-8 text-4xl text-white">
           Set Up Your Profile

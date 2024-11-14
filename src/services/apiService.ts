@@ -155,7 +155,7 @@ interface CreateInvoicePayload {
   city: string;
   state: string;
   zip: string;
-  issueDate: string;
+  issueDate: Date | null;
   paymentTerms: string;
   items: InvoiceItem[];
 }

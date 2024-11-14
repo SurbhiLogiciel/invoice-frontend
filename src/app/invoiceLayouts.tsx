@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
-import { InvoiceDrawer } from './Inovice/generateInvoice';
 import invoiceLogo from './assets/5.png';
 import { Outlet } from 'react-router-dom';
+import { InvoiceDrawer } from './Invoice/generateInvoice';
 
 interface InvoiceLayoutProps {
   // children: ReactNode;

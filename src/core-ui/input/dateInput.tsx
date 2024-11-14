@@ -3,9 +3,13 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../app/svg/calendar';
 
-const DateInput: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [focused, setFocused] = useState(false); // Add focus state
+interface DateInputProps {
+  value: Date | null;
+  onChange: (date: Date | null) => void;
+}
+
+const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
+  const [focused, setFocused] = useState(false);
   const datepickerRef = useRef<any>(null);
 
   return (
@@ -23,8 +27,8 @@ const DateInput: React.FC = () => {
         }`}
       >
         <DatePicker
-          selected={selectedDate}
-          onChange={(date: Date | null) => setSelectedDate(date)}
+          selected={value}
+          onChange={onChange}
           dateFormat="dd MMM, yyyy"
           className="w-full bg-transparent outline-none text-white text-sm"
           ref={datepickerRef}
