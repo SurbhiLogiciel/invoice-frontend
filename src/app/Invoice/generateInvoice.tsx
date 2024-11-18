@@ -23,19 +23,19 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
   const [issueDate, setIssueDate] = useState<Date | null>(new Date());
   const [paymentTerms, setPaymentTerms] = useState('');
   const [items, setItems] = useState([
-    { id: 1, itemName: '', qty: 0, price: 0 },
+    { id: Date.now(), itemName: '', qty: 0, price: 0 },
+    { id: Date.now() + 1, itemName: '', qty: 0, price: 0 },
+    { id: Date.now() + 2, itemName: '', qty: 0, price: 0 },
   ]);
 
   const addItemRow = () => {
-    setItems([
-      ...items,
-      { id: items.length + 1, itemName: '', qty: 0, price: 0 },
-    ]);
+    setItems([...items, { id: Date.now(), itemName: '', qty: 0, price: 0 }]);
   };
 
-  const handleItemChange = (index: number, field: string, value: any) => {
-    const updatedItems = [...items];
-    updatedItems[index] = { ...updatedItems[index], [field]: value };
+  const handleItemChange = (id: number, field: string, value: any) => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? { ...item, [field]: value } : item
+    );
     setItems(updatedItems);
   };
 
@@ -186,15 +186,15 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
           <div className="w-6 flex justify-center items-center"></div>
         </div>
 
-        {items.map((item, index) => (
-          <div key={index} className="flex items-center space-x-4 mt-4">
+        {items.map((item) => (
+          <div key={item.id} className="flex items-center space-x-4 mt-4">
             <div className="flex-1 w-[188px]">
               <Input
                 variant="secondary"
                 size="large"
                 value={item.itemName}
                 onChange={(e) =>
-                  handleItemChange(index, 'itemName', e.target.value)
+                  handleItemChange(item.id, 'itemName', e.target.value)
                 }
               />
             </div>
@@ -204,7 +204,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
                 size="large"
                 value={item.qty}
                 onChange={(e) =>
-                  handleItemChange(index, 'qty', parseInt(e.target.value))
+                  handleItemChange(item.id, 'qty', parseInt(e.target.value))
                 }
               />
             </div>
@@ -214,7 +214,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
                 size="large"
                 value={item.price}
                 onChange={(e) =>
-                  handleItemChange(index, 'price', parseFloat(e.target.value))
+                  handleItemChange(item.id, 'price', parseFloat(e.target.value))
                 }
               />
             </div>
