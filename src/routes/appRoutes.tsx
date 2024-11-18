@@ -58,7 +58,7 @@ const AppRoutes = () => {
           }
         />
       </Route>
-      <Route path="/invoiceLayout" element={<InvoiceLayout />}>
+      <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
         <Route element={<Navigate to="InvoiceComponent" replace />} />
         <Route path="invoiceComponent" element={<InvoiceComponent />} />
         <Route path="invoiceData" element={<DataContainer children />} />
