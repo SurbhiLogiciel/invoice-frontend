@@ -13,7 +13,6 @@ import InvoiceLayout from '../app/invoiceLayouts';
 import InvoiceComponent from '../core-ui/invoice';
 import { DataContainer } from '../core-ui/DataContainer';
 
-
 const AppRoutes = () => {
   return (
     <Routes>
@@ -57,10 +56,10 @@ const AppRoutes = () => {
           }
         />
       </Route>
-      <Route path="/invoiceLayout" element={<InvoiceLayout />}>
+      <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
         <Route element={<Navigate to="InvoiceComponent" replace />} />
         <Route path="invoiceComponent" element={<InvoiceComponent />} />
-        <Route path="invoiceData" element={< DataContainer children/>} />
+        <Route path="invoiceData" element={<DataContainer children />} />
       </Route>
     </Routes>
   );

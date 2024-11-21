@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
-import { InvoiceDrawer } from './Inovice/generateInvoice';
 import invoiceLogo from './assets/5.png';
 import { Outlet } from 'react-router-dom';
+import { InvoiceDrawer } from './Invoice/generateInvoice';
 
 interface InvoiceLayoutProps {
   // children: ReactNode;
 }
-export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
+export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const handleOpenDrawer = () => {
     setIsDrawerOpen(true);
@@ -33,7 +33,11 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
         </div>
       </div>
       {/* Main Content */}
-      <div className="flex flex-col max-w-[1200px] m-auto ">
+      <div
+        className={`flex flex-col max-w-[1200px] m-auto transition-opacity duration-300 ${
+          isDrawerOpen ? 'opacity-40' : 'opacity-100'
+        }`}
+      >
         <div className="text-left ">
           <h1 className="text-white text-2xl sm:text-3xl font-roboto">
             Invoices
