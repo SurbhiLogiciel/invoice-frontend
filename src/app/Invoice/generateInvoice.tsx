@@ -1,5 +1,5 @@
 import React from 'react';
-import InvoiceLayout from '../invoiceLayout';
+import InvoiceLayout from '../invoiceLayouts';
 import InvoiceComponent from '../../core-ui/invoice';
 // import { DataContainer } from '../../core-ui/DataContainer';
 

@@ -1,9 +1,10 @@
-import { Container } from './types';
-import { Dropdown } from '../dropdown';
-import { DropdownOption } from '../dropdown/types';
-import Frame from '../../assets/Frame.png';
 import React from 'react';
+import { Container } from './types';
+import { DropdownOption } from '../dropdown/types';
+
+import Frame from '../../app/assets/Frame.png'
 import { Chips } from '../chips';
+import { Dropdown } from '../dropdown';
 
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
@@ -44,6 +45,7 @@ export const DataContainer: React.FC<Container> = ({
 
   return (
     <div className={classNames}>
+      {children}
       <div className="flex w-full gap-3 justify-between items-center max-w-full">
         <div className="w-48">#INV-30202</div>
         <div className="w-48">Due 19 Sept,2024</div>

@@ -1,40 +1,63 @@
 import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
-import Layout from '../layouts';
 import SelectInput from '../../core-ui/input/selectInput';
+import { useNavigate, useParams } from 'react-router-dom';
+import { registerCompanyProfile } from '../../services/apiService';
+import { useCompany } from '../context/CompanyContext';
 
 export const RegisterCompanyProfile: React.FC = () => {
-  const [validateOnSubmit, setValidateOnSubmit] = useState(false);
-  const [formData, setFormData] = useState({
-    companyName: '',
-    location: '',
-    city: '',
-    option1: '',
-    option2: '',
-  });
+  const { userId } = useParams<{ userId: string }>();
+  const { setCompanyId } = useCompany();
+  const navigate = useNavigate();
+  const [companyName, setCompanyName] = useState('');
+  const [location, setLocation] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleRegisterCompanyProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setValidateOnSubmit(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
-    // Add any submission logic here if needed, e.g., form validation before sending data.
+    if (!userId) {
+      setErrorMessage('User ID is required.');
+      return;
+    }
+
+    try {
+      const response = await registerCompanyProfile(
+        userId,
+        companyName,
+        location,
+        city,
+        state,
+        zip
+      );
+
+      if (response.status === 201) {
+        setSuccessMessage('Company registered successfully!');
+        setErrorMessage(null);
+        setCompanyId(response.data.company._id);
+        navigate(`/registerUserProfile/${userId}`);
+      } else {
+        setErrorMessage('Unexpected response. Please try again.');
+      }
+    } catch (error: any) {
+      setErrorMessage(
+        error.response?.data?.message ||
+          'Registration failed. Please try again.'
+      );
+    }
   };
 
   return (
-    <Layout>
-      <form onSubmit={handleSubmit}>
-        <div className="">
+    <div>
+      <form onSubmit={handleRegisterCompanyProfile}>
+        <div>
           <div className="font-bold mt-8 text-3xl text-white">
             Set Up Company Profile
           </div>
@@ -45,9 +68,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               label="Company Name"
               size="large"
               required
-              value={formData.companyName}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
             />
           </div>
 
@@ -57,9 +79,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               type="text"
               size="large"
               required
-              value={formData.location}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
 
@@ -69,9 +90,8 @@ export const RegisterCompanyProfile: React.FC = () => {
               options={['Ludhiana', 'Amritsar']}
               placeholder="Select"
               required
-              value={formData.city}
-              onChange={handleInputChange}
-              validateOnSubmit={validateOnSubmit}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
@@ -79,26 +99,24 @@ export const RegisterCompanyProfile: React.FC = () => {
             <div className="w-full h-[50px] pr-4">
               <SelectInput
                 label="State"
-                options={['opt-1', 'opt-2', 'opt-3']}
+                options={['Punjab', 'Haryana', 'Karnataka']}
                 size="medium"
                 placeholder="Select"
                 required
-                value={formData.option1}
-                onChange={handleInputChange}
-                validateOnSubmit={validateOnSubmit}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
               />
             </div>
 
             <div className="w-full">
               <SelectInput
                 label="Zip"
-                options={['opt-1', 'opt-2', 'opt-3']}
                 size="medium"
+                options={['14000', '16000', '18000']}
                 placeholder="Select"
                 required
-                value={formData.option2}
-                onChange={handleInputChange}
-                validateOnSubmit={validateOnSubmit}
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
               />
             </div>
           </div>
@@ -119,10 +137,19 @@ export const RegisterCompanyProfile: React.FC = () => {
               outline="primary"
               fullWidth="true"
               children="Back"
+              onClick={() => navigate(-1)}
             />
           </div>
+
+          {/* Display success or error message */}
+          {successMessage && (
+            <div className="text-green-500 mt-4">{successMessage}</div>
+          )}
+          {errorMessage && (
+            <div className="text-red-500 mt-4">{errorMessage}</div>
+          )}
         </div>
       </form>
-    </Layout>
+    </div>
   );
 };

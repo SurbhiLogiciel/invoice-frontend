@@ -2,30 +2,24 @@ import React, { useState } from 'react';
 import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import IIcon from '../svg/i-icon';
-import Layout from '../layouts';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { userLogin } from '../../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const HandleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setIsLoading(true);
     setErrorMessage(''); 
 
     try {
-      const response = await axios.post('http://127.0.0.1:3001/api/user/login', {
-        email,
-        password,
-      });
-
+      const response = await userLogin(email,password);
       if (response.status === 200 && response.data.token) {
         localStorage.setItem('token', response.data.token); 
+        console.log(response.data.token);
         navigate('/dashboard'); 
       } else {
         setErrorMessage('Login failed. Please check your credentials.');
@@ -37,7 +31,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <div>
       <form onSubmit={HandleLogin} method="post">
         <div className="flex font-bold mt-8 text-3xl text-white">Welcome</div>
         <div className="flex text-gray text-custom text-lg">
@@ -97,15 +91,17 @@ export const Login: React.FC = () => {
 
         <div className="text-gray mt-8 text-[18px]">Don't have an account?</div>
         <div className="mt-[30px]">
-          <Link to={'/registerEmail'}>
-          <Button size="large" outline="primary" fullWidth="true">
+          <Button
+            size="large"
+            outline="primary"
+            fullWidth="true"
+            onClick={() => navigate('/registerEmail')}
+          >
             Registration
           </Button>
-          </Link>
         </div>
 
         <hr className="mt-[30px] text-white/10" />
-
         <div className="mt-[30px] text-white text-[18px]">
           Do you need help? Contact technical support
         </div>
@@ -114,6 +110,6 @@ export const Login: React.FC = () => {
           &nbsp; support@invoice.com
         </div>
       </form>
-    </Layout>
+    </div>
   );
 };

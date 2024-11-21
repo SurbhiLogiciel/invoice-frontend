@@ -14,6 +14,7 @@ module.exports = {
         purple: 'rgb(var(--color-purple) / <alpha-value>)',
         success: 'rgb(var(--color-success) / <alpha-value>)',
         green: 'rgb(var(--color-green) / <alpha-value>)',
+        violet: 'rgb(var(--color-violet) / <alpha-value>)',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

@@ -3,16 +3,14 @@ import { Button } from '../../core-ui/button';
 import { Input } from '../../core-ui/input/input';
 import { useNavigate, useParams } from 'react-router-dom';
 import { registerUserProfile } from '../../services/apiService';
-import { useCompany } from '../context/CompanyContext';
 
 export const UserProfile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { companyId } = useCompany();
   const [fullName, setFullName] = useState('');
+  const [companyId, setCompanyId] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleRegisterUserProfile = async (
@@ -20,22 +18,9 @@ export const UserProfile: React.FC = () => {
   ) => {
     e.preventDefault();
 
-    if (!userId) {
-      setErrorMessage('User ID is required.');
-      return;
-    }
-    if (!companyId) {
-      setErrorMessage('Company ID is required.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match.');
-      return;
-    }
-
     try {
       const response = await registerUserProfile(
-        userId,
+        userId!,
         companyId,
         fullName,
         phoneNumber,
@@ -44,15 +29,12 @@ export const UserProfile: React.FC = () => {
       );
 
       if (response.status === 200) {
-        navigate(`/choosePlan/${userId}`);
+        navigate('/registerCompanyProfile');
       } else {
-        setErrorMessage('Unexpected response. Please try again.');
+        alert('Unexpected response. Please try again.');
       }
     } catch (error: any) {
-      setErrorMessage(
-        error.response?.data?.message ||
-          'Error submitting the profile. Please try again.'
-      );
+      console.error('Error occured');
     }
   };
 
@@ -93,7 +75,6 @@ export const UserProfile: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
-            hasIcon
           />
         </div>
         <div className="mt-[38px] text-white w-full">
@@ -102,9 +83,8 @@ export const UserProfile: React.FC = () => {
             type="password"
             size="large"
             placeholder="***********"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)} // Update confirmPassword state
             value={confirmPassword}
-            hasIcon
           />
         </div>
         <div className="mt-[38px] w-full">
@@ -122,7 +102,6 @@ export const UserProfile: React.FC = () => {
             outline="primary"
             fullWidth="true"
             children="Back"
-            onClick={() => navigate(-1)}
           />
         </div>
       </form>

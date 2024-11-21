@@ -12,4 +12,6 @@ export interface SelectableContainerProps {
   children?: React.ReactNode;
   containerClass?: string;
   onClick?: () => void;
+  onSelect?: () => void;
+  isSelected?: boolean;
 }
