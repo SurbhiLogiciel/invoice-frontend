@@ -1,8 +1,8 @@
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'tel' | 'select' | 'date';
+  type?: 'text' | 'email' | 'password' | 'tel' | 'select' | 'date' | 'number';
   label?: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   options?: string[];
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

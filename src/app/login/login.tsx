@@ -13,20 +13,23 @@ export const Login: React.FC = () => {
 
   const HandleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(''); 
+    setErrorMessage('');
 
     try {
-      const response = await userLogin(email,password);
+      const response = await userLogin(email, password);
       if (response.status === 200 && response.data.token) {
-        localStorage.setItem('token', response.data.token); 
+        localStorage.setItem('token', response.data.token);
         console.log(response.data.token);
         navigate(`/invoiceLayout/${response.data.userId}`); 
       } else {
         setErrorMessage('Login failed. Please check your credentials.');
       }
     } catch (error: any) {
-    setErrorMessage('Login failed. Please check your credentials.');
-    console.error('Login error:', error.response ? error.response.data : error);
+      setErrorMessage('Login failed. Please check your credentials.');
+      console.error(
+        'Login error:',
+        error.response ? error.response.data : error
+      );
     }
   };
 

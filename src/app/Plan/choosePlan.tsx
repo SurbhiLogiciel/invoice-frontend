@@ -55,7 +55,7 @@ export const ChoosePlan: React.FC = () => {
       );
 
       if (response.status === 200) {
-        navigate('/login');
+        navigate(`/invoiceLayout/${userId}`);
       } else {
         setErrorMessage('Unexpected response. Please try again.');
       }

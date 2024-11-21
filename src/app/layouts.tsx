@@ -3,8 +3,6 @@ import image1 from './assets/1.png';
 import logo from './assets/logo.png';
 import { Outlet } from 'react-router-dom';
 
-
-
 const Layout: React.FC = () => {
   return (
     <div className="flex bg-secondary bg-contain bg-no-repeat min-h-screen bg-right">

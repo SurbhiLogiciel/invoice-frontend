@@ -3,11 +3,13 @@ import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
 import invoiceLogo from './assets/5.png';
 import { Outlet, useParams } from 'react-router-dom';
-import { InvoiceDrawer } from './Invoice/generateInvoiceForm';
+import { InvoiceDrawer } from './Invoice/generateInvoice';
 import axios from 'axios';
 
-interface InvoiceLayoutProps {}
-export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
+interface InvoiceLayoutProps {
+  // children: ReactNode;
+}
+export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [data, setData] = useState<any | null>(null);
   const { id } = useParams();
@@ -54,22 +56,15 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
           />
         </div>
       </div>
-      <div className="w-full mx-auto  max-w-[1400px]">
-        <div className="flex w-full justify-between items-center ">
-          <div className="">
-            <h1 className="text-white text-2xl sm:text-3xl mt-12 font-roboto">
-              Invoices
-            </h1>
-            <p className="text-gray  font-roboto">No Invoices</p>
-          </div>
-          <div className="relative top-5 justify-between items-center ">
-            <Button size="medium" color="primary" onClick={handleOpenDrawer}>
-              New Invoice
-            </Button>
-          </div>
+      {/* Main Content */}
+      <div className="flex flex-col max-w-[1200px] m-auto ">
+        <div className="text-left ">
+          <h1 className="text-white text-2xl sm:text-3xl font-roboto">
+            Invoices
+          </h1>
+          <p className="text-gray  font-roboto">No Invoices</p>
         </div>
-        <div className="mt-12 flex">
-          {/* <DataContainer children />  */}
+        <div className="mt-12 flex ">
           <Outlet />
         </div>
         <InvoiceDrawer open={isDrawerOpen} onClose={handleCloseDrawer} />
