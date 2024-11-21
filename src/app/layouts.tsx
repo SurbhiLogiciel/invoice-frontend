@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import image1 from './assets/1.png';
 import logo from './assets/logo.png';
 import { Outlet } from 'react-router-dom';
 
 
 
-const Layout: React.FC = ({  }) => {
+const Layout: React.FC = () => {
   return (
     <div className="flex bg-secondary bg-contain bg-no-repeat min-h-screen bg-right">
       <div className="flex mx-auto py-8  max-h-full  w-full max-w-[1010px] gap-20">

@@ -1,6 +1,6 @@
 // src/routes/AppRoutes.tsx
 
-import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from '../app/login/login';
 import { RegisterEmail } from '../app/Registration/register';
 import { VerifyOTP } from '../app/Registration/verifyOTP';
@@ -10,12 +10,9 @@ import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
 import InvoiceLayout from '../app/invoiceLayouts';
-import InvoiceComponent from '../core-ui/invoice';
-import { DataContainer } from '../core-ui/DataContainer';
 import ParentComponent from '../core-ui/invoice/invoiceData';
 
 const AppRoutes = () => {
-  const { id } = useParams<{ id: string }>();
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -24,7 +21,6 @@ const AppRoutes = () => {
 
         <Route path="/registerEmail" element={<RegisterEmail />} />
 
-        {/* Protected routes */}
         <Route
           path="/verifyOtp/:userId"
           element={
@@ -60,7 +56,6 @@ const AppRoutes = () => {
       </Route>
       <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
         <Route element={<Navigate to="InvoiceComponent" replace />} />
-        {/* <Route path="invoiceComponent" element={<InvoiceComponent />} /> */}
         <Route
           path="invoiceData"
           element={<ParentComponent />}
