@@ -5,41 +5,38 @@ import invoiceLogo from './assets/5.png';
 import { Outlet, useParams } from 'react-router-dom';
 import { InvoiceDrawer } from './Invoice/generateInvoiceForm';
 import axios from 'axios';
-import { DataContainer } from '../core-ui/DataContainer';
-import InvoiceComponent from '../core-ui/invoice';
 
 interface InvoiceLayoutProps {}
-export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
+export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [data, setData] = useState<any | null>(null);
-  const { id } = useParams(); 
+  const { id } = useParams();
   const handleOpenDrawer = () => {
     setIsDrawerOpen(true);
   };
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
   };
-   useEffect(() => {
-     if (id) {
-       const fetchData = async () => {
-         try {
-           const response = await axios.get(`/api/invoice/${id}`); // Use your actual API endpoint
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/api/invoice/${id}`); // Use your actual API endpoint
 
-           setData(response.data || null); // Set the fetched data or null if no data
-         } catch (error) {
-           console.error('Error fetching data:', error);
-           setData(null); // Set data to null in case of an error
-         } 
-       };
+          setData(response.data || null); // Set the fetched data or null if no data
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setData(null); // Set data to null in case of an error
+        }
+      };
 
-       fetchData();
-     } else {
-      console.log("Error occured while fetching data");
-      
+      fetchData();
+    } else {
+      console.log('Error occured while fetching data');
+
       //  setLoading(false); // No ID provided, so no need to fetch
-     }
-   }, [id]);
-
+    }
+  }, [id]);
 
   return (
     <div className="flex h-screen bg-secondary">
@@ -72,14 +69,8 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = ({}) => {
           </div>
         </div>
         <div className="mt-12 flex">
-           data ? (
-            <>
-              <DataContainer children /> 
-              <Outlet />  
-            </>
-          ) : (
-            <InvoiceComponent />  
-          )
+          {/* <DataContainer children />  */}
+          <Outlet />
         </div>
         <InvoiceDrawer open={isDrawerOpen} onClose={handleCloseDrawer} />
       </div>

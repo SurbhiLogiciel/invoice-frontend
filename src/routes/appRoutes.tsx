@@ -12,7 +12,7 @@ import ProtectedRoute from '../app/components/protectedRouteComponent';
 import InvoiceLayout from '../app/invoiceLayouts';
 import InvoiceComponent from '../core-ui/invoice';
 import { DataContainer } from '../core-ui/DataContainer';
-
+import ParentComponent from '../core-ui/invoice/invoiceData';
 
 const AppRoutes = () => {
   const { id } = useParams<{ id: string }>();
@@ -60,8 +60,11 @@ const AppRoutes = () => {
       </Route>
       <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
         <Route element={<Navigate to="InvoiceComponent" replace />} />
-        <Route path="invoiceComponent" element={<InvoiceComponent />} />
-        <Route path="invoiceData" element={<DataContainer children />} />
+        {/* <Route path="invoiceComponent" element={<InvoiceComponent />} /> */}
+        <Route
+          path="invoiceData"
+          element={<ParentComponent />}
+        />
       </Route>
     </Routes>
   );
