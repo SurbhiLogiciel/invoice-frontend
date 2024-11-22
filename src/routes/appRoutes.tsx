@@ -9,6 +9,7 @@ import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfi
 import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
+import { DataContainer } from '../core-ui/DataContainer';
 import InvoiceLayout from '../app/invoiceLayouts';
 import ParentComponent from '../core-ui/invoice/invoiceData';
 
@@ -17,7 +18,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Navigate to="login" replace />} />
-        <Route path="login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         <Route path="/registerEmail" element={<RegisterEmail />} />
 
@@ -53,13 +54,18 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/login/:userId"
+          element={
+            <ProtectedRoute>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
       </Route>
       <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
-        <Route element={<Navigate to="InvoiceComponent" replace />} />
-        <Route
-          path="invoiceData"
-          element={<ParentComponent />}
-        />
+        <Route element={<Navigate to="DataContainer" replace />} />
+        <Route path="invoiceData" element={<DataContainer children />} />
       </Route>
     </Routes>
   );

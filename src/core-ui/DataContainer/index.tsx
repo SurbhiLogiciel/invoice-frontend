@@ -5,7 +5,7 @@ import Frame from '../../app/assets/Frame.png';
 import { Chips } from '../chips';
 import { Dropdown } from '../dropdown';
 import axios from 'axios';
-import { InvoiceDrawer } from '../../app/Invoice/generateInvoiceForm';
+import { InvoiceDrawer } from '../../app/Invoice/generateInvoice';
 
 export const DataContainer: React.FC<Container> = ({
   data,
