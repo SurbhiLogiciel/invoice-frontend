@@ -5,28 +5,43 @@ import SelectInput from '../../core-ui/input/selectInput';
 import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
-import { useParams } from 'react-router-dom';
-import { createInvoice } from '../../services/apiService';
+import { useLocation, useParams } from 'react-router-dom';
+import { createInvoice, updateInvoice } from '../../services/apiService';
+import { InvoiceType } from '../../core-ui/DataContainer';
 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
+  invoice: InvoiceType | null; 
+  onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
-export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
+export const InvoiceDrawer: React.FC<DrawerProps> = ({
+  open,
+  onClose,
+  invoice,
+  onSave,
+}) => {
   const { userId } = useParams<{ userId: string }>();
+  const { invoiceId } = useParams<{ invoiceId: string }>();
   const [companyName, setCompanyName] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
   const [issueDate, setIssueDate] = useState<Date | null>(new Date());
+  const [status, setStatus] = useState('');
   const [paymentTerms, setPaymentTerms] = useState('');
   const [items, setItems] = useState([
     { id: Date.now(), itemName: '', qty: 0, price: 0 },
     { id: Date.now() + 1, itemName: '', qty: 0, price: 0 },
     { id: Date.now() + 2, itemName: '', qty: 0, price: 0 },
   ]);
+  const location = useLocation();
+
+  const isEditing = location.pathname.includes(
+    `/invoiceLayout/${userId}/${invoiceId}`
+  );
 
   const addItemRow = () => {
     setItems([...items, { id: Date.now(), itemName: '', qty: 0, price: 0 }]);
@@ -44,7 +59,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
     setItems(updatedItems);
   };
 
-  const handleCreateInvoice = async () => {
+  const handleSave = async () => {
     const invoiceData = {
       companyName,
       streetAddress,
@@ -53,13 +68,16 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
       zip,
       issueDate,
       paymentTerms,
+      status,
       items,
     };
 
     if (userId) {
       try {
         console.log('Creating invoice for userId:', userId);
-        await createInvoice(userId, invoiceData);
+        isEditing && invoice?._id
+          ? await updateInvoice(invoice._id, userId, invoiceData)
+          : await createInvoice(userId, invoiceData);
         onClose();
       } catch (error) {
         console.error('Failed to create invoice', error);
@@ -88,9 +106,15 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
       }}
     >
       <div className="p-6">
-        <h2 className="text-white font-bold text-xl font-roboto">
-          New Invoice
-        </h2>
+        {isEditing ? (
+          <h2 className="text-white font-bold text-xl font-roboto">
+            Update Invoice
+          </h2>
+        ) : (
+          <h2 className="text-white font-bold text-xl font-roboto">
+            New Invoice
+          </h2>
+        )}
 
         <h2 className="text-primary font-semibold text-sm mt-7 font-roboto">
           Bill To
@@ -165,6 +189,16 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
               onChange={(e) => setPaymentTerms(e.target.value)}
             />
           </div>
+          <div className="w-1/2">
+            <SelectInput
+              variant="secondary"
+              placeholder="Select"
+              label="Status"
+              options={['PAID', 'PENDING']}
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            />
+          </div>
         </div>
 
         <h2 className="text-gray font-bold text-lg mt-10 font-roboto">
@@ -235,6 +269,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
           + Add More Item
         </p>
       </div>
+
       <div className="flex justify-end bg-purple space-x-4 p-3">
         <Button
           size="large"
@@ -243,12 +278,22 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
           children="Cancel"
           onClick={onClose}
         />
-        <Button
-          size="large"
-          color="primary"
-          children="Save"
-          onClick={handleCreateInvoice}
-        />
+
+        {isEditing ? (
+          <Button
+            size="large"
+            color="primary"
+            children="Update"
+            onClick={handleSave}
+          />
+        ) : (
+          <Button
+            size="large"
+            color="primary"
+            children="Save"
+            onClick={handleSave}
+          />
+        )}
       </div>
     </Drawer>
   );

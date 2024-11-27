@@ -5,37 +5,47 @@ import invoiceLogo from './assets/5.png';
 import { Outlet, useParams } from 'react-router-dom';
 import { InvoiceDrawer } from './Invoice/generateInvoice';
 import axios from 'axios';
+import { DataContainer, InvoiceType } from '../core-ui/DataContainer';
+import { useNavigate } from 'react-router-dom';
+import { createInvoice } from '../services/apiService';
 
 interface InvoiceLayoutProps {}
 
 export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [data, setData] = useState<any | null>(null);
-  const { id } = useParams();
+  const [invoice, setInvoice] = useState<InvoiceType | null>(null);
+  const { invoiceId } = useParams();
 
+  const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
   const handleToggleDrawer = () => {
-    setIsDrawerOpen((prev) => !prev);
+    setIsDrawerOpen((prev) => {
+      const nextState = !prev;
+
+      if (nextState) {
+        navigate(`/invoiceLayout/${userId}`);
+      } else {
+        navigate(`/invoiceLayout/${userId}`);
+      }
+
+      return nextState;
+    });
+
     console.log(`Drawer ${!isDrawerOpen ? 'Open' : 'Close'} Clicked`);
   };
 
-  useEffect(() => {
-    if (id) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`/api/invoice/${id}`); // Use your actual API endpoint
-          setData(response.data || null);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setData(null);
-        }
-      };
-
-      fetchData();
-    } else {
-      console.log('Error occurred while fetching data');
+  const handleSaveInvoice = async (
+    updatedInvoice: InvoiceType
+  ): Promise<void> => {
+    if (updatedInvoice) {
+      try {
+        await axios.put(`/api/invoices/${updatedInvoice._id}`, updatedInvoice);
+        console.log('Invoice updated successfully');
+      } catch (error) {
+        console.error('Failed to save invoice:', error);
+      }
     }
-  }, [id]);
-
+  };
   return (
     <div className="flex h-screen bg-secondary">
       {/* Sidebar */}
@@ -55,27 +65,30 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full mx-auto max-w-[1400px]">
-        <div className="flex w-full justify-between items-center">
-          <div>
-            <h1 className="text-white text-2xl sm:text-3xl mt-12 font-roboto">
-              Invoices
-            </h1>
-            <div className="mt-12 flex">
-              <Outlet />
-            </div>
-          </div>
+      <div className="w-full mx-auto max-w-[1500px]">
+        <div className="flex w-full justify-between items-center mt-12">
+          <h1 className="text-white text-2xl sm:text-3xl font-roboto">
+            Invoices
+          </h1>
           <div className="relative">
-            {/* Open Drawer Button */}
             <Button size="medium" color="primary" onClick={handleToggleDrawer}>
               New Invoice
             </Button>
           </div>
         </div>
+        <div className="mt-12 flex justify-center">
+          <DataContainer>
+            <div></div>
+          </DataContainer>
+        </div>
       </div>
 
-      {/* Drawer Component */}
-      <InvoiceDrawer open={isDrawerOpen} onClose={handleToggleDrawer} />
+      <InvoiceDrawer
+        open={isDrawerOpen}
+        onClose={handleToggleDrawer}
+        invoice={invoice}
+        onSave={handleSaveInvoice}
+      />
     </div>
   );
 };

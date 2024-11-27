@@ -10,8 +10,8 @@ import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
 import { DataContainer } from '../core-ui/DataContainer';
+
 import InvoiceLayout from '../app/invoiceLayouts';
-import ParentComponent from '../core-ui/invoice/invoiceData';
 
 const AppRoutes = () => {
   return (
@@ -64,8 +64,10 @@ const AppRoutes = () => {
         />
       </Route>
       <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
-        <Route element={<Navigate to="DataContainer" replace />} />
-        <Route path="invoiceData" element={<DataContainer children />} />
+        <Route
+          path="/invoiceLayout/:userId/:invoiceId"
+          element={<InvoiceLayout />}
+        ></Route>
       </Route>
     </Routes>
   );
