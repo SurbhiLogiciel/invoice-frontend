@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Container } from './types';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../app/assets/Frame.png';
@@ -14,6 +14,7 @@ import {
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export interface InvoiceType {
   _id: string;
@@ -46,6 +47,7 @@ export const DataContainer: React.FC<Container> = ({
     currentPage: 1,
   });
   const navigate = useNavigate();
+  const [isLoading, setLoading] = useState(false);
   const userId = localStorage.getItem('userId') || '';
 
   useEffect(() => {
@@ -94,25 +96,47 @@ export const DataContainer: React.FC<Container> = ({
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = useCallback(
+    async (page: number) => {
+      setLoading(true);
       try {
-        const response = await fetchInvoiceList(userId);
-        setInvoices(response.data || []);
+        const response = await fetchInvoiceList(userId, page);
+        setInvoices((prevInvoices) => [...prevInvoices, ...response.data]);
         setPagination({
           totalItems: response.data.totalItems,
           totalPages: response.data.totalPages,
           currentPage: response.data.currentPage,
         });
         setError(null);
-      } catch (error: any) {
-        console.error(error.message);
+      } catch (error) {
+        console.error(error);
         setError('Failed to fetch invoices');
+      } finally {
+        setLoading(false);
       }
-    };
+    },
+    [userId]
+  );
 
-    fetchData();
-  }, [userId]);
+  useEffect(() => {
+    fetchData(pagination.currentPage);
+  }, [pagination.currentPage, fetchData]);
+
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const target = e.target as HTMLDivElement;
+    const bottom =
+      target.scrollHeight === target.scrollTop + target.clientHeight;
+    if (
+      bottom &&
+      !isLoading &&
+      pagination.currentPage < pagination.totalPages
+    ) {
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage + 1,
+      }));
+    }
+  };
 
   const handleEdit = (invoice: InvoiceType) => {
     const invoiceId = invoice._id;
@@ -147,7 +171,11 @@ export const DataContainer: React.FC<Container> = ({
 
   return (
     <div className="flex flex-col w-full gap-y-6">
-      <div className="bg-purple rounded-md text-white p-8">
+      <div
+        className="bg-purple rounded-md text-white p-8 overflow-auto"
+        onScroll={handleScroll}
+        style={{ height: 'calc(100vh - 150px)' }}
+      >
         <div className="flex flex-col w-full gap-7 justify-between items-center max-w-full">
           {invoices.length === 0 ? (
             <InvoiceComponent />
@@ -197,39 +225,6 @@ export const DataContainer: React.FC<Container> = ({
           onSave={handleUpdate}
         />
       </div>
-
-      {pagination.totalPages > 1 && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                currentPage: Math.max(prev.currentPage - 1, 1),
-              }))
-            }
-            disabled={pagination.currentPage <= 1}
-          >
-            Previous
-          </button>
-          <span className="mx-2">
-            {pagination.currentPage} / {pagination.totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                currentPage: Math.min(
-                  prev.currentPage + 1,
-                  pagination.totalPages
-                ),
-              }))
-            }
-            disabled={pagination.currentPage >= pagination.totalPages}
-          >
-            Next
-          </button>
-        </div>
-      )}
     </div>
   );
 };

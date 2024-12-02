@@ -11,7 +11,11 @@ export const registerUserEmail = async (email: string) => {
   }
 };
 
-export const fetchInvoiceList = async (userId: string) => {
+export const fetchInvoiceList = async (
+  userId: string,
+  page: number = 1,
+  limit: number = 10
+) => {
   try {
     if (!userId) {
       console.error('User ID not found!');
@@ -19,7 +23,7 @@ export const fetchInvoiceList = async (userId: string) => {
     }
 
     const response = await apiClient.get(`/invoiceList`, {
-      params: { userId },
+      params: { userId, page, limit },
     });
 
     console.log(response);
