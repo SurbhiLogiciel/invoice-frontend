@@ -10,5 +10,6 @@ export interface DropdownOption {
 export interface DropdownProps {
   options: DropdownOption[];
   Image: string;
-  position?: DropdownPosition; 
+  position?: DropdownPosition;
+  onEdit?: () => void;
 }

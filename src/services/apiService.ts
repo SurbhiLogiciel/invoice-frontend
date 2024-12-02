@@ -11,6 +11,75 @@ export const registerUserEmail = async (email: string) => {
   }
 };
 
+export const fetchInvoiceList = async (userId: string) => {
+  try {
+    if (!userId) {
+      console.error('User ID not found!');
+      return;
+    }
+
+    const response = await apiClient.get(`/invoiceList`, {
+      params: { userId },
+    });
+
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch invoices:', error);
+    throw error;
+  }
+};
+
+export const fetchInvoiceData = async (userId: string, invoiceId: string) => {
+  try {
+    if (!userId) {
+      console.error('User ID not found!');
+      return;
+    }
+    if (!invoiceId) {
+      console.error('invoiceId ID not found!');
+      return;
+    }
+
+    const response = await apiClient.get(
+      `/invoiceData/${userId}/${invoiceId}`,
+      {
+        params: { userId, invoiceId },
+      }
+    );
+
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch invoices:', error);
+    throw error;
+  }
+};
+
+export const updateInvoice = async (
+  id: string,
+  userId: string,
+  updatedInvoice: object
+) => {
+  try {
+    console.log(updatedInvoice);
+    if (!id) {
+      console.error('Invoice ID not found!');
+      return;
+    }
+    console.log('ndsjjdsf');
+
+    const response = await apiClient.put(
+      `/invoices/${userId}/${id}`,
+      updatedInvoice
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Failed to update invoice:', error);
+    throw error;
+  }
+};
+
 export const verifyOtp = async (userId: string, otp: number | string) => {
   if (!userId) {
     throw new Error('userId is required');
@@ -169,6 +238,28 @@ export const createInvoice = async (
     return response.data;
   } catch (error) {
     console.error('Error creating invoice:', error);
+    throw error;
+  }
+};
+
+export const getUserName = async (userId: string) => {
+  try {
+    const response = await apiClient.get(`/userName/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting Username:', error);
+    throw error;
+  }
+};
+
+export const deleteInvoice = async (userId: string, invoiceId: string) => {
+  try {
+    const response = await apiClient.delete(
+      `/deleteInvoice/${userId}/${invoiceId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting Invoice:', error);
     throw error;
   }
 };

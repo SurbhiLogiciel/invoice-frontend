@@ -22,6 +22,8 @@ export const RegisterEmail: React.FC = () => {
     }
     try {
       const response = await registerUserEmail(email);
+    localStorage.setItem('userId', response.data.userId);
+
 
       if (response.status === 201) {
         registerEmail();

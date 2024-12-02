@@ -20,7 +20,7 @@ export const Login: React.FC = () => {
       if (response.status === 200 && response.data.token) {
         localStorage.setItem('token', response.data.token);
         console.log(response.data.token);
-        navigate('/invoiceLayout');
+        navigate(`/invoiceLayout/${response.data.userId}`); 
       } else {
         setErrorMessage('Login failed. Please check your credentials.');
       }

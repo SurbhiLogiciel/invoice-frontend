@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { getErrorMessage } from './getErrorMessages';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+console.log(BASE_URL);
+
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

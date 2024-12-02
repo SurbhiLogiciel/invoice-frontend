@@ -9,20 +9,19 @@ import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfi
 import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
-import InvoiceLayout from '../app/invoiceLayouts';
-import InvoiceComponent from '../core-ui/invoice';
 import { DataContainer } from '../core-ui/DataContainer';
+
+import InvoiceLayout from '../app/invoiceLayouts';
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Navigate to="login" replace />} />
-        <Route path="login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         <Route path="/registerEmail" element={<RegisterEmail />} />
 
-        {/* Protected routes */}
         <Route
           path="/verifyOtp/:userId"
           element={
@@ -55,14 +54,22 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/login/:userId"
+          element={
+            <ProtectedRoute>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
       </Route>
       <Route path="/invoiceLayout/:userId" element={<InvoiceLayout />}>
-        <Route element={<Navigate to="InvoiceComponent" replace />} />
-        <Route path="invoiceComponent" element={<InvoiceComponent />} />
-        <Route path="invoiceData" element={<DataContainer children />} />
+        <Route
+          path="/invoiceLayout/:userId/:invoiceId"
+          element={<InvoiceLayout />}
+        ></Route>
       </Route>
     </Routes>
   );
 };
-
 export default AppRoutes;
