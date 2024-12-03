@@ -13,8 +13,7 @@ import {
 } from '../../services/apiService';
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export interface InvoiceType {
   _id: string;
@@ -39,7 +38,6 @@ export const DataContainer: React.FC<Container> = ({
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(
     null
   );
-  const { invoiceId } = useParams<{ invoiceId: string }>();
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -101,16 +99,38 @@ export const DataContainer: React.FC<Container> = ({
       setLoading(true);
       try {
         const response = await fetchInvoiceList(userId, page);
-        setInvoices((prevInvoices) => [...prevInvoices, ...response.data]);
-        setPagination({
-          totalItems: response.data.totalItems,
-          totalPages: response.data.totalPages,
-          currentPage: response.data.currentPage,
+        const newInvoices = response.data as InvoiceType[];
+
+        // Update the invoice list
+        setInvoices((prevInvoices) => {
+          const updatedInvoices = [
+            ...prevInvoices,
+            ...newInvoices.filter(
+              (newInvoice) =>
+                !prevInvoices.some(
+                  (prevInvoice) => prevInvoice._id === newInvoice._id
+                )
+            ),
+          ];
+
+          return updatedInvoices;
         });
+
+        // Update pagination state
+        setPagination({
+          totalItems: response.totalItems,
+          totalPages: response.totalPages,
+          currentPage: page,
+        });
+
         setError(null);
       } catch (error) {
-        console.error(error);
-        setError('Failed to fetch invoices');
+        console.error('Error fetching invoice data:', error);
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred while fetching invoices.'
+        );
       } finally {
         setLoading(false);
       }
@@ -124,10 +144,12 @@ export const DataContainer: React.FC<Container> = ({
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const target = e.target as HTMLDivElement;
-    const bottom =
+
+    const isAtBottom =
       target.scrollHeight === target.scrollTop + target.clientHeight;
+
     if (
-      bottom &&
+      isAtBottom &&
       !isLoading &&
       pagination.currentPage < pagination.totalPages
     ) {
@@ -138,22 +160,37 @@ export const DataContainer: React.FC<Container> = ({
     }
   };
 
-  const handleEdit = (invoice: InvoiceType) => {
+  const handleEdit = async (invoice: InvoiceType) => {
     const invoiceId = invoice._id;
     navigate(`/invoiceLayout/${userId}/${invoiceId}`);
-    const response = fetchInvoiceData(userId, invoiceId);
 
-    setSelectedInvoice(invoice);
-    setIsDrawerOpen(true);
+    try {
+      const response = await fetchInvoiceData(userId, invoiceId);
+      setSelectedInvoice(response.data);
+
+      setIsDrawerOpen(true);
+    } catch (error) {
+      console.error('Error fetching invoice data:', error);
+      setError('Failed to fetch invoice data');
+    }
   };
 
-  const handleDelete = (invoice: InvoiceType) => {
-    const response = deleteInvoice(invoice.userId, invoice._id);
+  const handleDelete = async (invoice: InvoiceType) => {
+    try {
+      await deleteInvoice(invoice.userId, invoice._id);
+      console.log('Invoice deleted successfully');
+    } catch (error) {
+      console.error('Error deleting invoice:', error);
+      setError('Failed to delete invoice');
+    }
   };
 
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
     navigate(`/invoiceLayout/${userId}`);
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
   };
 
   const generateOptions = (invoice: InvoiceType): DropdownOption[] => [
@@ -171,48 +208,60 @@ export const DataContainer: React.FC<Container> = ({
 
   return (
     <div className="flex flex-col w-full gap-y-6">
-      <div
-        className="bg-purple rounded-md text-white p-8 overflow-auto"
-        onScroll={handleScroll}
-        style={{ height: 'calc(100vh - 150px)' }}
-      >
-        <div className="flex flex-col w-full gap-7 justify-between items-center max-w-full">
+      <div className="bg-secondary rounded-md text-white p-8">
+        <div
+          className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
+          onScroll={handleScroll}
+          style={{
+            height: 'calc(102vh - 248px)',
+            overflowY: 'scroll',
+            scrollbarWidth: 'none',
+          }}
+        >
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (
             invoices.map((invoice) => (
-              <div className="flex w-full gap-7 items-center" key={invoice._id}>
-                {children}
-                <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                <div className="w-48">
-                  {' '}
-                  Due{' '}
-                  {calculateDueDate(invoice.issueDate, invoice.paymentTerms)}
-                </div>
-                <div className="w-48">{fullName}</div>
-                <div className="w-52">
-                  Created on{' '}
-                  {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </div>
-                <div className="w-40 font-bold text-[20px]">
-                  ${invoice.amount}
-                </div>
-                <div className="w-40 shrink-0">
-                  <Chips color="success" onClick={() => alert()}>
-                    {invoice.status}
-                  </Chips>
-                </div>
-
-                <div className="w-16">
-                  <Dropdown
-                    options={generateOptions(invoice)}
-                    Image={Frame}
-                    position="right"
-                  />
+              <div
+                className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
+                key={invoice._id}
+              >
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-7 items-center">
+                    {children}
+                    <div className="w-48">#INV-{invoice.invoiceNumber}</div>
+                    <div className="w-48">
+                      Due{' '}
+                      {calculateDueDate(
+                        invoice.issueDate,
+                        invoice.paymentTerms
+                      )}
+                    </div>
+                    <div className="w-48">{fullName}</div>
+                    <div className="w-52">
+                      Created on{' '}
+                      {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </div>
+                    <div className="w-40 font-bold text-[20px]">
+                      ${invoice.amount}
+                    </div>
+                    <div className="w-40 shrink-0">
+                      <Chips color="success" onClick={() => alert()}>
+                        {invoice.status}
+                      </Chips>
+                    </div>
+                    <div className="w-16">
+                      <Dropdown
+                        options={generateOptions(invoice)}
+                        Image={Frame}
+                        position="right"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))
@@ -224,6 +273,12 @@ export const DataContainer: React.FC<Container> = ({
           invoice={selectedInvoice}
           onSave={handleUpdate}
         />
+        <div className="flex justify-between items-center mt-1 text-white">
+          <span>Total Invoices: {pagination.totalItems}</span>
+          <span>
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+        </div>
       </div>
     </div>
   );
