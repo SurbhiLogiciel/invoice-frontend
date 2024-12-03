@@ -147,44 +147,55 @@ export const DataContainer: React.FC<Container> = ({
 
   return (
     <div className="flex flex-col w-full gap-y-6">
-      <div className="bg-purple rounded-md text-white p-8">
-        <div className="flex flex-col w-full gap-7 justify-between items-center max-w-full">
+      <div className="bg-secondary rounded-md text-white p-8">
+        <div
+          className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
+          
+        >
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (
             invoices.map((invoice) => (
-              <div className="flex w-full gap-7 items-center" key={invoice._id}>
-                {children}
-                <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                <div className="w-48">
-                  {' '}
-                  Due{' '}
-                  {calculateDueDate(invoice.issueDate, invoice.paymentTerms)}
-                </div>
-                <div className="w-48">{fullName}</div>
-                <div className="w-52">
-                  Created on{' '}
-                  {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </div>
-                <div className="w-40 font-bold text-[20px]">
-                  ${invoice.amount}
-                </div>
-                <div className="w-40 shrink-0">
-                  <Chips color="success" onClick={() => alert()}>
-                    {invoice.status}
-                  </Chips>
-                </div>
-
-                <div className="w-16">
-                  <Dropdown
-                    options={generateOptions(invoice)}
-                    Image={Frame}
-                    position="right"
-                  />
+              <div
+                className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
+                key={invoice._id}
+              >
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-7 items-center">
+                    {children}
+                    <div className="w-48">#INV-{invoice.invoiceNumber}</div>
+                    <div className="w-48">
+                      Due{' '}
+                      {calculateDueDate(
+                        invoice.issueDate,
+                        invoice.paymentTerms
+                      )}
+                    </div>
+                    <div className="w-48">{fullName}</div>
+                    <div className="w-52">
+                      Created on{' '}
+                      {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </div>
+                    <div className="w-40 font-bold text-[20px]">
+                      ${invoice.amount}
+                    </div>
+                    <div className="w-40 shrink-0">
+                      <Chips color="success" onClick={() => alert()}>
+                        {invoice.status}
+                      </Chips>
+                    </div>
+                    <div className="w-16">
+                      <Dropdown
+                        options={generateOptions(invoice)}
+                        Image={Frame}
+                        position="right"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))
@@ -196,40 +207,8 @@ export const DataContainer: React.FC<Container> = ({
           invoice={selectedInvoice}
           onSave={handleUpdate}
         />
+        
       </div>
-
-      {pagination.totalPages > 1 && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                currentPage: Math.max(prev.currentPage - 1, 1),
-              }))
-            }
-            disabled={pagination.currentPage <= 1}
-          >
-            Previous
-          </button>
-          <span className="mx-2">
-            {pagination.currentPage} / {pagination.totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                currentPage: Math.min(
-                  prev.currentPage + 1,
-                  pagination.totalPages
-                ),
-              }))
-            }
-            disabled={pagination.currentPage >= pagination.totalPages}
-          >
-            Next
-          </button>
-        </div>
-      )}
     </div>
   );
-};
+}
