@@ -207,8 +207,13 @@ export const DataContainer: React.FC<Container> = ({
           invoice={selectedInvoice}
           onSave={handleUpdate}
         />
-        
+        <div className="flex justify-between items-center mt-1 text-white">
+          <span>Total Invoices: {pagination.totalItems}</span>
+          <span>
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+        </div>
       </div>
     </div>
   );
-}
+};
