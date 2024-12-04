@@ -6,13 +6,13 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useParams } from 'react-router-dom';
-import { createInvoice, updateInvoice } from '../../services/apiService';
+import { createInvoice, fetchInvoiceData, fetchInvoiceList, updateInvoice } from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
-  invoice: InvoiceType | null; 
+  invoice: InvoiceType | null;
   onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
@@ -77,7 +77,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         console.log('Creating invoice for userId:', userId);
         isEditing && invoice?._id
           ? await updateInvoice(invoice._id, userId, invoiceData)
-          : await createInvoice(userId, invoiceData);
+          : await createInvoice(userId, invoiceData);          
         onClose();
       } catch (error) {
         console.error('Failed to create invoice', error);
