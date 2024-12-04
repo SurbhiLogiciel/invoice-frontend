@@ -15,6 +15,13 @@ import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
 import { useNavigate, useParams } from 'react-router-dom';
 
+export interface InvoiceItemType {
+  id: number;
+  itemName: string;
+  qty: number;
+  price: number;
+}
+
 export interface InvoiceType {
   _id: string;
   invoiceNumber: string;
@@ -25,7 +32,14 @@ export interface InvoiceType {
   userId: string;
   paymentTerms: string;
   status: string;
+  companyName: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  items: InvoiceItemType[];
 }
+
 
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
