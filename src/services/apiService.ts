@@ -1,3 +1,4 @@
+import { log } from 'console';
 import apiClient from '../utils/http';
 
 export const registerUserEmail = async (email: string) => {
@@ -62,13 +63,10 @@ export const updateInvoice = async (
   updatedInvoice: object
 ) => {
   try {
-    console.log(updatedInvoice);
     if (!id) {
       console.error('Invoice ID not found!');
       return;
     }
-    console.log('ndsjjdsf');
-
     const response = await apiClient.put(
       `/invoices/${userId}/${id}`,
       updatedInvoice
@@ -231,7 +229,7 @@ interface CreateInvoicePayload {
 
 export const createInvoice = async (
   userId: string,
-  data: CreateInvoicePayload,
+  data: CreateInvoicePayload
 ) => {
   try {
     const response = await apiClient.post(`/invoices/${userId}`, data);
@@ -261,30 +259,5 @@ export const deleteInvoice = async (userId: string, invoiceId: string) => {
   } catch (error) {
     console.error('Error deleting Invoice:', error);
     throw error;
-  }
-};
-
-export const logout = async () => {
-  try {
-    const token = localStorage.getItem('token'); 
-
-    if (!token) {
-      console.log('User is not logged in');
-      return;
-    }
-
-    await apiClient.post('/logout',
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      }
-    );
-
-    localStorage.removeItem('token');
-    console.log('User logged out successfully');
-  } catch (error) {
-    console.error('Error logging out:', error);
   }
 };

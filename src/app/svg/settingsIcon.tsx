@@ -25,6 +25,7 @@ const SettingsIcon: React.FC = () => {
       if (response.status === 200) {
         console.log('User logged out successfully');
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         window.location.href = '/login'; 
       }
     } catch (error) {
