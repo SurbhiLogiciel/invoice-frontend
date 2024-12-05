@@ -12,7 +12,7 @@ import { InvoiceType } from '../../core-ui/DataContainer';
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
-  invoice: InvoiceType | null; 
+  invoice: InvoiceType | null;
   onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
@@ -29,7 +29,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
-  const [issueDate, setIssueDate] = useState<Date | null>(new Date());
+  const [issueDate, setIssueDate] = useState<Date | null>(null);
   const [status, setStatus] = useState('');
   const [paymentTerms, setPaymentTerms] = useState('');
   const [items, setItems] = useState([
@@ -59,7 +59,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     setItems(updatedItems);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (isDraft: boolean = false) => {
     const invoiceData = {
       companyName,
       streetAddress,
@@ -68,20 +68,35 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       zip,
       issueDate,
       paymentTerms,
-      status,
+      status: isDraft ? 'DRAFT' : status,
       items,
     };
 
-    if (userId) {
-      try {
-        console.log('Creating invoice for userId:', userId);
-        isEditing && invoice?._id
-          ? await updateInvoice(invoice._id, userId, invoiceData)
-          : await createInvoice(userId, invoiceData);
-        onClose();
-      } catch (error) {
-        console.error('Failed to create invoice', error);
+    if (!userId) {
+      console.error('Missing userId; cannot save invoice.');
+      return;
+    }
+
+    try {
+      console.log(
+        isDraft
+          ? 'Saving invoice as draft for userId:'
+          : 'Creating or updating invoice for userId:',
+        userId
+      );
+
+      if (isEditing && invoice?._id) {
+        await updateInvoice(invoice._id, userId, invoiceData);
+      } else {
+        await createInvoice(userId, invoiceData);
       }
+
+      onClose();
+    } catch (error) {
+      console.error(
+        isDraft ? 'Failed to save draft invoice' : 'Failed to create invoice',
+        error
+      );
     }
   };
 
@@ -270,30 +285,39 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         </p>
       </div>
 
-      <div className="flex justify-end bg-purple space-x-4 p-3">
+      <div className="flex justify-between bg-purple space-x-4 p-3">
         <Button
           size="large"
-          outline="primary"
-          color="secondary"
-          children="Cancel"
-          onClick={onClose}
+          outline="secondary"
+          color="lightPurple"
+          children="Save Draft"
+          onClick={() => handleSave(true)}
         />
 
-        {isEditing ? (
+        <div className="flex space-x-4">
           <Button
             size="large"
-            color="primary"
-            children="Update"
-            onClick={handleSave}
+            outline="primary"
+            color="secondary"
+            children="Cancel"
+            onClick={onClose}
           />
-        ) : (
-          <Button
-            size="large"
-            color="primary"
-            children="Save"
-            onClick={handleSave}
-          />
-        )}
+          {isEditing ? (
+            <Button
+              size="large"
+              color="primary"
+              children="Update"
+              onClick={handleSave}
+            />
+          ) : (
+            <Button
+              size="large"
+              color="primary"
+              children="Save"
+              onClick={handleSave}
+            />
+          )}
+        </div>
       </div>
     </Drawer>
   );

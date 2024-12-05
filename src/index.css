@@ -17,3 +17,8 @@
     --color-violet: 42 32 93;
   }
 }
+/* DatePickerStyles.css */
+.react-datepicker__input-container input::placeholder {
+  color: #fff;
+  font-style: roboto;
+}

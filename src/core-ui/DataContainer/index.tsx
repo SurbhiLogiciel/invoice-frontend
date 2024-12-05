@@ -25,6 +25,7 @@ export interface InvoiceType {
   userId: string;
   paymentTerms: string;
   status: string;
+  items?: any[];
 }
 
 export const DataContainer: React.FC<Container> = ({
@@ -54,7 +55,6 @@ export const DataContainer: React.FC<Container> = ({
         const response = await getUserName(userId);
         setFullName(response);
       } catch (error) {
-        console.error('Error fetching user fullName:', error);
         setFullName('Error fetching user details');
       }
     };
@@ -64,7 +64,6 @@ export const DataContainer: React.FC<Container> = ({
   const handleUpdate = async (updatedInvoice: InvoiceType) => {
     try {
       await updateInvoice(updatedInvoice._id, userId, updatedInvoice);
-      console.log('Invoice updated successfully');
       setIsDrawerOpen(false);
       setInvoices(
         invoices.map((invoice) =>
@@ -89,7 +88,6 @@ export const DataContainer: React.FC<Container> = ({
         year: 'numeric',
       });
     } catch (error) {
-      console.error('Error calculating due date:', error);
       return 'Invalid Date';
     }
   };
@@ -125,7 +123,6 @@ export const DataContainer: React.FC<Container> = ({
 
         setError(null);
       } catch (error) {
-        console.error('Error fetching invoice data:', error);
         setError(
           error instanceof Error
             ? error.message
@@ -170,7 +167,6 @@ export const DataContainer: React.FC<Container> = ({
 
       setIsDrawerOpen(true);
     } catch (error) {
-      console.error('Error fetching invoice data:', error);
       setError('Failed to fetch invoice data');
     }
   };
@@ -178,9 +174,7 @@ export const DataContainer: React.FC<Container> = ({
   const handleDelete = async (invoice: InvoiceType) => {
     try {
       await deleteInvoice(invoice.userId, invoice._id);
-      console.log('Invoice deleted successfully');
     } catch (error) {
-      console.error('Error deleting invoice:', error);
       setError('Failed to delete invoice');
     }
   };
@@ -221,50 +215,69 @@ export const DataContainer: React.FC<Container> = ({
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (
-            invoices.map((invoice) => (
-              <div
-                className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
-                key={invoice._id}
-              >
-                <div className="flex flex-col gap-4">
-                  <div className="flex gap-7 items-center">
-                    {children}
-                    <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                    <div className="w-48">
-                      Due{' '}
-                      {calculateDueDate(
-                        invoice.issueDate,
-                        invoice.paymentTerms
-                      )}
-                    </div>
-                    <div className="w-48">{fullName}</div>
-                    <div className="w-52">
-                      Created on{' '}
-                      {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </div>
-                    <div className="w-40 font-bold text-[20px]">
-                      ${invoice.amount}
-                    </div>
-                    <div className="w-40 shrink-0">
-                      <Chips color="success" onClick={() => alert()}>
-                        {invoice.status}
-                      </Chips>
-                    </div>
-                    <div className="w-16">
-                      <Dropdown
-                        options={generateOptions(invoice)}
-                        Image={Frame}
-                        position="right"
-                      />
+            invoices.map((invoice) => {
+              const isDraft = invoice.status === 'DRAFT';
+              const hasNoIssueDate = !invoice.issueDate;
+              const hasNoPaymentTerms = !invoice.paymentTerms;
+              const hasNoItems = !invoice.items || invoice.items.length === 0;
+
+              const shouldShowDash =
+                isDraft && (hasNoIssueDate || hasNoPaymentTerms || hasNoItems);
+
+              return (
+                <div
+                  className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
+                  key={invoice._id}
+                >
+                  <div className="flex flex-col gap-4">
+                    <div className="flex gap-7 items-center">
+                      {children}
+                      <div className="w-48">#INV-{invoice.invoiceNumber}</div>
+                      <div className="w-48 flex justify-center items-center">
+                        {shouldShowDash ? (
+                          '--'
+                        ) : (
+                          <>
+                            Due{' '}
+                            {calculateDueDate(
+                              invoice.issueDate,
+                              invoice.paymentTerms
+                            )}
+                          </>
+                        )}
+                      </div>
+                      <div className="w-48">{fullName}</div>
+                      <div className="w-52">
+                        Created on{' '}
+                        {new Date(invoice.createdAt).toLocaleDateString(
+                          'en-GB',
+                          {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          }
+                        )}
+                      </div>
+                      <div className="w-40 font-bold text-[20px]">
+                        {shouldShowDash ? '--' : `$${invoice.amount}`}
+                      </div>
+                      <div className="w-40 shrink-0">
+                        <Chips color="success" onClick={() => alert()}>
+                          {invoice.status}
+                        </Chips>
+                      </div>
+                      <div className="w-16">
+                        <Dropdown
+                          options={generateOptions(invoice)}
+                          Image={Frame}
+                          position="right"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
         <InvoiceDrawer
