@@ -14,6 +14,7 @@ import {
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../button';
 
 export interface InvoiceType {
   _id: string;
@@ -48,6 +49,10 @@ export const DataContainer: React.FC<Container> = ({
   const navigate = useNavigate();
   const [isLoading, setLoading] = useState(false);
   const userId = localStorage.getItem('userId') || '';
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceType | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchUserFullName = async (userId: string) => {
@@ -171,12 +176,27 @@ export const DataContainer: React.FC<Container> = ({
     }
   };
 
-  const handleDelete = async (invoice: InvoiceType) => {
-    try {
-      await deleteInvoice(invoice.userId, invoice._id);
-    } catch (error) {
-      setError('Failed to delete invoice');
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setInvoiceToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (invoiceToDelete) {
+      try {
+        await deleteInvoice(invoiceToDelete.userId, invoiceToDelete._id);
+        setInvoices(invoices.filter((i) => i._id !== invoiceToDelete._id));
+        setShowDeleteConfirmation(false);
+        setInvoiceToDelete(null);
+      } catch (error) {
+        setError('Failed to delete invoice');
+      }
     }
+  };
+
+  const confirmDelete = (invoice: InvoiceType) => {
+    setInvoiceToDelete(invoice);
+    setShowDeleteConfirmation(true);
   };
 
   const handleCloseDrawer = () => {
@@ -195,7 +215,7 @@ export const DataContainer: React.FC<Container> = ({
     },
     {
       label: 'Delete',
-      action: () => handleDelete(invoice),
+      action: () => confirmDelete(invoice),
       color: 'danger',
     },
   ];
@@ -290,6 +310,35 @@ export const DataContainer: React.FC<Container> = ({
             })
           )}
         </div>
+        {showDeleteConfirmation && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+            <div className="bg-secondary/90 p-12 rounded-md shadow-lg w-1/4 text-white border border-lightGray">
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                Confirm Delete
+              </h2>
+              <p className="text-sm text-gray">
+                Are you sure you want to delete this invoice?
+              </p>
+              <div className="flex justify-end gap-4 mt-6">
+                <Button
+                  size="large"
+                  outline="lightPurple"
+                  color="gray"
+                  children="Cancel"
+                  onClick={handleCancelDelete}
+                />
+                <Button
+                  size="large"
+                  outline="danger"
+                  color="danger"
+                  children="Delete"
+                  onClick={handleConfirmDelete}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <InvoiceDrawer
           open={isDrawerOpen}
           onClose={handleCloseDrawer}
