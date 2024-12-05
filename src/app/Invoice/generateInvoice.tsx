@@ -72,6 +72,15 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       items,
     };
 
+    const hasInvalidItems = items.some(
+      (item) => item.qty <= 0 || item.price <= 0
+    );
+
+    if (hasInvalidItems) {
+      alert('All items must have a quantity and price greater than 0.');
+      return;
+    }
+
     if (!userId) {
       console.error('Missing userId; cannot save invoice.');
       return;
@@ -307,14 +316,14 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
               size="large"
               color="primary"
               children="Update"
-              onClick={handleSave}
+              onClick={() => handleSave()}
             />
           ) : (
             <Button
               size="large"
               color="primary"
               children="Save"
-              onClick={handleSave}
+              onClick={() => handleSave()}
             />
           )}
         </div>

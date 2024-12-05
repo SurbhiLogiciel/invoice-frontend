@@ -16,6 +16,8 @@ export const Chips: React.FC<ChipsProp> = ({
   };
 
   const colorClasses = {
+    info: ' text-lightBlue bg-lightBlue/20',
+    draft: 'text-white/80 bg-lightGray/70',
     primary: outline
       ? 'border border-primary text-white bg-secondary'
       : 'bg-primary text-white',
@@ -35,7 +37,7 @@ export const Chips: React.FC<ChipsProp> = ({
   const classNames = [
     'font-roboto  rounded-md',
     sizeClasses[size],
-    colorClasses[color],
+    colorClasses[color as keyof typeof colorClasses],
     disabled ? 'opacity-50 cursor-not-allowed' : '',
   ]
     .filter(Boolean)

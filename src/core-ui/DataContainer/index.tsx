@@ -221,9 +221,9 @@ export const DataContainer: React.FC<Container> = ({
               const hasNoPaymentTerms = !invoice.paymentTerms;
               const hasNoItems = !invoice.items || invoice.items.length === 0;
 
-              const shouldShowDash =
-                isDraft && (hasNoIssueDate || hasNoPaymentTerms || hasNoItems);
-
+              const shouldShowDashForDate =
+                isDraft && (hasNoIssueDate || hasNoPaymentTerms);
+              const shouldShowDashForAmount = isDraft && hasNoItems;
               return (
                 <div
                   className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
@@ -234,7 +234,7 @@ export const DataContainer: React.FC<Container> = ({
                       {children}
                       <div className="w-48">#INV-{invoice.invoiceNumber}</div>
                       <div className="w-48 flex justify-center items-center">
-                        {shouldShowDash ? (
+                        {shouldShowDashForDate ? (
                           '--'
                         ) : (
                           <>
@@ -259,13 +259,23 @@ export const DataContainer: React.FC<Container> = ({
                         )}
                       </div>
                       <div className="w-40 font-bold text-[20px]">
-                        {shouldShowDash ? '--' : `$${invoice.amount}`}
+                        {shouldShowDashForAmount ? '--' : `$${invoice.amount}`}
                       </div>
-                      <div className="w-40 shrink-0">
-                        <Chips color="success" onClick={() => alert()}>
+                      <div className="w-40">
+                        <Chips
+                          color={
+                            invoice.status === 'PAID'
+                              ? 'success'
+                              : invoice.status === 'PENDING'
+                              ? 'info'
+                              : 'draft'
+                          }
+                          onClick={() => alert()}
+                        >
                           {invoice.status}
                         </Chips>
                       </div>
+
                       <div className="w-16">
                         <Dropdown
                           options={generateOptions(invoice)}
