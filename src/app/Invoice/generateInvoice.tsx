@@ -6,13 +6,20 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useParams } from 'react-router-dom';
-import { createInvoice, updateInvoice } from '../../services/apiService';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from "yup";
+import {
+  createInvoice,
+  fetchInvoiceData,
+  fetchInvoiceList,
+  updateInvoice,
+} from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
-  invoice: InvoiceType | null; 
+  invoice: InvoiceType | null;
   onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
@@ -84,6 +91,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       }
     }
   };
+
+  // const drawerForm = () => {
+  //   const validationSchema = Yup.object({
+  //     companyName: Yup.string().companyName("").required();
+  //   });
+  // }
 
   return (
     <Drawer
