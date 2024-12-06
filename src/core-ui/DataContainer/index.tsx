@@ -246,7 +246,7 @@ export const DataContainer: React.FC<Container> = ({
               const shouldShowDashForAmount = isDraft && hasNoItems;
               return (
                 <div
-                  className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
+                  className="w-full bg-purple rounded-md shadow-md p-5 mb-6"
                   key={invoice._id}
                 >
                   <div className="flex flex-col gap-4">
@@ -266,7 +266,7 @@ export const DataContainer: React.FC<Container> = ({
                           </>
                         )}
                       </div>
-                      <div className="w-48">{fullName}</div>
+                      <div className="w-48 text-center">{fullName}</div>
                       <div className="w-52">
                         Created on{' '}
                         {new Date(invoice.createdAt).toLocaleDateString(
@@ -278,10 +278,10 @@ export const DataContainer: React.FC<Container> = ({
                           }
                         )}
                       </div>
-                      <div className="w-40 font-bold text-[20px]">
+                      <div className="w-40 font-bold text-[20px] text-center">
                         {shouldShowDashForAmount ? '--' : `$${invoice.amount}`}
                       </div>
-                      <div className="w-40">
+                      <div className="w-28 flex justify-center items-center text-center">
                         <Chips
                           color={
                             invoice.status === 'PAID'

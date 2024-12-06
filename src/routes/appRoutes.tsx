@@ -9,8 +9,6 @@ import { RegisterCompanyProfile } from '../app/Registration/registerCompanyProfi
 import { ChoosePlan } from '../app/Plan/choosePlan';
 import Layout from '../app/layouts';
 import ProtectedRoute from '../app/components/protectedRouteComponent';
-import { DataContainer } from '../core-ui/DataContainer';
-
 import InvoiceLayout from '../app/invoiceLayouts';
 
 const AppRoutes = () => {
