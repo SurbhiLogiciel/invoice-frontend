@@ -129,203 +129,211 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         },
       }}
     >
-      <div className="p-6">
-        {isEditing ? (
-          <h2 className="text-white font-bold text-xl font-roboto">
-            Update Invoice
+      {/* Content Wrapper */}
+      <div className="flex flex-col h-full">
+        {/* Scrollable Content */}
+        <div className="p-6 overflow-y-auto flex-grow">
+          {isEditing ? (
+            <h2 className="text-white font-bold text-xl font-roboto">
+              Update Invoice
+            </h2>
+          ) : (
+            <h2 className="text-white font-bold text-xl font-roboto">
+              New Invoice
+            </h2>
+          )}
+
+          <h2 className="text-primary font-semibold text-sm mt-7 font-roboto">
+            Bill To
           </h2>
-        ) : (
-          <h2 className="text-white font-bold text-xl font-roboto">
-            New Invoice
-          </h2>
-        )}
 
-        <h2 className="text-primary font-semibold text-sm mt-7 font-roboto">
-          Bill To
-        </h2>
-
-        <div className="mt-2">
-          <Input
-            variant="secondary"
-            label="Company Name"
-            size="large"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
-        </div>
-        <div className="mt-5">
-          <Input
-            variant="secondary"
-            label="Street Address"
-            value={streetAddress}
-            onChange={(e) => setStreetAddress(e.target.value)}
-          />
-        </div>
-        <div className="mt-5">
-          <SelectInput
-            variant="secondary"
-            label="City"
-            placeholder="Select"
-            options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </div>
-
-        <div className="mt-5 flex space-x-4">
-          <div className="w-1/2">
+          <div className="mt-2">
+            <Input
+              variant="secondary"
+              label="Company Name"
+              size="large"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+          </div>
+          <div className="mt-5">
+            <Input
+              variant="secondary"
+              label="Street Address"
+              value={streetAddress}
+              onChange={(e) => setStreetAddress(e.target.value)}
+            />
+          </div>
+          <div className="mt-5">
             <SelectInput
               variant="secondary"
+              label="City"
               placeholder="Select"
-              label="State"
-              options={['Punjab', 'Haryana', 'Karnataka']}
-              value={state}
-              onChange={(e) => setState(e.target.value)}
+              options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
-          <div className="w-1/2">
-            <SelectInput
-              variant="secondary"
-              placeholder="Select"
-              label="Zip"
-              options={['14000', '16000', '18000']}
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="mt-5 flex space-x-4">
-          <div className="w-1/2">
-            <DateInput
-              value={issueDate}
-              onChange={(date: Date | null) => setIssueDate(date)}
-            />
-          </div>
-          <div className="w-1/2">
-            <SelectInput
-              variant="secondary"
-              placeholder="Select"
-              label="Payment Terms"
-              options={['next 30 days', 'next 60 days', 'next 90 days']}
-              value={paymentTerms}
-              onChange={(e) => setPaymentTerms(e.target.value)}
-            />
-          </div>
-          <div className="w-1/2">
-            <SelectInput
-              variant="secondary"
-              placeholder="Select"
-              label="Status"
-              options={['PAID', 'PENDING']}
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <h2 className="text-gray font-bold text-lg mt-10 font-roboto">
-          Item List
-        </h2>
-        <div className="flex space-x-4 mt-4">
-          <div className="flex-1 w-[188px]">
-            <h3 className="text-sm font-roboto font-semibold">Item Name</h3>
-          </div>
-          <div className="w-[67px]">
-            <h3 className="text-sm font-roboto font-semibold">Quantity</h3>
-          </div>
-          <div className="w-[100px]">
-            <h3 className="text-sm font-roboto font-semibold">Price</h3>
-          </div>
-          <div className="w-1/5 text-center">
-            <h3 className="text-sm font-roboto font-semibold">Total</h3>
-          </div>
-          <div className="w-6 flex justify-center items-center"></div>
-        </div>
-
-        {items.map((item) => (
-          <div key={item.id} className="flex items-center space-x-4 mt-4">
-            <div className="flex-1 w-[188px]">
-              <Input
+          <div className="mt-5 flex space-x-4">
+            <div className="w-1/2">
+              <SelectInput
                 variant="secondary"
-                size="large"
-                value={item.itemName}
-                onChange={(e) =>
-                  handleItemChange(item.id, 'itemName', e.target.value)
-                }
+                placeholder="Select"
+                label="State"
+                options={['Punjab', 'Haryana', 'Karnataka']}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
               />
+            </div>
+
+            <div className="w-1/2">
+              <SelectInput
+                variant="secondary"
+                placeholder="Select"
+                label="Zip"
+                options={['14000', '16000', '18000']}
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="mt-5 flex space-x-4">
+            <div className="w-1/2">
+              <DateInput
+                value={issueDate}
+                onChange={(date: Date | null) => setIssueDate(date)}
+              />
+            </div>
+            <div className="w-1/2">
+              <SelectInput
+                variant="secondary"
+                placeholder="Select"
+                label="Payment Terms"
+                options={['next 30 days', 'next 60 days', 'next 90 days']}
+                value={paymentTerms}
+                onChange={(e) => setPaymentTerms(e.target.value)}
+              />
+            </div>
+            <div className="w-1/2">
+              <SelectInput
+                variant="secondary"
+                placeholder="Select"
+                label="Status"
+                options={['PAID', 'PENDING']}
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <h2 className="text-gray font-bold text-lg mt-10 font-roboto">
+            Item List
+          </h2>
+          <div className="flex space-x-4 mt-4">
+            <div className="flex-1 w-[188px]">
+              <h3 className="text-sm font-roboto font-semibold">Item Name</h3>
             </div>
             <div className="w-[67px]">
-              <Input
-                variant="secondary"
-                size="large"
-                value={item.qty}
-                onChange={(e) =>
-                  handleItemChange(item.id, 'qty', parseInt(e.target.value))
-                }
-              />
+              <h3 className="text-sm font-roboto font-semibold">Quantity</h3>
             </div>
             <div className="w-[100px]">
-              <Input
-                variant="secondary"
-                size="large"
-                value={item.price}
-                onChange={(e) =>
-                  handleItemChange(item.id, 'price', parseFloat(e.target.value))
-                }
-              />
+              <h3 className="text-sm font-roboto font-semibold">Price</h3>
             </div>
             <div className="w-1/5 text-center">
-              <h3 className="text-white font-roboto font-semibold">
-                ${item.qty * item.price}
-              </h3>
+              <h3 className="text-sm font-roboto font-semibold">Total</h3>
             </div>
-            <div className="w-6 flex justify-center items-center cursor-pointer">
-              <DeleteIcon onClick={() => handleDeleteItem(item.id)} />
-            </div>
+            <div className="w-6 flex justify-center items-center"></div>
           </div>
-        ))}
-        <p
-          className="text-primary text-sm font-roboto cursor-pointer mt-4"
-          onClick={addItemRow}
-        >
-          + Add More Item
-        </p>
-      </div>
 
-      <div className="flex justify-between bg-purple space-x-4 p-3">
-        <Button
-          size="large"
-          outline="secondary"
-          color="lightPurple"
-          children="Save Draft"
-          onClick={() => handleSave(true)}
-        />
+          {items.map((item) => (
+            <div key={item.id} className="flex items-center space-x-4 mt-4">
+              <div className="flex-1 w-[188px]">
+                <Input
+                  variant="secondary"
+                  size="large"
+                  value={item.itemName}
+                  onChange={(e) =>
+                    handleItemChange(item.id, 'itemName', e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-[67px]">
+                <Input
+                  variant="secondary"
+                  size="large"
+                  value={item.qty}
+                  onChange={(e) =>
+                    handleItemChange(item.id, 'qty', parseInt(e.target.value))
+                  }
+                />
+              </div>
+              <div className="w-[100px]">
+                <Input
+                  variant="secondary"
+                  size="large"
+                  value={item.price}
+                  onChange={(e) =>
+                    handleItemChange(
+                      item.id,
+                      'price',
+                      parseFloat(e.target.value)
+                    )
+                  }
+                />
+              </div>
+              <div className="w-1/5 text-center">
+                <h3 className="text-white font-roboto font-semibold">
+                  ${item.qty * item.price}
+                </h3>
+              </div>
+              <div className="w-6 flex justify-center items-center cursor-pointer">
+                <DeleteIcon onClick={() => handleDeleteItem(item.id)} />
+              </div>
+            </div>
+          ))}
+          <p
+            className="text-primary text-sm font-roboto cursor-pointer mt-4"
+            onClick={addItemRow}
+          >
+            + Add More Item
+          </p>
+        </div>
 
-        <div className="flex space-x-4">
+        <div className="flex justify-between bg-purple space-x-4 p-3">
           <Button
             size="large"
-            outline="primary"
-            color="secondary"
-            children="Cancel"
-            onClick={onClose}
+            outline="secondary"
+            color="lightPurple"
+            children="Save Draft"
+            onClick={() => handleSave(true)}
           />
-          {isEditing ? (
+
+          <div className="flex space-x-4">
             <Button
               size="large"
-              color="primary"
-              children="Update"
-              onClick={() => handleSave()}
+              outline="primary"
+              color="secondary"
+              children="Cancel"
+              onClick={onClose}
             />
-          ) : (
-            <Button
-              size="large"
-              color="primary"
-              children="Save"
-              onClick={() => handleSave()}
-            />
-          )}
+            {isEditing ? (
+              <Button
+                size="large"
+                color="primary"
+                children="Update"
+                onClick={() => handleSave()}
+              />
+            ) : (
+              <Button
+                size="large"
+                color="primary"
+                children="Save"
+                onClick={() => handleSave()}
+              />
+            )}
+          </div>
         </div>
       </div>
     </Drawer>
