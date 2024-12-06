@@ -28,6 +28,7 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
       >
         <DatePicker
           selected={value}
+          placeholderText="Select"
           onChange={onChange}
           dateFormat="dd MMM, yyyy"
           className="w-full bg-transparent outline-none text-white text-sm"

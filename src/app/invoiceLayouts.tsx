@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
 import invoiceLogo from './assets/5.png';
-import { Outlet, useParams } from 'react-router-dom';
 import { InvoiceDrawer } from './Invoice/generateInvoice';
 import axios from 'axios';
 import { DataContainer, InvoiceType } from '../core-ui/DataContainer';
 import { useNavigate } from 'react-router-dom';
-import { createInvoice } from '../services/apiService';
 
 interface InvoiceLayoutProps {}
 
 export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [invoice, setInvoice] = useState<InvoiceType | null>(null);
-  const { invoiceId } = useParams();
 
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
@@ -41,6 +38,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
       try {
         await axios.put(`/api/invoices/${updatedInvoice._id}`, updatedInvoice);
         console.log('Invoice updated successfully');
+        setInvoice(updatedInvoice);
       } catch (error) {
         console.error('Failed to save invoice:', error);
       }
@@ -76,7 +74,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
             </Button>
           </div>
         </div>
-        <div className="mt-12 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <DataContainer>
             <div></div>
           </DataContainer>

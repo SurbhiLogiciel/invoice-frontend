@@ -10,12 +10,14 @@ export const Chips: React.FC<ChipsProp> = ({
   onClick,
 }) => {
   const sizeClasses = {
-    small: 'pl-5 pr-[18px] py-2 w-[62px] h-[30px] text-sm',
-    medium: 'px-5 py-2 text-md',
-    large: 'px-5 py-2 text-lg',
+    small: 'pl-4 pr-4 py-2 w-full h-full text-sm',
+    medium: 'px-5 py-2 w-full h-full text-md',
+    large: 'px-5 py-2 w-full h-full text-lg',
   };
 
   const colorClasses = {
+    info: ' text-yellow bg-yellow/20',
+    draft: 'text-white/80 bg-lightGray/70',
     primary: outline
       ? 'border border-primary text-white bg-secondary'
       : 'bg-primary text-white',
@@ -35,7 +37,7 @@ export const Chips: React.FC<ChipsProp> = ({
   const classNames = [
     'font-roboto  rounded-md',
     sizeClasses[size],
-    colorClasses[color],
+    colorClasses[color as keyof typeof colorClasses],
     disabled ? 'opacity-50 cursor-not-allowed' : '',
   ]
     .filter(Boolean)

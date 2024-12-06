@@ -25,9 +25,9 @@ export const Button: React.FC<ButtonProps> = ({
       ? 'border border-secondary text-primary'
       : 'bg-secondary text-white',
     danger: outline
-      ? 'border border-red-600 text-red-600'
-      : 'bg-red-600 text-white',
-    gray: 'text-gray',
+      ? 'bg-red-600 text-white'
+      : 'border border-red-600 text-red-600',
+    gray: 'text-gray border border-gray ',
     lightPurple: 'bg-lightPurple text-white',
     purple: 'text-white bg-purple ',
   };
