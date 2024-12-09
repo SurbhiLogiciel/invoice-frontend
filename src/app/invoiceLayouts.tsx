@@ -51,7 +51,9 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
           <img src={invoiceLogo} alt="Logo" className="w-16 h-15" />
         </div>
         <div className="flex-grow"></div>
-      <div className=""><SettingsIcon/></div>
+        <div className="">
+          <SettingsIcon />
+        </div>
         <hr className="w-full border border-lightGray mb-4" />
         <div className="px-2 sm:px-2 md:px-3 lg:px-4">
           <img

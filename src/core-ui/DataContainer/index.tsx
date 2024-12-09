@@ -40,7 +40,6 @@ export interface InvoiceType {
   items: InvoiceItemType[];
 }
 
-
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
   color = 'purple',
@@ -162,10 +161,7 @@ export const DataContainer: React.FC<Container> = ({
   return (
     <div className="flex flex-col w-full gap-y-6">
       <div className="bg-secondary rounded-md text-white p-8">
-        <div
-          className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
-          
-        >
+        <div className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto">
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (

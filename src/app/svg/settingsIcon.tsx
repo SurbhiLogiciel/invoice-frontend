@@ -20,13 +20,13 @@ const SettingsIcon: React.FC = () => {
     }
 
     try {
-      const response = await apiClient.post('/logout',);
+      const response = await apiClient.post('/logout');
 
       if (response.status === 200) {
         console.log('User logged out successfully');
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
-        window.location.href = '/login'; 
+        window.location.href = '/login';
       }
     } catch (error) {
       console.error('Failed to logout user', error);
@@ -35,11 +35,11 @@ const SettingsIcon: React.FC = () => {
 
   const handleOptionClick = (option: string) => {
     if (option === 'Logout') {
-      handleLogoutUser(); 
+      handleLogoutUser();
     } else {
       alert(`${option} clicked`);
     }
-    setDropdownOpen(false); 
+    setDropdownOpen(false);
   };
 
   return (

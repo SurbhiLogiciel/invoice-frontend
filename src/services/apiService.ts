@@ -217,12 +217,12 @@ interface InvoiceItem {
 }
 
 interface CreateInvoicePayload {
-  companyName: string;
-  streetAddress: string;
+  // companyName: string;
+  // streetAddress: string;
   city: string;
   state: string;
   zip: string;
-  issueDate: Date | null;
+  // issueDate: Date | null;
   paymentTerms: string;
   items: InvoiceItem[];
 }

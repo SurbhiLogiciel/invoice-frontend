@@ -1,4 +1,7 @@
 export interface InputProps {
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  name?: string;
+  id?: string;
   type?: 'text' | 'email' | 'password' | 'tel' | 'select' | 'date' | 'number';
   label?: string;
   placeholder?: string;
@@ -16,6 +19,7 @@ export interface InputProps {
   error?: string;
   required?: boolean;
   validateOnSubmit?: boolean;
+
 }
 
 export interface OtpInputProps {
