@@ -19,8 +19,9 @@ export const Login: React.FC = () => {
       const response = await userLogin(email, password);
       if (response.status === 200 && response.data.token) {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId);
         console.log(response.data.token);
-        navigate(`/invoiceLayout/${response.data.userId}`); 
+        navigate(`/invoiceLayout/${response.data.userId}`);
       } else {
         setErrorMessage('Login failed. Please check your credentials.');
       }

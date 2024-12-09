@@ -10,6 +10,3 @@ export const isValidOtp = (otp: string | number): boolean => {
   }
   return true;
 };
-
-
-

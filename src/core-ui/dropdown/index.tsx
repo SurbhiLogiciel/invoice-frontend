@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { DropdownOption, DropdownProps, DropdownPosition } from './types';
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = 'right' }) => { 
+export const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  Image,
+  position = 'right',
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -25,11 +29,11 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = '
   const getPositionClass = (position: DropdownPosition) => {
     switch (position) {
       case 'left':
-        return 'left-0'; 
+        return 'left-0';
       case 'right':
-        return 'right-0'; 
+        return 'right-0';
       default:
-        return 'right-0'; 
+        return 'right-0';
     }
   };
 
@@ -43,7 +47,9 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, Image, position = '
       />
 
       {isOpen && (
-        <ul className={`absolute mt-2 w-32 bg-white shadow-lg border rounded-lg z-10 ${getPositionClass(position)}`}>
+        <ul
+          className={`absolute mt-2 w-32 bg-white shadow-lg border rounded-lg z-10 ${getPositionClass(position)}`}
+        >
           {options.map((option, index) => (
             <li
               key={index}
