@@ -89,7 +89,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       } catch (error) {
         console.error('Failed to create invoice', error);
       }
-    }
+      
+      onClose();
+    } 
 
     setSubmitting(false);
   };
