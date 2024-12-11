@@ -1,3 +1,4 @@
+import { log } from 'console';
 import apiClient from '../utils/http';
 
 export const registerUserEmail = async (email: string) => {
@@ -66,13 +67,10 @@ export const updateInvoice = async (
   updatedInvoice: object
 ) => {
   try {
-    console.log(updatedInvoice);
     if (!id) {
       console.error('Invoice ID not found!');
       return;
     }
-    console.log('ndsjjdsf');
-
     const response = await apiClient.put(
       `/invoices/${userId}/${id}`,
       updatedInvoice

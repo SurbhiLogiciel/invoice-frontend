@@ -6,13 +6,13 @@ import { InvoiceDrawer } from './Invoice/generateInvoice';
 import axios from 'axios';
 import { DataContainer, InvoiceType } from '../core-ui/DataContainer';
 import { useNavigate } from 'react-router-dom';
+import SettingsIcon from './svg/settingsIcon';
 
 interface InvoiceLayoutProps {}
 
 export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [invoice, setInvoice] = useState<InvoiceType | null>(null);
-
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   const handleToggleDrawer = () => {
@@ -52,6 +52,9 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
           <img src={invoiceLogo} alt="Logo" className="w-16 h-15" />
         </div>
         <div className="flex-grow"></div>
+        <div className="">
+          <SettingsIcon />
+        </div>
         <hr className="w-full border border-lightGray mb-4" />
         <div className="px-2 sm:px-2 md:px-3 lg:px-4">
           <img
