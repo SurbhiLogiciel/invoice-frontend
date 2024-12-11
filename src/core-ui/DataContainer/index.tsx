@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Container } from './types';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../app/assets/Frame.png';
@@ -13,7 +13,8 @@ import {
 } from '../../services/apiService';
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../button';
 
 export interface InvoiceType {
   _id: string;
@@ -25,6 +26,7 @@ export interface InvoiceType {
   userId: string;
   paymentTerms: string;
   status: string;
+  items?: any[];
 }
 
 export const DataContainer: React.FC<Container> = ({
@@ -38,7 +40,6 @@ export const DataContainer: React.FC<Container> = ({
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(
     null
   );
-  const { invoiceId } = useParams<{ invoiceId: string }>();
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -46,7 +47,12 @@ export const DataContainer: React.FC<Container> = ({
     currentPage: 1,
   });
   const navigate = useNavigate();
+  const [isLoading, setLoading] = useState(false);
   const userId = localStorage.getItem('userId') || '';
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceType | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchUserFullName = async (userId: string) => {
@@ -54,7 +60,6 @@ export const DataContainer: React.FC<Container> = ({
         const response = await getUserName(userId);
         setFullName(response);
       } catch (error) {
-        console.error('Error fetching user fullName:', error);
         setFullName('Error fetching user details');
       }
     };
@@ -64,7 +69,6 @@ export const DataContainer: React.FC<Container> = ({
   const handleUpdate = async (updatedInvoice: InvoiceType) => {
     try {
       await updateInvoice(updatedInvoice._id, userId, updatedInvoice);
-      console.log('Invoice updated successfully');
       setIsDrawerOpen(false);
       setInvoices(
         invoices.map((invoice) =>
@@ -89,47 +93,118 @@ export const DataContainer: React.FC<Container> = ({
         year: 'numeric',
       });
     } catch (error) {
-      console.error('Error calculating due date:', error);
       return 'Invalid Date';
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = useCallback(
+    async (page: number) => {
+      setLoading(true);
       try {
-        const response = await fetchInvoiceList(userId);
-        setInvoices(response.data || []);
-        setPagination({
-          totalItems: response.data.totalItems,
-          totalPages: response.data.totalPages,
-          currentPage: response.data.currentPage,
+        const response = await fetchInvoiceList(userId, page);
+        const newInvoices = response.data as InvoiceType[];
+
+        // Update the invoice list
+        setInvoices((prevInvoices) => {
+          const updatedInvoices = [
+            ...prevInvoices,
+            ...newInvoices.filter(
+              (newInvoice) =>
+                !prevInvoices.some(
+                  (prevInvoice) => prevInvoice._id === newInvoice._id
+                )
+            ),
+          ];
+
+          return updatedInvoices;
         });
+
+        // Update pagination state
+        setPagination({
+          totalItems: response.totalItems,
+          totalPages: response.totalPages,
+          currentPage: page,
+        });
+
         setError(null);
-      } catch (error: any) {
-        console.error(error.message);
-        setError('Failed to fetch invoices');
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred while fetching invoices.'
+        );
+      } finally {
+        setLoading(false);
       }
-    };
+    },
+    [userId]
+  );
 
-    fetchData();
-  }, [userId]);
+  useEffect(() => {
+    fetchData(pagination.currentPage);
+  }, [pagination.currentPage, fetchData]);
 
-  const handleEdit = (invoice: InvoiceType) => {
-    const invoiceId = invoice._id;
-    navigate(`/invoiceLayout/${userId}/${invoiceId}`);
-    const response = fetchInvoiceData(userId, invoiceId);
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const target = e.target as HTMLDivElement;
 
-    setSelectedInvoice(invoice);
-    setIsDrawerOpen(true);
+    const isAtBottom =
+      target.scrollHeight === target.scrollTop + target.clientHeight;
+
+    if (
+      isAtBottom &&
+      !isLoading &&
+      pagination.currentPage < pagination.totalPages
+    ) {
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage + 1,
+      }));
+    }
   };
 
-  const handleDelete = (invoice: InvoiceType) => {
-    const response = deleteInvoice(invoice.userId, invoice._id);
+  const handleEdit = async (invoice: InvoiceType) => {
+    const invoiceId = invoice._id;
+    navigate(`/invoiceLayout/${userId}/${invoiceId}`);
+
+    try {
+      const response = await fetchInvoiceData(userId, invoiceId);
+      setSelectedInvoice(response.data);
+
+      setIsDrawerOpen(true);
+    } catch (error) {
+      setError('Failed to fetch invoice data');
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setInvoiceToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (invoiceToDelete) {
+      try {
+        await deleteInvoice(invoiceToDelete.userId, invoiceToDelete._id);
+        setInvoices(invoices.filter((i) => i._id !== invoiceToDelete._id));
+        setShowDeleteConfirmation(false);
+        setInvoiceToDelete(null);
+      } catch (error) {
+        setError('Failed to delete invoice');
+      }
+    }
+  };
+
+  const confirmDelete = (invoice: InvoiceType) => {
+    setInvoiceToDelete(invoice);
+    setShowDeleteConfirmation(true);
   };
 
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
     navigate(`/invoiceLayout/${userId}`);
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
   };
 
   const generateOptions = (invoice: InvoiceType): DropdownOption[] => [
@@ -140,7 +215,7 @@ export const DataContainer: React.FC<Container> = ({
     },
     {
       label: 'Delete',
-      action: () => handleDelete(invoice),
+      action: () => confirmDelete(invoice),
       color: 'danger',
     },
   ];
@@ -150,57 +225,120 @@ export const DataContainer: React.FC<Container> = ({
       <div className="bg-secondary rounded-md text-white p-8">
         <div
           className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
-          
+          onScroll={handleScroll}
+          style={{
+            height: 'calc(102vh - 248px)',
+            overflowY: 'scroll',
+            scrollbarWidth: 'none',
+          }}
         >
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (
-            invoices.map((invoice) => (
-              <div
-                className="w-full bg-purple rounded-md shadow-md p-6 mb-6"
-                key={invoice._id}
-              >
-                <div className="flex flex-col gap-4">
-                  <div className="flex gap-7 items-center">
-                    {children}
-                    <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                    <div className="w-48">
-                      Due{' '}
-                      {calculateDueDate(
-                        invoice.issueDate,
-                        invoice.paymentTerms
-                      )}
-                    </div>
-                    <div className="w-48">{fullName}</div>
-                    <div className="w-52">
-                      Created on{' '}
-                      {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </div>
-                    <div className="w-40 font-bold text-[20px]">
-                      ${invoice.amount}
-                    </div>
-                    <div className="w-40 shrink-0">
-                      <Chips color="success" onClick={() => alert()}>
-                        {invoice.status}
-                      </Chips>
-                    </div>
-                    <div className="w-16">
-                      <Dropdown
-                        options={generateOptions(invoice)}
-                        Image={Frame}
-                        position="right"
-                      />
+            invoices.map((invoice) => {
+              const isDraft = invoice.status === 'DRAFT';
+              const hasNoIssueDate = !invoice.issueDate;
+              const hasNoPaymentTerms = !invoice.paymentTerms;
+              const hasNoItems = !invoice.items || invoice.items.length === 0;
+
+              const shouldShowDashForDate =
+                isDraft && (hasNoIssueDate || hasNoPaymentTerms);
+              const shouldShowDashForAmount = isDraft && hasNoItems;
+              return (
+                <div
+                  className="w-full bg-purple rounded-md shadow-md p-5 mb-6"
+                  key={invoice._id}
+                >
+                  <div className="flex flex-col gap-4">
+                    <div className="flex gap-7 items-center">
+                      {children}
+                      <div className="w-48">#INV-{invoice.invoiceNumber}</div>
+                      <div className="w-48 flex justify-center items-center">
+                        {shouldShowDashForDate ? (
+                          '--'
+                        ) : (
+                          <>
+                            Due{' '}
+                            {calculateDueDate(
+                              invoice.issueDate,
+                              invoice.paymentTerms
+                            )}
+                          </>
+                        )}
+                      </div>
+                      <div className="w-48 text-center">{fullName}</div>
+                      <div className="w-52">
+                        Created on{' '}
+                        {new Date(invoice.createdAt).toLocaleDateString(
+                          'en-GB',
+                          {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          }
+                        )}
+                      </div>
+                      <div className="w-40 font-bold text-[20px] text-center">
+                        {shouldShowDashForAmount ? '--' : `$${invoice.amount}`}
+                      </div>
+                      <div className="w-28 flex justify-center items-center text-center">
+                        <Chips
+                          color={
+                            invoice.status === 'PAID'
+                              ? 'success'
+                              : invoice.status === 'PENDING'
+                              ? 'info'
+                              : 'draft'
+                          }
+                          onClick={() => alert()}
+                        >
+                          {invoice.status}
+                        </Chips>
+                      </div>
+
+                      <div className="w-16">
+                        <Dropdown
+                          options={generateOptions(invoice)}
+                          Image={Frame}
+                          position="right"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
+        {showDeleteConfirmation && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+            <div className="bg-secondary/90 p-12 rounded-md shadow-lg w-1/4 text-white border border-lightGray">
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                Confirm Delete
+              </h2>
+              <p className="text-sm text-gray">
+                Are you sure you want to delete this invoice?
+              </p>
+              <div className="flex justify-end gap-4 mt-6">
+                <Button
+                  size="large"
+                  outline="lightPurple"
+                  color="gray"
+                  children="Cancel"
+                  onClick={handleCancelDelete}
+                />
+                <Button
+                  size="large"
+                  outline="danger"
+                  color="danger"
+                  children="Delete"
+                  onClick={handleConfirmDelete}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <InvoiceDrawer
           open={isDrawerOpen}
           onClose={handleCloseDrawer}

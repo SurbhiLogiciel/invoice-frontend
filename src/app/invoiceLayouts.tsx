@@ -38,6 +38,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
       try {
         await axios.put(`/api/invoices/${updatedInvoice._id}`, updatedInvoice);
         console.log('Invoice updated successfully');
+        setInvoice(updatedInvoice);
       } catch (error) {
         console.error('Failed to save invoice:', error);
       }
@@ -51,7 +52,9 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
           <img src={invoiceLogo} alt="Logo" className="w-16 h-15" />
         </div>
         <div className="flex-grow"></div>
-      <div className=""><SettingsIcon/></div>
+        <div className="">
+          <SettingsIcon />
+        </div>
         <hr className="w-full border border-lightGray mb-4" />
         <div className="px-2 sm:px-2 md:px-3 lg:px-4">
           <img
@@ -74,7 +77,7 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
             </Button>
           </div>
         </div>
-        <div className="mt-12 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <DataContainer>
             <div></div>
           </DataContainer>
