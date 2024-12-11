@@ -13,7 +13,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -22,24 +22,23 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
 
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response, 
+  (response: AxiosResponse) => response,
   (error) => {
-    const status = error.response?.status; 
-    const customMessages = error.config?.meta?.errorMessages; 
+    const status = error.response?.status;
+    const customMessages = error.config?.meta?.errorMessages;
 
     const dynamicErrorMessage = getErrorMessage(customMessages);
     const errorMessage = dynamicErrorMessage(status);
 
-    console.error(errorMessage); 
-    return Promise.reject(error); 
+    console.error(errorMessage);
+    return Promise.reject(error);
   }
 );
-
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
@@ -47,7 +46,7 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401) {
-      localStorage.removeItem('token'); 
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
 
@@ -59,6 +58,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default apiClient;

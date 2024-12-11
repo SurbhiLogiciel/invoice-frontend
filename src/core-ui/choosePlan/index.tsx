@@ -30,8 +30,8 @@ const SelectableContainer: React.FC<SelectableContainerProps> = ({
     disabled
       ? colorClasses['disabled']
       : isSelected
-      ? colorClasses['primary']
-      : colorClasses[color]
+        ? colorClasses['primary']
+        : colorClasses[color]
   } 
   ${outline ? 'border-2' : 'primary'}
   ${disabled ? 'opacity-50' : ''}`;

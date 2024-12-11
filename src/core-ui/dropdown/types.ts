@@ -1,5 +1,5 @@
 export type DropdownColor = 'success' | 'danger';
-export type DropdownPosition = 'left' | 'right'; 
+export type DropdownPosition = 'left' | 'right';
 
 export interface DropdownOption {
   label: string;

@@ -13,8 +13,15 @@ import {
 } from '../../services/apiService';
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../button';
+
+export interface InvoiceItemType {
+  id: number;
+  itemName: string;
+  qty: number;
+  price: number;
+}
 
 export interface InvoiceType {
   _id: string;
@@ -26,7 +33,12 @@ export interface InvoiceType {
   userId: string;
   paymentTerms: string;
   status: string;
-  items?: any[];
+  companyName: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  items: InvoiceItemType[];
 }
 
 export const DataContainer: React.FC<Container> = ({

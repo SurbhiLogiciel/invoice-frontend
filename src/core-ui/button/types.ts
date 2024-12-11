@@ -1,6 +1,6 @@
 export interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
-  type?: string;
+  type?: 'reset' | "submit" | "button";
   disabled?: boolean;
   color?:
     | 'primary'
