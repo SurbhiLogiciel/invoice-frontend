@@ -82,8 +82,11 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     if (userId) {
       try {
         console.log('Creating invoice for userId:', userId);
-        isEditing && invoice?._id
-          ? await updateInvoice(invoice._id, userId, values)
+        console.log(isEditing);
+        console.log(invoiceId);
+        
+        isEditing && invoiceId
+          ? await updateInvoice(invoiceId, userId, values)
           : await createInvoice(userId, values);
         onClose();
       } catch (error) {

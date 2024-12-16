@@ -22,6 +22,9 @@ export interface InvoiceItemType {
   qty: number;
   price: number;
 }
+interface StatusOrder {
+  [key: string]: number; 
+}
 
 export interface InvoiceType {
   _id: string;
@@ -41,11 +44,17 @@ export interface InvoiceType {
   items: InvoiceItemType[];
 }
 
-export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'purple', children }) => {
+export const DataContainer: React.FC<Container> = ({
+  size = 'medium',
+  color = 'purple',
+  children,
+}) => {
   const [invoices, setInvoices] = useState<InvoiceType[]>([]);
   const [fullName, setFullName] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -56,7 +65,9 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
   const [isLoading, setLoading] = useState(false);
   const userId = localStorage.getItem('userId') || '';
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceType | null>(null);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceType | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchUserFullName = async (userId: string) => {
@@ -72,9 +83,14 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
 
   const handleUpdate = async (updatedInvoice: InvoiceType) => {
     try {
+      console.log(updateInvoice)
       await updateInvoice(updatedInvoice._id, userId, updatedInvoice);
       setIsDrawerOpen(false);
-      setInvoices(invoices.map((invoice) => (invoice._id === updatedInvoice._id ? updatedInvoice : invoice)));
+      setInvoices(
+        invoices.map((invoice) =>
+          invoice._id === updatedInvoice._id ? updatedInvoice : invoice
+        )
+      );
       navigate(`/invoiceLayout/${userId}`);
     } catch (error) {
       console.error('Failed to update invoice', error);
@@ -97,28 +113,6 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
     }
   };
 
-  const sortInvoices = (invoices: InvoiceType[]): InvoiceType[] => {
-    const statusPriority: { [key: string]: number } = {
-      PAID: 1,
-      PENDING: 2,
-      DRAFT: 3,
-    };
-  
-    return invoices
-      .sort((a, b) => {
-        // Sort by issueDate (soon to be breached invoices first)
-        const aDate = new Date(a.issueDate).getTime();
-        const bDate = new Date(b.issueDate).getTime();
-  
-        if (aDate !== bDate) {
-          return aDate - bDate; // Sort by issueDate
-        }
-  
-        // If dates are the same, sort by status
-        return (statusPriority[a.status] ?? 999) - (statusPriority[b.status] ?? 999);
-      });
-  };
-
   const fetchData = useCallback(
     async (page: number) => {
       setLoading(true);
@@ -126,20 +120,34 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
         const response = await fetchInvoiceList(userId, page);
         const newInvoices = response.data as InvoiceType[];
 
-        // Update the invoice list and apply sorting
-        setInvoices((prevInvoices) => {
-          const updatedInvoices = [
-            ...prevInvoices,
-            ...newInvoices.filter(
-              (newInvoice) =>
-                !prevInvoices.some((prevInvoice) => prevInvoice._id === newInvoice._id)
-            ),
-          ];
+        const updatedInvoices = [
+          ...invoices,
+          ...newInvoices.filter(
+            (newInvoice) =>
+              !invoices.some(
+                (prevInvoice) => prevInvoice._id === newInvoice._id
+              )
+          ),
+        ];
 
-          // Apply sorting based on date and status
-          return sortInvoices(updatedInvoices);
+        updatedInvoices.sort((a, b) => {
+          const dateA = new Date(a.issueDate).getTime();
+          const dateB = new Date(b.issueDate).getTime();
+          if (dateA !== dateB) return dateA - dateB;
+
+          const statusOrder: StatusOrder = {
+            PAID: 1,
+            PENDING: 2,
+            DRAFT: 3,
+          };
+
+          const statusA = statusOrder[a.status as keyof StatusOrder] ?? 4;
+          const statusB = statusOrder[b.status as keyof StatusOrder] ?? 4;
+
+          return statusA - statusB;
         });
 
+        setInvoices(updatedInvoices);
         setPagination({
           totalItems: response.totalItems,
           totalPages: response.totalPages,
@@ -148,13 +156,18 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
 
         setError(null);
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'An unexpected error occurred while fetching invoices.');
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred while fetching invoices.'
+        );
       } finally {
         setLoading(false);
       }
     },
-    [userId]
+    [userId] // Remove invoices from here
   );
+
 
   useEffect(() => {
     fetchData(pagination.currentPage);
@@ -163,9 +176,14 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const target = e.target as HTMLDivElement;
 
-    const isAtBottom = target.scrollHeight === target.scrollTop + target.clientHeight;
+    const isAtBottom =
+      target.scrollHeight === target.scrollTop + target.clientHeight;
 
-    if (isAtBottom && !isLoading && pagination.currentPage < pagination.totalPages) {
+    if (
+      isAtBottom &&
+      !isLoading &&
+      pagination.currentPage < pagination.totalPages
+    ) {
       setPagination((prev) => ({
         ...prev,
         currentPage: prev.currentPage + 1,
@@ -180,6 +198,7 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
     try {
       const response = await fetchInvoiceData(userId, invoiceId);
       setSelectedInvoice(response.data);
+
       setIsDrawerOpen(true);
     } catch (error) {
       setError('Failed to fetch invoice data');
@@ -209,13 +228,13 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
     setShowDeleteConfirmation(true);
   };
 
-  const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
-    navigate(`/invoiceLayout/${userId}`);
-    if (error) {
-      return <div>Error: {error}</div>;
-    }
-  };
+ const handleCloseDrawer = () => {
+   setIsDrawerOpen(false);
+   navigate(`/invoiceLayout/${userId}`);
+   if (error) {
+     return <div>Error: {error}</div>;
+   }
+ };
 
   const generateOptions = (invoice: InvoiceType): DropdownOption[] => [
     {
@@ -232,7 +251,7 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
 
   return (
     <div className="flex flex-col w-full gap-y-6">
-      <div className="p-8 text-white rounded-md bg-secondary">
+      <div className="bg-secondary rounded-md text-white p-8">
         <div
           className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
           onScroll={handleScroll}
@@ -256,36 +275,42 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
               const shouldShowDashForAmount = isDraft && hasNoItems;
               return (
                 <div
-                  className="w-full p-5 mb-6 rounded-md shadow-md bg-purple"
+                  className="w-full bg-purple rounded-md shadow-md p-5 mb-6"
                   key={invoice._id}
                 >
                   <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-7">
+                    <div className="flex gap-7 items-center">
                       {children}
                       <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                      <div className="flex items-center justify-center w-48">
+                      <div className="w-48 flex justify-center items-center">
                         {shouldShowDashForDate ? (
                           '--'
                         ) : (
                           <>
                             Due{' '}
-                            {calculateDueDate(invoice.issueDate, invoice.paymentTerms)}
+                            {calculateDueDate(
+                              invoice.issueDate,
+                              invoice.paymentTerms
+                            )}
                           </>
                         )}
                       </div>
                       <div className="w-48 text-center">{fullName}</div>
                       <div className="w-52">
                         Created on{' '}
-                        {new Date(invoice.createdAt).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
+                        {new Date(invoice.createdAt).toLocaleDateString(
+                          'en-GB',
+                          {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          }
+                        )}
                       </div>
                       <div className="w-40 font-bold text-[20px] text-center">
                         {shouldShowDashForAmount ? '--' : `$${invoice.amount}`}
                       </div>
-                      <div className="flex items-center justify-center text-center w-28">
+                      <div className="w-28 flex justify-center items-center text-center">
                         <Chips
                           color={
                             invoice.status === 'PAID'
@@ -315,20 +340,46 @@ export const DataContainer: React.FC<Container> = ({ size = 'medium', color = 'p
           )}
         </div>
         {showDeleteConfirmation && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="p-8 bg-white rounded-md shadow-lg">
-              <p>Are you sure you want to delete this invoice?</p>
-              <div className="flex gap-4 mt-4">
-                <Button onClick={handleCancelDelete} color="secondary">
-                  Cancel
-                </Button>
-                <Button onClick={handleConfirmDelete} color="danger">
-                  Confirm
-                </Button>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+            <div className="bg-secondary/90 p-12 rounded-md shadow-lg w-1/4 text-white border border-lightGray">
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                Confirm Delete
+              </h2>
+              <p className="text-sm text-gray">
+                Are you sure you want to delete this invoice?
+              </p>
+              <div className="flex justify-end gap-4 mt-6">
+                <Button
+                  size="large"
+                  outline="lightPurple"
+                  color="gray"
+                  children="Cancel"
+                  onClick={handleCancelDelete}
+                />
+                <Button
+                  size="large"
+                  outline="danger"
+                  color="danger"
+                  children="Delete"
+                  onClick={handleConfirmDelete}
+                />
               </div>
             </div>
           </div>
         )}
+
+        <InvoiceDrawer
+          open={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          invoice={selectedInvoice}
+          onSave={handleUpdate}
+        />
+        <div className="flex justify-between items-center mt-1 text-white">
+          <span>Total Invoices: {pagination.totalItems}</span>
+          <span>
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+        </div>
       </div>
     </div>
   );
