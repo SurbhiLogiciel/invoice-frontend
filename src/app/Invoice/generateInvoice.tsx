@@ -18,6 +18,7 @@ interface DrawerProps {
   onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
+// interface for validation
 interface DrawerForm {
   companyName: string;
   streetAddress: string;

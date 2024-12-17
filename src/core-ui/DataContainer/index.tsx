@@ -13,8 +13,9 @@ import {
 } from '../../services/apiService';
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../button';
+import { showToast } from '../../services/toastService';
 
 export interface InvoiceItemType {
   id: number;
@@ -47,9 +48,10 @@ export interface InvoiceType {
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
   color = 'purple',
+  invoices,
+  setInvoices,
   children,
 }) => {
-  const [invoices, setInvoices] = useState<InvoiceType[]>([]);
   const [fullName, setFullName] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(
@@ -216,8 +218,10 @@ export const DataContainer: React.FC<Container> = ({
         setInvoices(invoices.filter((i) => i._id !== invoiceToDelete._id));
         setShowDeleteConfirmation(false);
         setInvoiceToDelete(null);
+        showToast('Invoice deleted successfully!', 'success');
       } catch (error) {
         setError('Failed to delete invoice');
+        showToast('Failed to delete invoice', 'error');
       }
     }
   };
