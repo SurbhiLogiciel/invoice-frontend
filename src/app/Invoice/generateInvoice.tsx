@@ -6,7 +6,7 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useParams } from 'react-router-dom';
-import { Formik, FormikHelpers } from 'formik';
+import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
@@ -46,9 +46,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
   const { userId } = useParams<{ userId: string }>();
   const { invoiceId } = useParams<{ invoiceId: string }>();
   const [items, setItems] = useState([
-    { id: Date.now(), itemName: '', qty: 0, price: 0 },
-    { id: Date.now() + 1, itemName: '', qty: 0, price: 0 },
-    { id: Date.now() + 2, itemName: '', qty: 0, price: 0 },
+    { id: Date.now(), itemName: '', qty: 0, price: 0, total: 0 },
+    { id: Date.now() + 1, itemName: '', qty: 0, price: 0, total: 0 },
+    { id: Date.now() + 2, itemName: '', qty: 0, price: 0, total: 0 },
   ]);
   const location = useLocation();
 
@@ -56,27 +56,49 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     `/invoiceLayout/${userId}/${invoiceId}`
   );
 
-  const addItemRow = () => {
-    setItems([...items, { id: Date.now(), itemName: '', qty: 0, price: 0 }]);
-  };
+  // const handleItemChange = (id: number | string, field: string, value: any) => {
+  //   const updatedItems = items.map((item) =>
+  //     item.id === id ? { ...item, [field]: value } : item
+  //   );
+  //   setItems(updatedItems);
+  // };
 
-  const handleItemChange = (id: number, field: string, value: any) => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? { ...item, [field]: value } : item
-    );
-    setItems(updatedItems);
-  };
+  const handleItemChange = (
+    id: string | number,
+    field: string,
+    value: string
+  ) => {
+    // Find the index of the item to update
+    const itemIndex = items.findIndex((item) => item.id === id);
 
-  const handleDeleteItem = (id: number) => {
-    const updatedItems = items.filter((item) => item.id !== id);
-    setItems(updatedItems);
+    if (itemIndex !== -1) {
+      // Create a copy of the items array
+      const updatedItems = [...items];
+
+      // Update the specific item
+      const updatedItem = { ...updatedItems[itemIndex] };
+
+      if (field === 'qty') {
+        updatedItem.qty = parseInt(value) || 0; // Ensure qty is a number
+      } else if (field === 'price') {
+        updatedItem.price = parseFloat(value) || 0; // Ensure price is a number
+      }
+
+      // Calculate the total price
+      updatedItem.total = updatedItem.qty * updatedItem.price;
+
+      // Update the items array with the modified item
+      updatedItems[itemIndex] = updatedItem;
+
+      // Update the state with the new items array
+      setItems(updatedItems);
+    }
   };
 
   const handleSave = async (
     values: DrawerForm,
     { setSubmitting }: FormikHelpers<DrawerForm>
   ) => {
-
     console.log('Form Submitted:', values);
 
     if (userId) {
@@ -84,7 +106,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         console.log('Creating invoice for userId:', userId);
         console.log(isEditing);
         console.log(invoiceId);
-        
+
         isEditing && invoiceId
           ? await updateInvoice(invoiceId, userId, values)
           : await createInvoice(userId, values);
@@ -92,9 +114,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       } catch (error) {
         console.error('Failed to create invoice', error);
       }
-      
+
       onClose();
-    } 
+    }
 
     setSubmitting(false);
   };
@@ -197,10 +219,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       id="companyName"
                       variant="secondary"
                       size="large"
-                      name="companyName" 
-                      value={values.companyName} 
-                      onChange={
-                        (e) => setFieldValue('companyName', e.target.value) 
+                      name="companyName"
+                      value={values.companyName}
+                      onChange={(e) =>
+                        setFieldValue('companyName', e.target.value)
                       }
                     />
                   </div>
@@ -210,10 +232,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       id="streetAddress"
                       variant="secondary"
                       size="large"
-                      name="streetAddress" 
-                      value={values.streetAddress} 
-                      onChange={
-                        (e) => setFieldValue('streetAddress', e.target.value) 
+                      name="streetAddress"
+                      value={values.streetAddress}
+                      onChange={(e) =>
+                        setFieldValue('streetAddress', e.target.value)
                       }
                     />
                   </div>
@@ -224,9 +246,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       variant="secondary"
                       label="city"
                       options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
-                      value={values.city} 
-                      onChange={(e) => setFieldValue('city', e.target.value)} 
-                      onBlur={handleBlur} 
+                      value={values.city}
+                      onChange={(e) => setFieldValue('city', e.target.value)}
+                      onBlur={handleBlur}
                     />
                   </div>
                   <div className="mt-5 flex space-x-4">
@@ -237,13 +259,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="State"
                         options={['Punjab', 'Haryana', 'Karnataka']}
-                        value={values.state} 
+                        value={values.state}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('state', value); 
+                          setFieldValue('state', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="state" 
+                        onBlur={handleBlur}
+                        name="state"
                       />
                     </div>
 
@@ -254,13 +276,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Zip"
                         options={['14000', '16000', '18000']}
-                        value={values.zip} 
+                        value={values.zip}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('zip', value); 
+                          setFieldValue('zip', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="zip" 
+                        onBlur={handleBlur}
+                        name="zip"
                       />
                     </div>
                   </div>
@@ -272,9 +294,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         name="issueDate"
                         value={
                           values.issueDate ? new Date(values.issueDate) : null
-                        } 
+                        }
                         onChange={(date: Date | null) => {
-                          setFieldValue('issueDate', date); 
+                          setFieldValue('issueDate', date);
                         }}
                       />
                     </div>
@@ -285,13 +307,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Payment Terms"
                         options={['Net 30', 'Net 60', 'Net 90']}
-                        value={values.paymentTerms} 
+                        value={values.paymentTerms}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('paymentTerms', value); 
+                          setFieldValue('paymentTerms', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="paymentTerms" 
+                        onBlur={handleBlur}
+                        name="paymentTerms"
                       />
                     </div>
                     <div className="w-1/2">
@@ -301,12 +323,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Status"
                         options={['PAID', 'PENDING']}
-                        value={values.status} 
+                        value={values.status}
                         onChange={(e) =>
                           setFieldValue('status', e.target.value)
-                        } 
+                        }
                         onBlur={handleBlur}
-                        name="status" 
+                        name="status"
                       />
                     </div>
                   </div>
@@ -314,112 +336,114 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                   <h2 className="text-gray font-bold text-lg mt-10 font-roboto">
                     Item List
                   </h2>
-                  <div className="flex space-x-4 mt-4">
-                    <div className="flex-1 w-[188px]">
-                      <h3 className="text-sm font-roboto font-semibold">
-                        Item Name
-                      </h3>
-                    </div>
-                    <div className="w-[67px]">
-                      <h3 className="text-sm font-roboto font-semibold">
-                        Quantity
-                      </h3>
-                    </div>
-                    <div className="w-[100px]">
-                      <h3 className="text-sm font-roboto font-semibold">
-                        Price
-                      </h3>
-                    </div>
-                    <div className="w-1/5 text-center">
-                      <h3 className="text-sm font-roboto font-semibold">
-                        Total
-                      </h3>
-                    </div>
-                    <div className="w-6 flex justify-center items-center"></div>
-                  </div>
-                  {values.items.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center space-x-4 mt-4"
-                    >
-                      {/* Item Name Input */}
-                      <div className="flex-1 w-[188px]">
-                        <Input
-                          id="itemName"
-                          variant="secondary"
-                          size="large"
-                          name={`items[${index}].itemName`} 
-                          value={item.itemName} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].itemName`,
-                                e.target.value
-                              ) 
+                  <FieldArray name="items">
+                    {({ push, remove }) => (
+                      <>
+                        <div className="flex space-x-4 mt-4">
+                          <div className="flex-1 w-[188px]">
+                            <h3 className="text-sm font-roboto font-semibold">
+                              Item Name
+                            </h3>
+                          </div>
+                          <div className="w-[67px]">
+                            <h3 className="text-sm font-roboto font-semibold">
+                              Quantity
+                            </h3>
+                          </div>
+                          <div className="w-[100px]">
+                            <h3 className="text-sm font-roboto font-semibold">
+                              Price
+                            </h3>
+                          </div>
+                          <div className="w-1/5 text-center">
+                            <h3 className="text-sm font-roboto font-semibold">
+                              Total
+                            </h3>
+                          </div>
+                          <div className="w-6 flex justify-center items-center"></div>
+                        </div>
+                        {values.items.map((item, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center space-x-4 mt-4"
+                          >
+                            {/* Item Name Input */}
+                            <div className="flex-1 w-[188px]">
+                              <Input
+                                id={`items[${index}].itemName`}
+                                variant="secondary"
+                                size="large"
+                                name={`items[${index}].itemName`}
+                                value={item.itemName}
+                                onChange={handleChange}
+                                placeholder="Item Name"
+                              />
+                            </div>
+
+                            {/* Quantity Input */}
+                            <div className="w-[67px]">
+                              <Input
+                                variant="secondary"
+                                size="large"
+                                value={item.qty}
+                                onChange={(e) =>
+                                  handleItemChange(
+                                    item.id,
+                                    'qty',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            {/* Price Input */}
+                            <div className="w-[100px]">
+                              <Input
+                                variant="secondary"
+                                size="large"
+                                value={item.price}
+                                onChange={(e) =>
+                                  handleItemChange(
+                                    item.id,
+                                    'price',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            {/* Total Price */}
+                            <div className="w-1/5 text-center">
+                              <h3 className="text-white font-roboto font-semibold">
+                                {item.total && !isNaN(item.total)
+                                  ? item.total.toFixed(2)
+                                  : '$0'}
+                                {/* Display the total */}
+                              </h3>
+                            </div>
+
+                            {/* Delete Item */}
+                            <div
+                              className="w-6 flex justify-center items-center cursor-pointer"
+                              // onClick={() => remove(index)}
+                            >
+                              <DeleteIcon onClick={() => remove(index)} />
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Add More Item Button */}
+                        <p
+                          className="text-primary text-sm font-roboto cursor-pointer mt-4"
+                          onClick={() =>
+                            push({ itemName: '', qty: 0, price: 0 })
                           }
-                        />
-                      </div>
-
-                      {/* Quantity Input */}
-                      <div className="w-[67px]">
-                        <Input
-                          id="qty"
-                          variant="secondary"
-                          size="large"
-                          name={`items[${index}].qty`} 
-                          value={item.qty} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].qty`,
-                                parseInt(e.target.value)
-                              ) 
-                          }
-                        />
-                      </div>
-
-                      {/* Price Input */}
-                      <div className="w-[100px]">
-                        <Input
-                          id="price"
-                          variant="secondary"
-                          size="large"
-                          name={`items[${index}].price`} 
-                          value={item.price} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].price`,
-                                parseFloat(e.target.value)
-                              ) 
-                          }
-                        />
-                      </div>
-
-                      {/* Total Price Display */}
-                      <div className="w-1/5 text-center">
-                        <h3 className="text-white font-roboto font-semibold">
-                          ${item.qty * item.price}
-                        </h3>
-                      </div>
-
-                      {/* Delete Item */}
-                      <div className="w-6 flex justify-center items-center cursor-pointer">
-                        <DeleteIcon onClick={() => handleDeleteItem(index)} />
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="mt-4">
-                    <button type="submit">Submit</button>
-                  </div>
-
-                  <p
-                    className="text-primary text-sm font-roboto cursor-pointer mt-4"
-                    onClick={addItemRow}
-                  >
-                    + Add More Item
-                  </p>
+                        >
+                          + Add More Item
+                        </p>
+                      </>
+                    )}
+                  </FieldArray>
                 </div>
 
                 <div className="flex justify-end bg-purple space-x-4 p-3">
