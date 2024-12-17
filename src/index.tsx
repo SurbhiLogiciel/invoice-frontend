@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './app/context/AuthContext';
 import AppRoutes from './routes/appRoutes';
 import { CompanyProvider } from './app/context/CompanyContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,9 +15,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* Wrap both AuthProvider and CompanyProvider */}
       <AuthProvider>
         <CompanyProvider>
+          <ToastContainer />
           <AppRoutes />
         </CompanyProvider>
       </AuthProvider>

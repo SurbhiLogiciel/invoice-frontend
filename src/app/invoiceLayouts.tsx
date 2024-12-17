@@ -3,47 +3,35 @@ import avatar from './assets/avtar.png';
 import { Button } from '../core-ui/button';
 import invoiceLogo from './assets/5.png';
 import { InvoiceDrawer } from './Invoice/generateInvoice';
-import axios from 'axios';
-import { DataContainer, InvoiceType } from '../core-ui/DataContainer';
+import { DataContainer } from '../core-ui/DataContainer';
 import { useNavigate } from 'react-router-dom';
 import SettingsIcon from './svg/settingsIcon';
+import { InvoiceType } from '../core-ui/DataContainer/types';
 
 interface InvoiceLayoutProps {}
 
 export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [invoices, setInvoices] = useState<InvoiceType[]>([]);
   const [invoice, setInvoice] = useState<InvoiceType | null>(null);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   const handleToggleDrawer = () => {
     setIsDrawerOpen((prev) => {
       const nextState = !prev;
-
-      if (nextState) {
-        navigate(`/invoiceLayout/${userId}`);
-      } else {
-        navigate(`/invoiceLayout/${userId}`);
-      }
-
+      navigate(`/invoiceLayout/${userId}`);
       return nextState;
     });
-
-    console.log(`Drawer ${!isDrawerOpen ? 'Open' : 'Close'} Clicked`);
   };
 
   const handleSaveInvoice = async (
     updatedInvoice: InvoiceType
   ): Promise<void> => {
     if (updatedInvoice) {
-      try {
-        await axios.put(`/api/invoices/${updatedInvoice._id}`, updatedInvoice);
-        console.log('Invoice updated successfully');
-        setInvoice(updatedInvoice);
-      } catch (error) {
-        console.error('Failed to save invoice:', error);
-      }
+      setInvoices((prevInvoices) => [...prevInvoices, updatedInvoice]);
     }
   };
+
   return (
     <div className="flex h-screen bg-secondary">
       {/* Sidebar */}
@@ -78,8 +66,8 @@ export const InvoiceLayout: React.FC<InvoiceLayoutProps> = () => {
           </div>
         </div>
         <div className="mt-10 flex justify-center">
-          <DataContainer>
-            <div></div>
+          <DataContainer invoices={invoices} setInvoices={setInvoices}>
+            <></>
           </DataContainer>
         </div>
       </div>

@@ -6,16 +6,16 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useParams } from 'react-router-dom';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
-import { InvoiceType } from '../../core-ui/DataContainer';
-
+import { showToast } from '../../services/toastService';
+import { InvoiceType } from '../../core-ui/DataContainer/types';
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
   invoice: InvoiceType | null;
-  onSave: (updatedInvoice: InvoiceType) => Promise<void>;
+  onSave: (invoice: InvoiceType) => void;
 }
 
 // interface for validation
@@ -74,37 +74,65 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
 
   const handleSave = async (
     values: DrawerForm,
-    { setSubmitting }: FormikHelpers<DrawerForm>
+    setSubmitting: (isSubmitting: boolean) => void,
+    isDraft: boolean
   ) => {
+    if (!userId) {
+      showToast('Failed to save invoice: Missing user ID.', 'error');
+      setSubmitting(false);
+      return;
+    }
 
-    console.log('Form Submitted:', values);
+    if (isDraft) values.status = 'DRAFT';
 
-    if (userId) {
-      try {
-        console.log('Creating invoice for userId:', userId);
-        isEditing && invoice?._id
-          ? await updateInvoice(invoice._id, userId, values)
-          : await createInvoice(userId, values);
-        onClose();
-      } catch (error) {
-        console.error('Failed to create invoice', error);
+    let response: InvoiceType;
+    try {
+      if (isEditing && invoiceId) {
+        response = await updateInvoice(invoiceId, userId, values);
+        showToast('Invoice updated successfully!', 'success');
+      } else {
+        response = await createInvoice(userId, values);
+        if (isDraft) {
+          showToast('Draft invoice saved successfully!', 'info');
+        } else {
+          showToast('Invoice created successfully!', 'success');
+        }
       }
-      
       onClose();
-    } 
+      onSave(response);
+    } catch (error) {
+      showToast(
+        isDraft
+          ? 'Failed to save draft invoice. Please try again.'
+          : 'Failed to create invoice. Please try again.',
+        'error'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-    setSubmitting(false);
+  const initialValues: DrawerForm = {
+    companyName: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    zip: '',
+    issueDate: '',
+    paymentTerms: '',
+    status: invoice?.status || '',
+    items: [{ id: '1', itemName: '', qty: 1, price: 0, total: 0 }],
   };
 
   const validationSchema = Yup.object({
     companyName: Yup.string().required('Company Name is Required'),
-    streetAddress: Yup.string().required('street is Required'),
-    city: Yup.string().required('city is Required'),
-    state: Yup.string().required('state is Required'),
-    zip: Yup.string().required('zip is Required'),
-    issueDate: Yup.string().required('issueDate is Required'),
-    paymentTerms: Yup.string().required('paymentTerms is Required'),
-    status: Yup.string().required('status is Required'),
+    streetAddress: Yup.string().required('Street is Required'),
+    city: Yup.string().required('City is Required'),
+    state: Yup.string().required('State is Required'),
+    zip: Yup.string().required('Zip is Required'),
+    issueDate: Yup.string().required('Issue Date is Required'),
+    paymentTerms: Yup.string().required('Payment Terms are Required'),
+    status: Yup.string().required('Status is Required'),
     items: Yup.array()
       .of(
         Yup.object({
@@ -120,18 +148,6 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       )
       .required('Items are required'),
   });
-
-  const initialValues: DrawerForm = {
-    companyName: '',
-    streetAddress: '',
-    city: '',
-    state: '',
-    zip: '',
-    issueDate: '',
-    paymentTerms: '',
-    status: '',
-    items: [{ id: '1', itemName: '', qty: 1, price: 0, total: 0 }],
-  };
 
   return (
     <Drawer
@@ -158,9 +174,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, formikHelpers) => {
-            console.log(values);
-
-            handleSave(values, formikHelpers);
+            handleSave(values, formikHelpers.setSubmitting, false);
           }}
         >
           {({
@@ -170,8 +184,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             handleChange,
             setFieldValue,
             errors,
+            setSubmitting,
           }) => {
-            console.log(errors);
             return (
               <form onSubmit={handleSubmit}>
                 <div className="p-6">
@@ -194,10 +208,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       id="companyName"
                       variant="secondary"
                       size="large"
-                      name="companyName" 
-                      value={values.companyName} 
-                      onChange={
-                        (e) => setFieldValue('companyName', e.target.value) 
+                      name="companyName"
+                      value={values.companyName}
+                      onChange={(e) =>
+                        setFieldValue('companyName', e.target.value)
                       }
                     />
                   </div>
@@ -207,10 +221,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       id="streetAddress"
                       variant="secondary"
                       size="large"
-                      name="streetAddress" 
-                      value={values.streetAddress} 
-                      onChange={
-                        (e) => setFieldValue('streetAddress', e.target.value) 
+                      name="streetAddress"
+                      value={values.streetAddress}
+                      onChange={(e) =>
+                        setFieldValue('streetAddress', e.target.value)
                       }
                     />
                   </div>
@@ -221,9 +235,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       variant="secondary"
                       label="city"
                       options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
-                      value={values.city} 
-                      onChange={(e) => setFieldValue('city', e.target.value)} 
-                      onBlur={handleBlur} 
+                      value={values.city}
+                      onChange={(e) => setFieldValue('city', e.target.value)}
+                      onBlur={handleBlur}
                     />
                   </div>
                   <div className="mt-5 flex space-x-4">
@@ -234,13 +248,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="State"
                         options={['Punjab', 'Haryana', 'Karnataka']}
-                        value={values.state} 
+                        value={values.state}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('state', value); 
+                          setFieldValue('state', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="state" 
+                        onBlur={handleBlur}
+                        name="state"
                       />
                     </div>
 
@@ -251,13 +265,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Zip"
                         options={['14000', '16000', '18000']}
-                        value={values.zip} 
+                        value={values.zip}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('zip', value); 
+                          setFieldValue('zip', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="zip" 
+                        onBlur={handleBlur}
+                        name="zip"
                       />
                     </div>
                   </div>
@@ -269,9 +283,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         name="issueDate"
                         value={
                           values.issueDate ? new Date(values.issueDate) : null
-                        } 
+                        }
                         onChange={(date: Date | null) => {
-                          setFieldValue('issueDate', date); 
+                          setFieldValue('issueDate', date);
                         }}
                       />
                     </div>
@@ -282,13 +296,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Payment Terms"
                         options={['Net 30', 'Net 60', 'Net 90']}
-                        value={values.paymentTerms} 
+                        value={values.paymentTerms}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue('paymentTerms', value); 
+                          setFieldValue('paymentTerms', value);
                         }}
-                        onBlur={handleBlur} 
-                        name="paymentTerms" 
+                        onBlur={handleBlur}
+                        name="paymentTerms"
                       />
                     </div>
                     <div className="w-1/2">
@@ -298,12 +312,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Status"
                         options={['PAID', 'PENDING']}
-                        value={values.status} 
+                        value={values.status}
                         onChange={(e) =>
                           setFieldValue('status', e.target.value)
-                        } 
+                        }
                         onBlur={handleBlur}
-                        name="status" 
+                        name="status"
                       />
                     </div>
                   </div>
@@ -345,14 +359,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                           id="itemName"
                           variant="secondary"
                           size="large"
-                          name={`items[${index}].itemName`} 
-                          value={item.itemName} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].itemName`,
-                                e.target.value
-                              ) 
+                          name={`items[${index}].itemName`}
+                          value={item.itemName}
+                          onChange={(e) =>
+                            setFieldValue(
+                              `items[${index}].itemName`,
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -363,14 +376,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                           id="qty"
                           variant="secondary"
                           size="large"
-                          name={`items[${index}].qty`} 
-                          value={item.qty} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].qty`,
-                                parseInt(e.target.value)
-                              ) 
+                          name={`items[${index}].qty`}
+                          value={item.qty}
+                          onChange={(e) =>
+                            setFieldValue(
+                              `items[${index}].qty`,
+                              parseInt(e.target.value)
+                            )
                           }
                         />
                       </div>
@@ -381,14 +393,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                           id="price"
                           variant="secondary"
                           size="large"
-                          name={`items[${index}].price`} 
-                          value={item.price} 
-                          onChange={
-                            (e) =>
-                              setFieldValue(
-                                `items[${index}].price`,
-                                parseFloat(e.target.value)
-                              ) 
+                          name={`items[${index}].price`}
+                          value={item.price}
+                          onChange={(e) =>
+                            setFieldValue(
+                              `items[${index}].price`,
+                              parseFloat(e.target.value)
+                            )
                           }
                         />
                       </div>
@@ -419,30 +430,41 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                   </p>
                 </div>
 
-                <div className="flex justify-end bg-purple space-x-4 p-3">
+                <div className="flex justify-between bg-purple space-x-4 p-3">
                   <Button
+                    type="submit"
                     size="large"
-                    outline="primary"
-                    color="secondary"
-                    children="Cancel"
-                    onClick={onClose}
+                    outline="secondary"
+                    color="lightPurple"
+                    children="Save Draft"
+                    onClick={() => handleSave(values, setSubmitting, true)}
                   />
 
-                  {isEditing ? (
+                  <div className="flex space-x-4">
                     <Button
-                      type="submit"
                       size="large"
-                      color="primary"
-                      children="Update"
+                      outline="primary"
+                      color="secondary"
+                      children="Cancel"
+                      onClick={onClose}
                     />
-                  ) : (
-                    <Button
-                      type="submit"
-                      size="large"
-                      color="primary"
-                      children="Save"
-                    />
-                  )}
+
+                    {isEditing ? (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Update"
+                      />
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Save"
+                      />
+                    )}
+                  </div>
                 </div>
               </form>
             );
