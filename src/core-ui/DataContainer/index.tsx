@@ -165,7 +165,7 @@ export const DataContainer: React.FC<Container> = ({
         setLoading(false);
       }
     },
-    [userId] // Remove invoices from here
+    [userId]
   );
 
 

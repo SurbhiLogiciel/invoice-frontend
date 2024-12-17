@@ -5,7 +5,7 @@ import SelectInput from '../../core-ui/input/selectInput';
 import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation,useNavigate, useParams } from 'react-router-dom';
 import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
@@ -56,45 +56,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     `/invoiceLayout/${userId}/${invoiceId}`
   );
 
-  // const handleItemChange = (id: number | string, field: string, value: any) => {
-  //   const updatedItems = items.map((item) =>
-  //     item.id === id ? { ...item, [field]: value } : item
-  //   );
-  //   setItems(updatedItems);
-  // };
 
-  const handleItemChange = (
-    id: string | number,
-    field: string,
-    value: string
-  ) => {
-    // Find the index of the item to update
-    const itemIndex = items.findIndex((item) => item.id === id);
-
-    if (itemIndex !== -1) {
-      // Create a copy of the items array
-      const updatedItems = [...items];
-
-      // Update the specific item
-      const updatedItem = { ...updatedItems[itemIndex] };
-
-      if (field === 'qty') {
-        updatedItem.qty = parseInt(value) || 0; // Ensure qty is a number
-      } else if (field === 'price') {
-        updatedItem.price = parseFloat(value) || 0; // Ensure price is a number
-      }
-
-      // Calculate the total price
-      updatedItem.total = updatedItem.qty * updatedItem.price;
-
-      // Update the items array with the modified item
-      updatedItems[itemIndex] = updatedItem;
-
-      // Update the state with the new items array
-      setItems(updatedItems);
-    }
-  };
-
+ const navigate = useNavigate();
   const handleSave = async (
     values: DrawerForm,
     { setSubmitting }: FormikHelpers<DrawerForm>
@@ -110,7 +73,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         isEditing && invoiceId
           ? await updateInvoice(invoiceId, userId, values)
           : await createInvoice(userId, values);
-        onClose();
+        navigate(`/invoiceLayout/${userId}`);
       } catch (error) {
         console.error('Failed to create invoice', error);
       }
@@ -362,81 +325,84 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                           </div>
                           <div className="w-6 flex justify-center items-center"></div>
                         </div>
+
                         {values.items.map((item, index) => (
                           <div
-                            key={index}
+                            key={item.id}
                             className="flex items-center space-x-4 mt-4"
                           >
-                            {/* Item Name Input */}
+                            {/* Item Name */}
                             <div className="flex-1 w-[188px]">
                               <Input
-                                id={`items[${index}].itemName`}
-                                variant="secondary"
-                                size="large"
+                                id={`itemName-${index}`}
                                 name={`items[${index}].itemName`}
                                 value={item.itemName}
-                                onChange={handleChange}
-                                placeholder="Item Name"
+                                onChange={(e) =>
+                                  setFieldValue(
+                                    `items[${index}].itemName`,
+                                    e.target.value
+                                  )
+                                }
                               />
                             </div>
 
-                            {/* Quantity Input */}
+                            {/* Quantity */}
                             <div className="w-[67px]">
                               <Input
-                                variant="secondary"
-                                size="large"
+                                id={`qty-${index}`}
+                                name={`items[${index}].qty`}
                                 value={item.qty}
                                 onChange={(e) =>
-                                  handleItemChange(
-                                    item.id,
-                                    'qty',
-                                    e.target.value
+                                  setFieldValue(
+                                    `items[${index}].qty`,
+                                    parseInt(e.target.value, 10)
                                   )
                                 }
                               />
                             </div>
 
-                            {/* Price Input */}
+                            {/* Price */}
                             <div className="w-[100px]">
                               <Input
-                                variant="secondary"
-                                size="large"
+                                id={`price-${index}`}
+                                name={`items[${index}].price`}
                                 value={item.price}
                                 onChange={(e) =>
-                                  handleItemChange(
-                                    item.id,
-                                    'price',
-                                    e.target.value
+                                  setFieldValue(
+                                    `items[${index}].price`,
+                                    parseFloat(e.target.value)
                                   )
                                 }
                               />
                             </div>
 
-                            {/* Total Price */}
+                            {/* Total */}
                             <div className="w-1/5 text-center">
                               <h3 className="text-white font-roboto font-semibold">
-                                {item.total && !isNaN(item.total)
-                                  ? item.total.toFixed(2)
-                                  : '$0'}
-                                {/* Display the total */}
+                                ${item.qty * item.price}
                               </h3>
                             </div>
 
-                            {/* Delete Item */}
+                            {/* Remove Item */}
                             <div
                               className="w-6 flex justify-center items-center cursor-pointer"
-                              // onClick={() => remove(index)}
                             >
                               <DeleteIcon onClick={() => remove(index)} />
                             </div>
                           </div>
                         ))}
 
-                        {/* Add More Item Button */}
+                        {/* Add More Item */}
                         <p
                           className="text-primary text-sm font-roboto cursor-pointer mt-4"
                           onClick={() =>
-                            push({ itemName: '', qty: 0, price: 0 })
+                            push({
+                              id: Date.now(), 
+                              itemName: '',
+                              qty: 0,
+                              price: 0,
+                              total: 0,
+                            })
                           }
                         >
                           + Add More Item
