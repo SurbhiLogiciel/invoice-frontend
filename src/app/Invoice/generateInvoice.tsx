@@ -6,15 +6,16 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useParams } from 'react-router-dom';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
-import { InvoiceType } from '../../core-ui/DataContainer';
+import { showToast } from '../../services/toastService';
+import { InvoiceType } from '../../core-ui/DataContainer/types';
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
   invoice: InvoiceType | null;
-  onSave: (updatedInvoice: InvoiceType) => Promise<void>;
+  onSave: (invoice: InvoiceType) => void;
 }
 
 // interface for validation
@@ -77,25 +78,34 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     isDraft: boolean
   ) => {
     if (!userId) {
-      console.error('Missing userId; cannot save invoice.');
+      showToast('Failed to save invoice: Missing user ID.', 'error');
       setSubmitting(false);
       return;
     }
 
     if (isDraft) values.status = 'DRAFT';
 
+    let response: InvoiceType;
     try {
-      if (isEditing && invoice?._id) {
-        await updateInvoice(invoice._id, userId, values);
+      if (isEditing && invoiceId) {
+        response = await updateInvoice(invoiceId, userId, values);
+        showToast('Invoice updated successfully!', 'success');
       } else {
-        await createInvoice(userId, values);
+        response = await createInvoice(userId, values);
+        if (isDraft) {
+          showToast('Draft invoice saved successfully!', 'info');
+        } else {
+          showToast('Invoice created successfully!', 'success');
+        }
       }
-
       onClose();
+      onSave(response);
     } catch (error) {
-      console.error(
-        isDraft ? 'Failed to save draft invoice' : 'Failed to create invoice',
-        error
+      showToast(
+        isDraft
+          ? 'Failed to save draft invoice. Please try again.'
+          : 'Failed to create invoice. Please try again.',
+        'error'
       );
     } finally {
       setSubmitting(false);
@@ -164,8 +174,6 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, formikHelpers) => {
-            console.log(values);
-
             handleSave(values, formikHelpers.setSubmitting, false);
           }}
         >
@@ -178,7 +186,6 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             errors,
             setSubmitting,
           }) => {
-            console.log(errors);
             return (
               <form onSubmit={handleSubmit}>
                 <div className="p-6">

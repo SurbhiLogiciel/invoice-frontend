@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container } from './types';
+import { Container, InvoiceType } from './types';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../app/assets/Frame.png';
 import { Dropdown } from '../dropdown';
@@ -13,40 +13,17 @@ import {
 } from '../../services/apiService';
 import InvoiceComponent from '../invoice';
 import { Chips } from '../chips';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../button';
-
-export interface InvoiceItemType {
-  id: number;
-  itemName: string;
-  qty: number;
-  price: number;
-}
-
-export interface InvoiceType {
-  _id: string;
-  invoiceNumber: string;
-  fullName: string;
-  amount: number;
-  createdAt: string;
-  issueDate: string;
-  userId: string;
-  paymentTerms: string;
-  status: string;
-  companyName: string;
-  streetAddress: string;
-  city: string;
-  state: string;
-  zip: string;
-  items: InvoiceItemType[];
-}
+import { showToast } from '../../services/toastService';
 
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
   color = 'purple',
+  invoices,
+  setInvoices,
   children,
 }) => {
-  const [invoices, setInvoices] = useState<InvoiceType[]>([]);
   const [fullName, setFullName] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(
@@ -200,8 +177,10 @@ export const DataContainer: React.FC<Container> = ({
         setInvoices(invoices.filter((i) => i._id !== invoiceToDelete._id));
         setShowDeleteConfirmation(false);
         setInvoiceToDelete(null);
+        showToast('Invoice deleted successfully!', 'success');
       } catch (error) {
         setError('Failed to delete invoice');
+        showToast('Failed to delete invoice', 'error');
       }
     }
   };
