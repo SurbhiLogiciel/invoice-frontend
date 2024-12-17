@@ -83,7 +83,6 @@ export const DataContainer: React.FC<Container> = ({
 
   const handleUpdate = async (updatedInvoice: InvoiceType) => {
     try {
-      console.log(updateInvoice)
       await updateInvoice(updatedInvoice._id, userId, updatedInvoice);
       setIsDrawerOpen(false);
       setInvoices(

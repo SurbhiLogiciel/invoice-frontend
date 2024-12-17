@@ -5,7 +5,7 @@ import SelectInput from '../../core-ui/input/selectInput';
 import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
-import { useLocation,useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
@@ -18,7 +18,6 @@ interface DrawerProps {
   onSave: (updatedInvoice: InvoiceType) => Promise<void>;
 }
 
-// interface for validation
 interface DrawerForm {
   companyName: string;
   streetAddress: string;
@@ -56,20 +55,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     `/invoiceLayout/${userId}/${invoiceId}`
   );
 
-
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleSave = async (
     values: DrawerForm,
     { setSubmitting }: FormikHelpers<DrawerForm>
   ) => {
-    console.log('Form Submitted:', values);
-
     if (userId) {
       try {
-        console.log('Creating invoice for userId:', userId);
-        console.log(isEditing);
-        console.log(invoiceId);
-
         isEditing && invoiceId
           ? await updateInvoice(invoiceId, userId, values)
           : await createInvoice(userId, values);
@@ -146,8 +138,6 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, formikHelpers) => {
-            console.log(values);
-
             handleSave(values, formikHelpers);
           }}
         >
@@ -159,7 +149,6 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             setFieldValue,
             errors,
           }) => {
-            console.log(errors);
             return (
               <form onSubmit={handleSubmit}>
                 <div className="p-6">
@@ -384,9 +373,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             </div>
 
                             {/* Remove Item */}
-                            <div
-                              className="w-6 flex justify-center items-center cursor-pointer"
-                            >
+                            <div className="w-6 flex justify-center items-center cursor-pointer">
                               <DeleteIcon onClick={() => remove(index)} />
                             </div>
                           </div>
@@ -397,7 +384,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                           className="text-primary text-sm font-roboto cursor-pointer mt-4"
                           onClick={() =>
                             push({
-                              id: Date.now(), 
+                              id: Date.now(),
                               itemName: '',
                               qty: 0,
                               price: 0,
