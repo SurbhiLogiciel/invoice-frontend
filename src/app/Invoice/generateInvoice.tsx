@@ -20,6 +20,7 @@ interface DrawerProps {
 
 // interface for validation
 interface DrawerForm {
+  isDraft?: boolean;
   companyName: string;
   streetAddress: string;
   city: string;
@@ -57,10 +58,13 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
   );
 
   const navigate = useNavigate();
+
   const handleSave = async (
     values: DrawerForm,
-    { setSubmitting }: FormikHelpers<DrawerForm>
+    setSubmitting: (isSubmitting: boolean) => void,
+    isDraft: boolean
   ) => {
+    if (isDraft) values.status = 'DRAFT';
     if (userId) {
       try {
         isEditing && invoiceId
@@ -68,7 +72,11 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           : await createInvoice(userId, values);
         navigate(`/invoiceLayout/${userId}`);
       } catch (error) {
-        console.error('Failed to create invoice', error);
+        console.error(
+          isDraft ? 'Failed to save draft invoice' : 'Failed to create invoice',
+          error
+        );
+        setSubmitting(false);
       }
 
       onClose();
@@ -110,7 +118,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     zip: '',
     issueDate: '',
     paymentTerms: '',
-    status: '',
+    status: invoice?.status || '',
     items: [{ id: '1', itemName: '', qty: 1, price: 0, total: 0 }],
   };
 
@@ -140,7 +148,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, formikHelpers) => {
-            handleSave(values, formikHelpers);
+            // handleSave(values, formikHelpers, false);
+            handleSave(values, formikHelpers.setSubmitting, false);
           }}
         >
           {({
@@ -149,7 +158,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             values,
             handleChange,
             setFieldValue,
-            errors,
+            setSubmitting,
           }) => {
             return (
               <form onSubmit={handleSubmit}>
@@ -401,30 +410,41 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                   </FieldArray>
                 </div>
 
-                <div className="flex fixed w-[550px] left bottom-0 justify-end bg-purple space-x-4 p-3">
+                <div className="flex fixed w-[550px] left bottom-0 justify-between bg-purple space-x-4 p-3">
                   <Button
+                    type="submit"
                     size="large"
-                    outline="primary"
-                    color="secondary"
-                    children="Cancel"
-                    onClick={onClose}
+                    outline="secondary"
+                    color="lightPurple"
+                    children="Save Draft"
+                    onClick={() => handleSave(values, setSubmitting, true)}
                   />
 
-                  {isEditing ? (
+                  <div className="flex space-x-4">
                     <Button
-                      type="submit"
                       size="large"
-                      color="primary"
-                      children="Update"
+                      outline="primary"
+                      color="secondary"
+                      children="Cancel"
+                      onClick={onClose}
                     />
-                  ) : (
-                    <Button
-                      type="submit"
-                      size="large"
-                      color="primary"
-                      children="Save"
-                    />
-                  )}
+
+                    {isEditing ? (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Update"
+                      />
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Save"
+                      />
+                    )}
+                  </div>
                 </div>
               </form>
             );
