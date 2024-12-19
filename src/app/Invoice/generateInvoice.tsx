@@ -122,7 +122,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       sx={{
         position: 'absolute',
         left: '90px',
-        width: 350,
+        width: 550,
         height: '100%',
         transition: 'transform 0.3s ease-in-out',
         transform: open ? 'translateX(0)' : 'translateX(100%)',
@@ -400,7 +400,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                   </FieldArray>
                 </div>
 
-                <div className="flex justify-end bg-purple space-x-4 p-3">
+                <div className="flex fixed w-[550px] left bottom-0 justify-end bg-purple space-x-4 p-3">
                   <Button
                     size="large"
                     outline="primary"
