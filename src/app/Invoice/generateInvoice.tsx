@@ -131,6 +131,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           boxSizing: 'border-box',
           backgroundColor: 'rgb(var(--color-secondary))',
           color: 'white',
+          // overflowY:'auto'
         },
       }}
     >
@@ -152,7 +153,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           }) => {
             return (
               <form onSubmit={handleSubmit}>
-                <div className="p-6">
+                <div className="p-6 pb-24">
                   {isEditing ? (
                     <h2 className="text-white font-bold text-xl font-roboto">
                       Update Invoice
