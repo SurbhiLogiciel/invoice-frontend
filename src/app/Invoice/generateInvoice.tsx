@@ -10,12 +10,13 @@ import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
+import { showToast } from '../../services/toastService';
 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
   invoice: InvoiceType | null;
-  onSave: (updatedInvoice: InvoiceType) => Promise<void>;
+  onSave: (invoice: InvoiceType) => void;
 }
 
 // interface for validation
@@ -65,24 +66,35 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     isDraft: boolean
   ) => {
     if (isDraft) values.status = 'DRAFT';
+
     if (userId) {
+      let response: InvoiceType;
       try {
-        isEditing && invoiceId
-          ? await updateInvoice(invoiceId, userId, values)
-          : await createInvoice(userId, values);
-        navigate(`/invoiceLayout/${userId}`);
+        if (isEditing && invoiceId) {
+          response = await updateInvoice(invoiceId, userId, values);
+          showToast('Invoice updated successfully!', 'success');
+        } else {
+          response = await createInvoice(userId, values);
+          if (isDraft) {
+            showToast('Draft invoice saved successfully!', 'info');
+          } else {
+            showToast('Invoice created successfully!', 'success');
+          }
+        }
+
+        onClose();
+        onSave(response);
       } catch (error) {
-        console.error(
-          isDraft ? 'Failed to save draft invoice' : 'Failed to create invoice',
-          error
+        showToast(
+          isDraft
+            ? 'Failed to save draft invoice. Please try again.'
+            : 'Failed to create invoice. Please try again.',
+          'error'
         );
+      } finally {
         setSubmitting(false);
       }
-
-      onClose();
     }
-
-    setSubmitting(false);
   };
 
   const validationSchema = Yup.object({
@@ -334,6 +346,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Item Name */}
                             <div className="flex-1 w-[188px]">
                               <Input
+                                variant="secondary"
                                 id={`itemName-${index}`}
                                 name={`items[${index}].itemName`}
                                 value={item.itemName}
@@ -349,6 +362,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Quantity */}
                             <div className="w-[67px]">
                               <Input
+                                variant="secondary"
                                 id={`qty-${index}`}
                                 name={`items[${index}].qty`}
                                 value={item.qty}
@@ -364,6 +378,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Price */}
                             <div className="w-[100px]">
                               <Input
+                                variant="secondary"
                                 id={`price-${index}`}
                                 name={`items[${index}].price`}
                                 value={item.price}
