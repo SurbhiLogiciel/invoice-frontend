@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, InvoiceType } from './types';
+import { Container } from './types';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../app/assets/Frame.png';
 import { Dropdown } from '../dropdown';
@@ -16,6 +16,34 @@ import { Chips } from '../chips';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../button';
 import { showToast } from '../../services/toastService';
+
+export interface InvoiceItemType {
+  id: number;
+  itemName: string;
+  qty: number;
+  price: number;
+}
+interface StatusOrder {
+  [key: string]: number; 
+}
+
+export interface InvoiceType {
+  _id: string;
+  invoiceNumber: string;
+  fullName: string;
+  amount: number;
+  createdAt: string;
+  issueDate: string;
+  userId: string;
+  paymentTerms: string;
+  status: string;
+  companyName: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  items: InvoiceItemType[];
+}
 
 export const DataContainer: React.FC<Container> = ({
   size = 'medium',
@@ -93,22 +121,34 @@ export const DataContainer: React.FC<Container> = ({
         const response = await fetchInvoiceList(userId, page);
         const newInvoices = response.data as InvoiceType[];
 
-        // Update the invoice list
-        setInvoices((prevInvoices) => {
-          const updatedInvoices = [
-            ...prevInvoices,
-            ...newInvoices.filter(
-              (newInvoice) =>
-                !prevInvoices.some(
-                  (prevInvoice) => prevInvoice._id === newInvoice._id
-                )
-            ),
-          ];
+        const updatedInvoices = [
+          ...invoices,
+          ...newInvoices.filter(
+            (newInvoice) =>
+              !invoices.some(
+                (prevInvoice) => prevInvoice._id === newInvoice._id
+              )
+          ),
+        ];
 
-          return updatedInvoices;
+        updatedInvoices.sort((a, b) => {
+          const dateA = new Date(a.issueDate).getTime();
+          const dateB = new Date(b.issueDate).getTime();
+          if (dateA !== dateB) return dateA - dateB;
+
+          const statusOrder: StatusOrder = {
+            PAID: 1,
+            PENDING: 2,
+            DRAFT: 3,
+          };
+
+          const statusA = statusOrder[a.status as keyof StatusOrder] ?? 4;
+          const statusB = statusOrder[b.status as keyof StatusOrder] ?? 4;
+
+          return statusA - statusB;
         });
 
-        // Update pagination state
+        setInvoices(updatedInvoices);
         setPagination({
           totalItems: response.totalItems,
           totalPages: response.totalPages,
@@ -128,6 +168,7 @@ export const DataContainer: React.FC<Container> = ({
     },
     [userId]
   );
+
 
   useEffect(() => {
     fetchData(pagination.currentPage);
@@ -190,13 +231,13 @@ export const DataContainer: React.FC<Container> = ({
     setShowDeleteConfirmation(true);
   };
 
-  const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
-    navigate(`/invoiceLayout/${userId}`);
-    if (error) {
-      return <div>Error: {error}</div>;
-    }
-  };
+ const handleCloseDrawer = () => {
+   setIsDrawerOpen(false);
+   navigate(`/invoiceLayout/${userId}`);
+   if (error) {
+     return <div>Error: {error}</div>;
+   }
+ };
 
   const generateOptions = (invoice: InvoiceType): DropdownOption[] => [
     {
