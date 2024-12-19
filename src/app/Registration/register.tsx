@@ -6,6 +6,7 @@ import { registerUserEmail } from '../../services/apiService';
 import { getErrorMessage } from '../../utils/getErrorMessages';
 import { isValidEmail } from '../../utils/validations';
 import { useAuth } from '../context/AuthContext';
+import { showToast } from '../../services/toastService';
 
 export const RegisterEmail: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,6 +27,7 @@ export const RegisterEmail: React.FC = () => {
 
       if (response.status === 201) {
         registerEmail();
+        showToast('Email sent successfully.', 'success');
         navigate(`/verifyOtp/${response.data.userId}`);
       } else {
         setErrorMessage('Unexpected response. Please try again.');
