@@ -10,16 +10,18 @@ import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { createInvoice, updateInvoice } from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
+import { showToast } from '../../services/toastService';
 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
   invoice: InvoiceType | null;
-  onSave: (updatedInvoice: InvoiceType) => Promise<void>;
+  onSave: (invoice: InvoiceType) => void;
 }
 
 // interface for validation
 interface DrawerForm {
+  isDraft?: boolean;
   companyName: string;
   streetAddress: string;
   city: string;
@@ -57,24 +59,44 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
   );
 
   const navigate = useNavigate();
+
   const handleSave = async (
     values: DrawerForm,
-    { setSubmitting }: FormikHelpers<DrawerForm>
+    setSubmitting: (isSubmitting: boolean) => void,
+    isDraft: boolean
   ) => {
+    if (isDraft) values.status = 'DRAFT';
+
     if (userId) {
+      let response: InvoiceType;
       try {
-        isEditing && invoiceId
-          ? await updateInvoice(invoiceId, userId, values)
-          : await createInvoice(userId, values);
-        navigate(`/invoiceLayout/${userId}`);
+        if (isEditing && invoiceId) {
+          response = await updateInvoice(invoiceId, userId, values);
+          showToast('Invoice updated successfully!', 'success');
+          navigate(`/invoiceLayout/${userId}`);
+        } else {
+          response = await createInvoice(userId, values);
+          if (isDraft) {
+            showToast('Draft invoice saved successfully!', 'info');
+          } else {
+            showToast('Invoice created successfully!', 'success');
+          }
+          navigate(`/invoiceLayout/${userId}`);
+        }
+
+        onClose();
+        onSave(response);
       } catch (error) {
-        console.error('Failed to create invoice', error);
+        showToast(
+          isDraft
+            ? 'Failed to save draft invoice. Please try again.'
+            : 'Failed to create invoice. Please try again.',
+          'error'
+        );
+      } finally {
+        setSubmitting(false);
       }
-
-      onClose();
     }
-
-    setSubmitting(false);
   };
 
   const validationSchema = Yup.object({
@@ -110,7 +132,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     zip: '',
     issueDate: '',
     paymentTerms: '',
-    status: '',
+    status: invoice?.status || '',
     items: [{ id: '1', itemName: '', qty: 1, price: 0, total: 0 }],
   };
 
@@ -140,7 +162,8 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, formikHelpers) => {
-            handleSave(values, formikHelpers);
+            // handleSave(values, formikHelpers, false);
+            handleSave(values, formikHelpers.setSubmitting, false);
           }}
         >
           {({
@@ -149,7 +172,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             values,
             handleChange,
             setFieldValue,
-            errors,
+            setSubmitting,
           }) => {
             return (
               <form onSubmit={handleSubmit}>
@@ -325,6 +348,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Item Name */}
                             <div className="flex-1 w-[188px]">
                               <Input
+                                variant="secondary"
                                 id={`itemName-${index}`}
                                 name={`items[${index}].itemName`}
                                 value={item.itemName}
@@ -340,6 +364,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Quantity */}
                             <div className="w-[67px]">
                               <Input
+                                variant="secondary"
                                 id={`qty-${index}`}
                                 name={`items[${index}].qty`}
                                 value={item.qty}
@@ -355,6 +380,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Price */}
                             <div className="w-[100px]">
                               <Input
+                                variant="secondary"
                                 id={`price-${index}`}
                                 name={`items[${index}].price`}
                                 value={item.price}
@@ -401,30 +427,41 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                   </FieldArray>
                 </div>
 
-                <div className="flex fixed w-[550px] left bottom-0 justify-end bg-purple space-x-4 p-3">
+                <div className="flex fixed w-[550px] left bottom-0 justify-between bg-purple space-x-4 p-3">
                   <Button
+                    type="submit"
                     size="large"
-                    outline="primary"
-                    color="secondary"
-                    children="Cancel"
-                    onClick={onClose}
+                    outline="secondary"
+                    color="lightPurple"
+                    children="Save Draft"
+                    onClick={() => handleSave(values, setSubmitting, true)}
                   />
 
-                  {isEditing ? (
+                  <div className="flex space-x-4">
                     <Button
-                      type="submit"
                       size="large"
-                      color="primary"
-                      children="Update"
+                      outline="primary"
+                      color="secondary"
+                      children="Cancel"
+                      onClick={onClose}
                     />
-                  ) : (
-                    <Button
-                      type="submit"
-                      size="large"
-                      color="primary"
-                      children="Save"
-                    />
-                  )}
+
+                    {isEditing ? (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Update"
+                      />
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="large"
+                        color="primary"
+                        children="Save"
+                      />
+                    )}
+                  </div>
                 </div>
               </form>
             );
