@@ -26,15 +26,9 @@ const SelectableContainer: React.FC<SelectableContainerProps> = ({
   };
 
   const containerClasses = `relative rounded-lg cursor-pointer border-gray text-white transition-colors duration-300 py-4 px-5
-  ${
-    disabled
-      ? colorClasses['disabled']
-      : isSelected
-        ? colorClasses['primary']
-        : colorClasses[color]
-  } 
-  ${outline ? 'border-2' : 'primary'}
-  ${disabled ? 'opacity-50' : ''}`;
+  ${isSelected ? colorClasses['primary'] : colorClasses[color]} 
+  ${outline ? 'border-2' : 'primary'}`;
+
   return (
     <div className="relative font-roboto">
       <div onClick={handleClick} className={containerClasses}>

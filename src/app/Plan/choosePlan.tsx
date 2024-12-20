@@ -108,7 +108,6 @@ export const ChoosePlan: React.FC = () => {
           description="Limited features with basic functionality"
           planPrice="$0"
           isSelected={selectedPlan === 'Free'}
-          disabled={selectedPlan === 'Business'}
           onSelect={() => handlePlanSelect('Free', 0)}
         />
 
@@ -117,7 +116,6 @@ export const ChoosePlan: React.FC = () => {
           description="Unlimited features and priority support"
           planPrice="$20"
           isSelected={selectedPlan === 'Business'}
-          disabled={selectedPlan === 'Free'}
           onSelect={() => handlePlanSelect('Business', 20)}
         />
       </div>
