@@ -73,6 +73,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         if (isEditing && invoiceId) {
           response = await updateInvoice(invoiceId, userId, values);
           showToast('Invoice updated successfully!', 'success');
+          navigate(`/invoiceLayout/${userId}`);
         } else {
           response = await createInvoice(userId, values);
           if (isDraft) {
@@ -80,6 +81,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           } else {
             showToast('Invoice created successfully!', 'success');
           }
+          navigate(`/invoiceLayout/${userId}`);
         }
 
         onClose();

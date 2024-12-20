@@ -24,7 +24,7 @@ export interface InvoiceItemType {
   price: number;
 }
 interface StatusOrder {
-  [key: string]: number; 
+  [key: string]: number;
 }
 
 export interface InvoiceType {
@@ -169,7 +169,6 @@ export const DataContainer: React.FC<Container> = ({
     [userId]
   );
 
-
   useEffect(() => {
     fetchData(pagination.currentPage);
   }, [pagination.currentPage, fetchData]);
@@ -231,13 +230,13 @@ export const DataContainer: React.FC<Container> = ({
     setShowDeleteConfirmation(true);
   };
 
- const handleCloseDrawer = () => {
-   setIsDrawerOpen(false);
-   navigate(`/invoiceLayout/${userId}`);
-   if (error) {
-     return <div>Error: {error}</div>;
-   }
- };
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    navigate(`/invoiceLayout/${userId}`);
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
+  };
 
   const generateOptions = (invoice: InvoiceType): DropdownOption[] => [
     {
@@ -256,7 +255,7 @@ export const DataContainer: React.FC<Container> = ({
     <div className="flex flex-col w-full gap-y-6">
       <div className="bg-secondary rounded-md text-white p-8">
         <div
-          className="flex flex-col w-full gap-[-1] justify-between items-center max-w-full overflow-auto"
+          className="flex flex-col w-full justify-between items-center max-w-full overflow-auto"
           onScroll={handleScroll}
           style={{
             height: 'calc(102vh - 248px)',
@@ -267,79 +266,83 @@ export const DataContainer: React.FC<Container> = ({
           {invoices.length === 0 ? (
             <InvoiceComponent />
           ) : (
-            invoices.map((invoice) => {
-              const isDraft = invoice.status === 'DRAFT';
-              const hasNoIssueDate = !invoice.issueDate;
-              const hasNoPaymentTerms = !invoice.paymentTerms;
-              const hasNoItems = !invoice.items || invoice.items.length === 0;
+            <div className="grid grid-cols-1 gap-6 w-full">
+              {invoices.map((invoice) => {
+                const isDraft = invoice.status === 'DRAFT';
+                const hasNoIssueDate = !invoice.issueDate;
+                const hasNoPaymentTerms = !invoice.paymentTerms;
+                const hasNoItems = !invoice.items || invoice.items.length === 0;
 
-              const shouldShowDashForDate =
-                isDraft && (hasNoIssueDate || hasNoPaymentTerms);
-              const shouldShowDashForAmount = isDraft && hasNoItems;
-              return (
-                <div
-                  className="w-full bg-purple rounded-md shadow-md p-5 mb-6"
-                  key={invoice._id}
-                >
-                  <div className="flex flex-col gap-4">
-                    <div className="flex gap-7 items-center">
-                      {children}
-                      <div className="w-48">#INV-{invoice.invoiceNumber}</div>
-                      <div className="w-48 flex justify-center items-center">
-                        {shouldShowDashForDate ? (
-                          '--'
-                        ) : (
-                          <>
-                            Due{' '}
-                            {calculateDueDate(
-                              invoice.issueDate,
-                              invoice.paymentTerms
-                            )}
-                          </>
-                        )}
-                      </div>
-                      <div className="w-48 text-center">{fullName}</div>
-                      <div className="w-52">
-                        Created on{' '}
-                        {new Date(invoice.createdAt).toLocaleDateString(
-                          'en-GB',
-                          {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                          }
-                        )}
-                      </div>
-                      <div className="w-40 font-bold text-[20px] text-center">
-                        {shouldShowDashForAmount ? '--' : `$${invoice.amount}`}
-                      </div>
-                      <div className="w-28 flex justify-center items-center text-center">
-                        <Chips
-                          color={
-                            invoice.status === 'PAID'
-                              ? 'success'
-                              : invoice.status === 'PENDING'
-                              ? 'info'
-                              : 'draft'
-                          }
-                          onClick={() => alert()}
-                        >
-                          {invoice.status}
-                        </Chips>
-                      </div>
+                const shouldShowDashForDate =
+                  isDraft && (hasNoIssueDate || hasNoPaymentTerms);
+                const shouldShowDashForAmount = isDraft && hasNoItems;
 
-                      <div className="w-16">
-                        <Dropdown
-                          options={generateOptions(invoice)}
-                          Image={Frame}
-                          position="right"
-                        />
+                return (
+                  <div
+                    className="w-full bg-purple rounded-md shadow-md p-5"
+                    key={invoice._id}
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="flex gap-7 items-center">
+                        {children}
+                        <div className="w-48">#INV-{invoice.invoiceNumber}</div>
+                        <div className="w-48 flex justify-center items-center">
+                          {shouldShowDashForDate ? (
+                            '--'
+                          ) : (
+                            <>
+                              Due{' '}
+                              {calculateDueDate(
+                                invoice.issueDate,
+                                invoice.paymentTerms
+                              )}
+                            </>
+                          )}
+                        </div>
+                        <div className="w-48 text-center">{fullName}</div>
+                        <div className="w-52">
+                          Created on{' '}
+                          {new Date(invoice.createdAt).toLocaleDateString(
+                            'en-GB',
+                            {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            }
+                          )}
+                        </div>
+                        <div className="w-40 font-bold text-[20px] text-center">
+                          {shouldShowDashForAmount
+                            ? '--'
+                            : `$${invoice.amount}`}
+                        </div>
+                        <div className="w-28 flex justify-center items-center text-center">
+                          <Chips
+                            color={
+                              invoice.status === 'PAID'
+                                ? 'success'
+                                : invoice.status === 'PENDING'
+                                ? 'info'
+                                : 'draft'
+                            }
+                            onClick={() => alert()}
+                          >
+                            {invoice.status}
+                          </Chips>
+                        </div>
+                        <div className="w-16">
+                          <Dropdown
+                            options={generateOptions(invoice)}
+                            Image={Frame}
+                            position="right"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })}
+            </div>
           )}
         </div>
         {showDeleteConfirmation && (
