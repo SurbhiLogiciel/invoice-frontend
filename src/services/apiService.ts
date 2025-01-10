@@ -265,3 +265,14 @@ export const deleteInvoice = async (userId: string, invoiceId: string) => {
     throw error;
   }
 };
+
+export const sendNotificationEmail = async (
+  userId: string,
+  data: { message: string }
+) => {
+  const response = await apiClient.post(`/sendUserNotification`, {
+    userId,
+    ...data,
+  });
+  return response.data;
+};

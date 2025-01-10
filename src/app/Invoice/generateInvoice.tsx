@@ -8,7 +8,11 @@ import { Button } from '../../core-ui/button';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { createInvoice, updateInvoice } from '../../services/apiService';
+import {
+  createInvoice,
+  sendNotificationEmail,
+  updateInvoice,
+} from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
 import { showToast } from '../../services/toastService';
 
@@ -70,6 +74,14 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     if (userId) {
       let response: InvoiceType;
       try {
+        if ((isDraft && !values.issueDate) || !values.paymentTerms) {
+          await sendEmailNotification(
+            userId,
+            'Your payment is currently pending. Kindly provide the Issue Date and Payment Terms to proceed further.'
+          );
+          showToast('Notification via email sent.', 'info');
+        }
+
         if (isEditing && invoiceId) {
           response = await updateInvoice(invoiceId, userId, values);
           showToast('Invoice updated successfully!', 'success');
@@ -96,6 +108,14 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       } finally {
         setSubmitting(false);
       }
+    }
+  };
+
+  const sendEmailNotification = async (userId: string, message: string) => {
+    try {
+      await sendNotificationEmail(userId, { message });
+    } catch (error) {
+      console.error('Error sending email:', error);
     }
   };
 
