@@ -3,6 +3,7 @@ import { InputProps } from './types';
 import InputDropdown from '../../app/svg/selectDropdown';
 
 const SelectInput: React.FC<InputProps> = ({
+  value,
   placeholder = '',
   onChange,
   options = [],
@@ -56,7 +57,7 @@ const SelectInput: React.FC<InputProps> = ({
           } appearance-none flex items-center cursor-pointer focus:ring-2 focus:ring-input-border-focus ${
             inputValue === '' ? 'text-gray' : 'text-white'
           } border border-lightGray`}
-          value={inputValue}
+          value={value}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

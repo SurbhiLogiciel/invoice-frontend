@@ -1,8 +1,9 @@
 export interface InvoiceItemType {
-  id: number;
+  id: string;
   itemName: string;
-  qty: number;
-  price: number;
+  qty: string;
+  price: string | number;
+  total: string;
 }
 export interface InvoiceType {
   _id: string;

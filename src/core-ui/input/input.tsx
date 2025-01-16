@@ -3,6 +3,7 @@ import { InputProps } from './types';
 import PasswordEyeIcon from '../../app/svg/passwordEye';
 
 export const Input: React.FC<InputProps> = ({
+  value,
   type = 'text',
   placeholder = '',
   onChange,
@@ -15,6 +16,7 @@ export const Input: React.FC<InputProps> = ({
   passwordValue = '',
   isConfirmPassword = false,
 }) => {
+  console.log('value', value);
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -39,6 +41,7 @@ export const Input: React.FC<InputProps> = ({
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
+    console.log(value);
 
     if (type === 'tel') {
       value = formatPhoneNumber(value);
@@ -128,7 +131,7 @@ export const Input: React.FC<InputProps> = ({
       <input
         type={showPassword && type === 'password' ? 'text' : type}
         placeholder={placeholder}
-        value={inputValue}
+        value={value}
         onChange={handleInputChange}
         onFocus={() => setFocused(true)}
         onBlur={() => {

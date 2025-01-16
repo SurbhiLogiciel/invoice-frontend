@@ -12,9 +12,9 @@ const Cancel: React.FC = () => {
       <path
         d="M5.5 16.5L16.5 5.5M5.5 5.5L16.5 16.5"
         stroke="#981010"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

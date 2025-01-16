@@ -53,7 +53,7 @@ export const fetchInvoiceData = async (userId: string, invoiceId: string) => {
       }
     );
 
-    console.log(response);
+    // console.log(response);
     return response.data;
   } catch (error) {
     console.error('Failed to fetch invoices:', error);
@@ -216,8 +216,8 @@ export const applyPromoCode = async (
 
 interface InvoiceItem {
   itemName: string;
-  qty: number;
-  price: number;
+  qty: string;
+  price: string;
 }
 
 interface CreateInvoicePayload {

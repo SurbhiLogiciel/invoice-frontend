@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container } from './types';
+import { Container, InvoiceItemType } from './types';
 import { DropdownOption } from '../dropdown/types';
 import Frame from '../../app/assets/Frame.png';
 import { Dropdown } from '../dropdown';
@@ -17,12 +17,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../button';
 import { showToast } from '../../services/toastService';
 
-export interface InvoiceItemType {
-  id: number;
-  itemName: string;
-  qty: number;
-  price: number;
-}
 interface StatusOrder {
   [key: string]: number;
 }
@@ -216,13 +210,14 @@ export const DataContainer: React.FC<Container> = ({
 
   const handleEdit = async (invoice: InvoiceType) => {
     const invoiceId = invoice._id;
-    navigate(`/invoiceLayout/${userId}/${invoiceId}`);
+
+    console.log('userId, invoiceId', userId, invoiceId);
 
     try {
       const response = await fetchInvoiceData(userId, invoiceId);
-      setSelectedInvoice(response.data);
-
+      setSelectedInvoice(response);
       setIsDrawerOpen(true);
+      navigate(`/invoiceLayout/${userId}/${invoiceId}`);
     } catch (error) {
       setError('Failed to fetch invoice data');
     }

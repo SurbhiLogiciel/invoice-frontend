@@ -12,9 +12,9 @@ const InputDropdown: React.FC = () => {
       <path
         d="M16.25 6.875L10 13.125L3.75 6.875"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
