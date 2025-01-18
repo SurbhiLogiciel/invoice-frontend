@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Drawer } from '@mui/material';
 import { Input } from '../../core-ui/input/input';
 import SelectInput from '../../core-ui/input/selectInput';
@@ -6,16 +6,11 @@ import DateInput from '../../core-ui/input/dateInput';
 import DeleteIcon from '../svg/deleteIcon';
 import { Button } from '../../core-ui/button';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { FieldArray, Formik } from 'formik';
+import { FieldArray, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import {
-  createInvoice,
-  updateInvoice,
-  // fetchInvoiceData,
-} from '../../services/apiService';
+import { createInvoice, updateInvoice } from '../../services/apiService';
 import { InvoiceType } from '../../core-ui/DataContainer';
 import { showToast } from '../../services/toastService';
-import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 interface DrawerProps {
   open: boolean;
@@ -24,7 +19,8 @@ interface DrawerProps {
   onSave: (invoice: InvoiceType) => void;
 }
 
-interface DrawerForm {
+// interface for validation
+export interface DrawerForm {
   isDraft?: boolean;
   companyName: string;
   streetAddress: string;
@@ -51,90 +47,55 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
 }) => {
   const { userId } = useParams<{ userId: string }>();
   const { invoiceId } = useParams<{ invoiceId: string }>();
+  const [items, setItems] = useState([
+    { id: Date.now(), itemName: '', qty: 0, price: 0, total: 0 },
+    { id: Date.now() + 1, itemName: '', qty: 0, price: 0, total: 0 },
+    { id: Date.now() + 2, itemName: '', qty: 0, price: 0, total: 0 },
+  ]);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  // const [editingInvoiceData, setEditingInvoiceData] =
-  //   useState<DrawerForm | null>(null);
   const isEditing = location.pathname.includes(
     `/invoiceLayout/${userId}/${invoiceId}`
   );
 
-  useEffect(() => {
-    if (isEditing && userId && invoiceId) {
-      // fetchInvoiceData(userId, invoiceId).then((data) => {
-      console.log('fetched data');
-      // setEditingInvoiceData(data);
-      // Ensure the entire data object is set
-    }
-  });
-  // },
-  //  [isEditing, userId, invoiceId]);
-
-  // const handleSave = async (
-  //   values: DrawerForm,
-  //   setSubmitting: (isSubmitting: boolean) => void,
-  //   isDraft: boolean
-  // ) => {
-  //   if (isDraft) values.status = 'DRAFT';
-
-  //   try {
-  //     let response: InvoiceType;
-  //     if (isEditing && invoiceId) {
-  //       response = await updateInvoice(invoiceId, userId!, values);
-  //       showToast('Invoice updated successfully!', 'success');
-  //     } else {
-  //       response = await createInvoice(userId!, values);
-  //       showToast(isDraft ? 'Draft invoice saved!' : 'Invoice created!', 'success');
-  //     }
-  //     onSave(response);
-  //     navigate(`/invoiceLayout/${userId}`);
-  //     onClose();
-  //   } catch (error) {
-  //     showToast('Failed to save the invoice. Please try again.', 'error');
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
+  const navigate = useNavigate();
 
   const handleSave = async (
     values: DrawerForm,
     setSubmitting: (isSubmitting: boolean) => void,
     isDraft: boolean
   ) => {
-    // Assign status based on draft state
-    values.status = isDraft ? 'DRAFT' : values.status;
+    if (isDraft) values.status = 'DRAFT';
 
-    try {
+    if (userId) {
       let response: InvoiceType;
+      try {
+        if (isEditing && invoiceId) {
+          response = await updateInvoice(invoiceId, userId, values);
+          showToast('Invoice updated successfully!', 'success');
+          navigate(`/invoiceLayout/${userId}`);
+        } else {
+          response = await createInvoice(userId, values);
+          if (isDraft) {
+            showToast('Draft invoice saved successfully!', 'info');
+          } else {
+            showToast('Invoice created successfully!', 'success');
+          }
+          navigate(`/invoiceLayout/${userId}`);
+        }
 
-      if (isEditing && invoiceId) {
-        // Update invoice when editing
-        response = await updateInvoice(invoiceId, userId!, values);
-        showToast('Invoice updated successfully!', 'success');
-      } else {
-        // Create new invoice
-        response = await createInvoice(userId!, values);
+        onClose();
+        onSave(response);
+      } catch (error) {
         showToast(
-          isDraft ? 'Draft invoice saved!' : 'Invoice created successfully!',
-          'success'
+          isDraft
+            ? 'Failed to save draft invoice. Please try again.'
+            : 'Failed to create invoice. Please try again.',
+          'error'
         );
+      } finally {
+        setSubmitting(false);
       }
-
-      // Callback and navigation after successful save
-      onSave(response);
-      navigate(`/invoiceLayout/${userId}`);
-      onClose();
-    } catch (error) {
-      // Handle errors
-      showToast(
-        isEditing
-          ? 'Failed to update the invoice. Please try again.'
-          : 'Failed to create the invoice. Please try again.',
-        'error'
-      );
-      // Stop submitting state
-      setSubmitting(false);
     }
   };
 
@@ -151,13 +112,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       .of(
         Yup.object({
           itemName: Yup.string().required('Item Name is required'),
-          qty: Yup.string()
+          qty: Yup.number()
             .min(1, 'Quantity must be at least 1')
             .required('Quantity is required'),
-          price: Yup.string()
+          price: Yup.number()
             .min(0.01, 'Price must be greater than 0')
             .required('Price is required'),
-          total: Yup.string().required('Total is required'),
         })
       )
       .required('At least one item is required'),
@@ -195,11 +155,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           })),
         }
       : defaultValues;
-  console.log(isEditing);
 
-  console.log('Editing Invoice Data:', invoice);
-
-  // console.log('Initial Values for Formik:', initialValues);
+  // const calculateTotal = (qty, price) => {
+  //   return qty && price ? qty * price : 0;
+  // };
 
   return (
     <Drawer
@@ -218,6 +177,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
           boxSizing: 'border-box',
           backgroundColor: 'rgb(var(--color-secondary))',
           color: 'white',
+          // overflowY:'auto'
         },
       }}
     >
@@ -225,33 +185,42 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={(values, { setSubmitting }) =>
-            handleSave(values, setSubmitting, false)
-          }
+          onSubmit={(values, formikHelpers) => {
+            handleSave(values, formikHelpers.setSubmitting, false);
+
+            const updatedItems = values.items.map((item) => ({
+              ...item,
+              total:
+                item.qty && item.price
+                  ? (parseFloat(item.qty) * parseFloat(item.price)).toFixed(2)
+                  : '0.00',
+            }));
+            console.log('Submitted values:', updatedItems);
+          }}
         >
           {({
             handleBlur,
             handleSubmit,
             values,
+            handleChange,
             setFieldValue,
             setSubmitting,
           }) => {
-            console.log('Formik Values:', values);
+            // console.log('ALL VALUES',values.items);
             return (
               <form onSubmit={handleSubmit}>
                 <div className="p-6 pb-24">
                   {isEditing ? (
-                    <h2 className="text-xl font-bold text-white font-roboto">
+                    <h2 className="text-white font-bold text-xl font-roboto">
                       Update Invoice
                     </h2>
                   ) : (
-                    <h2 className="text-xl font-bold text-white font-roboto">
+                    <h2 className="text-white font-bold text-xl font-roboto">
                       New Invoice
                     </h2>
                   )}
 
-                  <h2 className="text-sm font-semibold text-primary mt-7 font-roboto">
+                  <h2 className="text-primary font-semibold text-sm mt-7 font-roboto">
                     Bill To
                   </h2>
                   <div className="mt-2">
@@ -261,11 +230,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       variant="secondary"
                       size="large"
                       name="companyName"
-                      value={values.companyName || undefined}
+                      value={values.companyName}
                       onChange={(e) =>
                         setFieldValue('companyName', e.target.value)
                       }
-                      onBlur={handleBlur}
                     />
                   </div>
                   <div className="mt-5">
@@ -286,14 +254,14 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                       id="city"
                       name="city"
                       variant="secondary"
-                      label="City"
-                      options={['Ludhiana', 'Amritsar', 'Jaipur', 'Chandigarh']}
+                      label="city"
+                      options={['ludhiana', 'amritsar', 'jaipur', 'chandigarh']}
                       value={values.city}
                       onChange={(e) => setFieldValue('city', e.target.value)}
                       onBlur={handleBlur}
                     />
                   </div>
-                  <div className="flex mt-5 space-x-4">
+                  <div className="mt-5 flex space-x-4">
                     <div className="w-1/2">
                       <SelectInput
                         id="state"
@@ -318,7 +286,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                         placeholder="Select"
                         label="Zip"
                         options={['14000', '16000', '18000']}
-                        value={values.zip || undefined}
+                        value={values.zip}
                         onChange={(e) => {
                           const value = e.target.value;
                           setFieldValue('zip', value);
@@ -329,7 +297,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex mt-5 space-x-4">
+                  <div className="mt-5 flex space-x-4">
                     <div className="w-1/2">
                       <DateInput
                         id="issueDate"
@@ -434,9 +402,9 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                                 name={`items[${index}].qty`}
                                 value={item.qty}
                                 onChange={(e) =>
+                                  // setFieldValue(`items[${index}].total`, calculateTotal(qty, price));
                                   setFieldValue(
                                     `items[${index}].qty`,
-                                    // parseInt(e.target.value, 10)
                                     e?.target?.value === ''
                                       ? ''
                                       : parseFloat(e.target.value)
@@ -448,12 +416,12 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Price */}
                             <div className="w-[100px]">
                               <Input
-                              type='number'
                                 variant="secondary"
                                 id={`price-${index}`}
                                 name={`items[${index}].price`}
                                 value={item.price}
                                 onChange={(e) =>
+                                  //  setFieldValue(`items[${index}].total`, calculateTotal(qty, price));
                                   setFieldValue(
                                     `items[${index}].price`,
                                     e?.target?.value === ''
@@ -467,7 +435,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                             {/* Total */}
                             <div className="w-1/5 text-center">
                               <h3 className="text-white font-roboto font-semibold">
-                                $
+                                ${' '}
                                 {item.qty && item.price
                                   ? (
                                       parseFloat(item.qty) *
@@ -503,6 +471,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                     )}
                   </FieldArray>
                 </div>
+
                 <div className="flex fixed w-[550px] left bottom-0 justify-between bg-purple space-x-4 p-3">
                   <Button
                     type="submit"

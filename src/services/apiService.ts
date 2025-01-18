@@ -1,5 +1,6 @@
 import { log } from 'console';
 import apiClient from '../utils/http';
+import { DrawerForm } from '../app/Invoice/generateInvoice';
 
 export const registerUserEmail = async (email: string) => {
   try {
@@ -221,19 +222,19 @@ interface InvoiceItem {
 }
 
 interface CreateInvoicePayload {
-  // companyName: string;
-  // streetAddress: string;
+  companyName: string;
+  streetAddress: string;
   city: string;
   state: string;
   zip: string;
-  // issueDate: Date | null;
+  issueDate: Date | null;
   paymentTerms: string;
   items: InvoiceItem[];
 }
 
 export const createInvoice = async (
   userId: string,
-  data: CreateInvoicePayload
+  data: DrawerForm
 ) => {
   try {
     const response = await apiClient.post(`/invoices/${userId}`, data);
