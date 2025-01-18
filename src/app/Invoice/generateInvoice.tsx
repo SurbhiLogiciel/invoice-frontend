@@ -112,17 +112,30 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
       .of(
         Yup.object({
           itemName: Yup.string().required('Item Name is required'),
+
+          // Validate qty as a number
           qty: Yup.number()
-            .min(1, 'Quantity must be at least 1')
+            .positive('Quantity must be greater than 0')
+            .integer('Quantity must be an integer')
             .required('Quantity is required'),
+
           price: Yup.number()
-            .min(0.01, 'Price must be greater than 0')
+            .positive('Price must be greater than 0')
             .required('Price is required'),
+
+          total: Yup.number()
+            .required('Total is required')
+            .test('valid-total', 'Invalid total format', function (value) {
+              const { qty, price } = this.parent;
+              if (qty && price) {
+                return value === qty * price;
+              }
+              return true;
+            }),
         })
       )
       .required('At least one item is required'),
   });
-
   const defaultValues: DrawerForm = {
     companyName: '',
     streetAddress: '',
@@ -132,7 +145,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
     issueDate: '',
     paymentTerms: '',
     status: '',
-    items: [{ id: '1', itemName: '', qty: '', price: '', total: '' }],
+    items: [{ id: '1', itemName: '', qty: '', price: '', total: '0.00' }],
   };
 
   const initialValues =
@@ -151,14 +164,10 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             itemName: item.itemName || '',
             qty: '', // Ensure string
             price: '', // Ensure string
-            total: item.total?.toString() || '', // Ensure string
+            total: item.total || '', // Ensure string
           })),
         }
       : defaultValues;
-
-  // const calculateTotal = (qty, price) => {
-  //   return qty && price ? qty * price : 0;
-  // };
 
   return (
     <Drawer
@@ -206,7 +215,7 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
             setFieldValue,
             setSubmitting,
           }) => {
-            // console.log('ALL VALUES',values.items);
+            console.log('ALL VALUES', values);
             return (
               <form onSubmit={handleSubmit}>
                 <div className="p-6 pb-24">
@@ -401,15 +410,28 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                                 id={`qty-${index}`}
                                 name={`items[${index}].qty`}
                                 value={item.qty}
-                                onChange={(e) =>
-                                  // setFieldValue(`items[${index}].total`, calculateTotal(qty, price));
-                                  setFieldValue(
-                                    `items[${index}].qty`,
+                                onChange={(e) => {
+                                  const value =
                                     e?.target?.value === ''
-                                      ? ''
-                                      : parseFloat(e.target.value)
-                                  )
-                                }
+                                      ? '' // If empty, set to empty
+                                      : parseFloat(e.target.value).toString(); // Ensure it's stored as a string
+
+                                  setFieldValue(`items[${index}].qty`, value); // Update qty field in Formik
+
+                                  // Calculate total, ensuring it's a string with 2 decimals
+                                  const updatedTotal =
+                                    value && item.price
+                                      ? (
+                                          parseFloat(value) *
+                                          parseFloat(item.price)
+                                        ).toFixed(2) // String with 2 decimals
+                                      : '0.00'; // Default to '0.00' if no value
+
+                                  setFieldValue(
+                                    `items[${index}].total`,
+                                    updatedTotal
+                                  ); // Set total as a string
+                                }}
                               />
                             </div>
 
@@ -420,32 +442,36 @@ export const InvoiceDrawer: React.FC<DrawerProps> = ({
                                 id={`price-${index}`}
                                 name={`items[${index}].price`}
                                 value={item.price}
-                                onChange={(e) =>
-                                  //  setFieldValue(`items[${index}].total`, calculateTotal(qty, price));
-                                  setFieldValue(
-                                    `items[${index}].price`,
+                                onChange={(e) => {
+                                  const value =
                                     e?.target?.value === ''
                                       ? ''
-                                      : parseFloat(e.target.value)
-                                  )
-                                }
+                                      : parseFloat(e.target?.value).toString();
+
+                                  setFieldValue(`items[${index}].price`, value);
+
+                                  const updatedTotal =
+                                    value && item.qty
+                                      ? (
+                                          parseFloat(item.qty) *
+                                          parseFloat(value)
+                                        ).toFixed(2)
+                                      : '0.00';
+
+                                  setFieldValue(
+                                    `items[${index}].total`,
+                                    updatedTotal
+                                  );
+                                }}
                               />
                             </div>
 
-                            {/* Total */}
                             <div className="w-1/5 text-center">
                               <h3 className="text-white font-roboto font-semibold">
-                                ${' '}
-                                {item.qty && item.price
-                                  ? (
-                                      parseFloat(item.qty) *
-                                      parseFloat(item.price)
-                                    ).toFixed(2)
-                                  : '0.00'}
+                                ${values.items[index].total}{' '}
                               </h3>
                             </div>
 
-                            {/* Remove Item */}
                             <div className="w-6 flex justify-center items-center cursor-pointer">
                               <DeleteIcon onClick={() => remove(index)} />
                             </div>
